@@ -14,8 +14,8 @@ import {
 import { Label } from '@/components/ui/label';
 
 export default function Home() {
-  const [email, setEmail] = useState(' ');
-  const [gtid, setGtid] = useState(' ');
+  const [email, setEmail] = useState('');
+  const [gtid, setGtid] = useState('');
   return (
     <div className='min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4'>
       <motion.div
@@ -44,24 +44,14 @@ export default function Home() {
               <Label htmlFor="gtid">GTID</Label>
               <Input
                 id="gtid"
+                type="default"
                 placeholder="90XXXXXXX"
                 value={gtid}
                 required
               />
             </div>
-
-
-
-
           </form>
-
-
-
         </div>
-
-
-
-
       </motion.div>
     </div>
   );
