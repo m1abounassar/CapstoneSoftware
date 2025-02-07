@@ -8,14 +8,36 @@ import { Label } from '@/components/ui/label';
 export default function Home() {
   const [email, setEmail] = useState('');
   const [gtid, setGtid] = useState('');
+  const [error, setError] = useState({ email: '', gtid: '' });
 
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevents page reload
+
+    let valid = true;
+    let newErrors = { email: '', gtid: '' };
+
+    // Validate GTID (Must start with "90" and be 9 digits)
+    const gtidPattern = /^90\d{7}$/;
+    if (!gtidPattern.test(gtid)) {
+      newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
+      valid = false;
+    }
+
+    // Validate Email (Must end with "@gatech.edu")
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gatech\.edu$/;
+    if (!emailPattern.test(email)) {
+      newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
+      valid = false;
+    }
+
+    setError(newErrors);
+
+    if (!valid) return; // Stop submission if there are errors
+
     console.log("Submitted Email:", email);
     console.log("Submitted GTID:", gtid);
 
-    // Add API call or validation logic here
     alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}`);
   };
 
@@ -51,7 +73,9 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
+                {error.email && <p className="text-red-500 text-sm">{error.email}</p>}
               </div>
+
               <div className='space-y-2'>
                 <Label htmlFor="gtid">GTID:</Label>
                 <Input
@@ -63,6 +87,7 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
+                {error.gtid && <p className="text-red-500 text-sm">{error.gtid}</p>}
               </div>
 
               {/* Submit Button inside Form */}
@@ -82,3 +107,4 @@ export default function Home() {
     </div>
   );
 }
+
