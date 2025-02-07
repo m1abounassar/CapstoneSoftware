@@ -65,7 +65,15 @@ export default function Home() {
                       className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                     />
                   </div>
-                </form>
+                  <div className="text-center">
+                <Button 
+                  type="submit" 
+                  className="bg-[#003056] text-white px-6 py-3 rounded-lg hover:bg-[#002040]"
+                >
+                  Submit
+                </Button>
+              </div>
+            </form>
               </div>
           </motion.div>
           </div>
