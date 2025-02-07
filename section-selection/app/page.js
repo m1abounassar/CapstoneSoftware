@@ -48,6 +48,7 @@ export default function Home() {
                       type="email"
                       placeholder="gburdell3@gatech.edu"
                       value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                       className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                     />
@@ -59,6 +60,7 @@ export default function Home() {
                       type="default"
                       placeholder="90XXXXXXX"
                       value={gtid}
+                      onChange={(e) => setGtid(e.target.value)}
                       required
                       className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                     />
