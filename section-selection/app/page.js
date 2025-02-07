@@ -27,7 +27,49 @@ export default function Home() {
 
         
         </div>
-      </motion.div>
+        
+        <div className="flex place-content-center">
+          <motion.div
+          initial={{opacity: 0, y: -20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{duration: 0.5}}
+          className="w-full max-w-md"
+          >
+              <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
+                <div className='text-center space-y-2'>
+                  <h1 className='text-2xl font-bold'>Enter your GT Account and Password</h1>
+                  <hr className="rounded-sm border-[#6E5F33] border-1"></hr>
+                </div>
+                <form className='space-y-4'>
+                  <div className='space-y-2'>
+                    <Label htmlFor="email">GT Email:</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="gburdell3@gatech.edu"
+                      value={email}
+                      required
+                      className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <Label htmlFor="gtid">GTID:</Label>
+                    <Input
+                      id="gtid"
+                      type="default"
+                      placeholder="90XXXXXXX"
+                      value={gtid}
+                      required
+                      className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
+                    />
+                  </div>
+                </form>
+              </div>
+          </motion.div>
+          </div>
+
+
+
     </div>
 
 
