@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 export default function Home() {
   const [email, setEmail] = useState('');
   const [gtid, setGtid] = useState('');
+  const [adminCode, setAdminCode] = useState('');
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]' >
 
@@ -61,6 +62,18 @@ export default function Home() {
                       placeholder="90XXXXXXX"
                       value={gtid}
                       onChange={(e) => setGtid(e.target.value)}
+                      required
+                      className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <Label htmlFor="adminCode">Admin Code:</Label>
+                    <Input
+                      id="adminCode"
+                      type="default"
+                      placeholder="123456"
+                      value={adminCode}
+                      onChange={(e) => setAdminCode(e.target.value)}
                       required
                       className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                     />
