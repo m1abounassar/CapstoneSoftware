@@ -9,28 +9,33 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [gtid, setGtid] = useState('');
   const [adminCode, setAdminCode] = useState('');
+
+
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]' >
 
+    {/**
+     * 
+     * this code is being written as text on the login page:
+    
+     setError(newErrors);
 
-    setError(newErrors);
 
+      if (!valid) return; // Stop submission if there are errors
 
-    if (!valid) return; // Stop submission if there are errors
+      console.log("Submitted Email:", email);
+      console.log("Submitted GTID:", gtid);
 
-    console.log("Submitted Email:", email);
-    console.log("Submitted GTID:", gtid);
+      alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}`);
+    */}
+      
 
-    alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}`);
-  };
-
-  return (
-    <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
+    <div className='min-h-screen bg-[url(../public/logBack.jpg)] mb-20'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='p-8 text-5xl font-mono font-bold text-[#003056]'>Junior Design</div>
+        <div className='p-8 text-5xl font-mono font-bold text-[#003056] justify-self-center'>Junior Design</div>
       </div>
 
-      <div className="flex place-content-center">
+      <div className="flex place-content-center mt-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -39,7 +44,7 @@ export default function Home() {
           >
               <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
                 <div className='text-center space-y-2'>
-                  <h1 className='text-2xl font-bold'>Enter your GT Account and Password</h1>
+                  <h1 className='text-2xl font-bold'>Enter your GT Email and ID</h1>
                   <hr className="rounded-sm border-[#6E5F33] border-1"></hr>
                 </div>
                 <form className='space-y-4'>
@@ -86,13 +91,16 @@ export default function Home() {
                 >
                   Submit
                 </Button>
-              </div>
-            </form>
+                  </div>
+                </form>
 
-          </div>
+              </div>
         </motion.div>
       </div>
     </div>
+    </div>
+
+
   );
 }
 
