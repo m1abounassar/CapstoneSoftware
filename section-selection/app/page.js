@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 export default function Home() {
   const [email, setEmail] = useState('');
   const [gtid, setGtid] = useState('');
+
   const [error, setError] = useState({ email: '', gtid: '' });
 
   // Function to handle form submission
@@ -31,7 +32,9 @@ export default function Home() {
       valid = false;
     }
 
+
     setError(newErrors);
+
 
     if (!valid) return; // Stop submission if there are errors
 
@@ -94,7 +97,7 @@ export default function Home() {
               <div className="text-center">
                 <Button 
                   type="submit" 
-                  className="bg-[#003056] text-white px-6 py-3 rounded-lg hover:bg-[#002040]"
+                  className="bg-[#003056] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
                 >
                   Submit
                 </Button>

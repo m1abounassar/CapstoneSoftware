@@ -27,8 +27,6 @@ export default function Home() {
           <div></div>
 
           <div className='p-5 text-sm lg:text-lg justify-self-end'>Admin Name</div>
-
-
         
         </div>
 
@@ -95,7 +93,6 @@ export default function Home() {
       
       */}
       
-
 
 
     </div>
