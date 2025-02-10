@@ -15,80 +15,84 @@ import { Label } from '@/components/ui/label';
 
 
 export default function Home() {
-  const [email, setEmail] = useState('');
-  const [gtid, setGtid] = useState('');
   return (
-    <div className='min-h-screen bg-[url(../public/logBack.jpg)] bg-no-repeat' >
+    <div className='min-h-screen bg-[#D3D0D0] font-mono' >
 
 
-        <div className='bg-[url(../public/logHead.jpg)] grid-cols-3 bg-no-repeat'>
+        <div className='bg-[#9B9B9B] grid grid-cols-3 w-screen'>
 
-          <div className='bg-[url(../public/gtLogo.svg)]'></div>
 
-          <div className='grid-rows-2'>
+          <div className='p-4 text-lg lg:text-2xl font-bold w-max'>Junior Design Team Sync</div>
 
-            <div className='pt-4 text-lg font-mono font-bold text-[#003056] justify-self-center'>Junior Design</div>
-            <div className='pt-2 pb-4 text-4xl font-mono font-bold text-[#003056] justify-self-center'>Team Sync</div>
+          <div></div>
 
-          </div>
-
-          <div className='bg-[url(../public/hexes.svg)]'></div>
-
+          <div className='p-5 text-sm lg:text-lg justify-self-end'>Admin Name</div>
         
         </div>
 
-        <div className='h-20'></div>
-        
-        <div className="flex place-content-center">
-          <motion.div
-          initial={{opacity: 0, y: -20}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.5}}
-          className="w-full max-w-md"
-          >
-              <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
-                <div className='text-center space-y-2'>
-                  <h1 className='text-2xl font-bold text-[#003056] opacity-200'>Enter your GT Email and ID</h1>
-                  <hr className="rounded-sm border-[#6E5F33] border-1"></hr>
-                </div>
-                <form className='space-y-4'>
-                  <div className='space-y-2'>
-                    <Label htmlFor="email">GT Email:</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="gburdell3@gatech.edu"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
-                    />
-                  </div>
-                  <div className='space-y-2'>
-                    <Label htmlFor="gtid">GTID:</Label>
-                    <Input
-                      id="gtid"
-                      type="default"
-                      placeholder="90XXXXXXX"
-                      value={gtid}
-                      onChange={(e) => setGtid(e.target.value)}
-                      required
-                      className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
-                    />
-                  </div>
-                  <div className="text-center">
-                <Button 
-                  type="submit" 
-                  className="bg-[#003056] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
+
+
+        {/* panels */}
+        <div className="grid grid-cols-2">
+
+          {/* section panel + button */}
+          <div className='m-10'>
+
+            <div className='bg-[#757575] w-xs h-min rounded-3xl grid-rows-2'>
+
+              <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
+              <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3'>info</div>
+
+            </div>
+            <Button 
+                  className="bg-[#757575] mt-5 text-white text-sm rounded-lg hover:bg-[#636363] shadow-none"
                 >
-                  Submit
+                  Add Section
                 </Button>
-              </div>
-            </form>
-              </div>
-          </motion.div>
+
           </div>
 
+
+          {/* team panel */}
+          <div className='bg-[#757575] w-xs h-min rounded-3xl grid-rows-2 m-10'>
+            
+            
+            <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
+              <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3'>info</div>
+
+            <div className='bg-[#E6E6E6] h-full w-full'></div>
+
+
+          </div>
+
+
+        </div>
+
+
+
+      {/* Pop-up Modal 
+      
+      {isPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg">
+            <h2 className="text-lg font-bold">Add a New Section</h2>
+            <Input placeholder="Section Name" className="mt-3 mb-5" />
+            <div className="flex justify-end">
+              <Button 
+                className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 shadow-none"
+                onClick={() => setIsPopupOpen(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      
+      
+      */}
+      
 
 
     </div>
