@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,6 +11,48 @@ export default function Home() {
   const [gtid, setGtid] = useState('');
   const [adminCode, setAdminCode] = useState('');
 
+<<<<<<< Updated upstream
+=======
+  const [error, setError] = useState({ email: '', gtid: '' });
+
+  const router = useRouter(); // Initialize router
+
+
+  // Function to handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevents page reload
+
+    let valid = true;
+    let newErrors = { email: '', gtid: '' };
+
+    // Validate GTID (Must start with "90" and be 9 digits)
+    const gtidPattern = /^90\d{7}$/;
+    if (!gtidPattern.test(gtid)) {
+      newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
+      valid = false;
+    }
+
+    // Validate Email (Must end with "@gatech.edu")
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@gatech\.edu$/;
+    if (!emailPattern.test(email)) {
+      newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
+      valid = false;
+    }
+
+
+    setError(newErrors);
+
+
+    if (!valid) return; // Stop submission if there are errors
+
+    console.log("Submitted Email:", email);
+    console.log("Submitted GTID:", gtid);
+
+    alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}`);
+
+    router.push('/admin'); 
+  };
+>>>>>>> Stashed changes
 
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]' >
