@@ -1,45 +1,52 @@
-'use client'
+'use client';
+
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CheckBox } from '@/components/ui/checkbox';
 
 export default function Home() {
   const [email, setEmail] = useState('');
   const [gtid, setGtid] = useState('');
+  const [adminCode, setAdminCode] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [error, setError] = useState({ email: '', gtid: '' });
 
-  // Function to handle form submission
+  const router = useRouter();
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevents page reload
+    e.preventDefault();
 
     let valid = true;
     let newErrors = { email: '', gtid: '' };
 
-    // Validate GTID (Must start with "90" and be 9 digits)
     const gtidPattern = /^90\d{7}$/;
     if (!gtidPattern.test(gtid)) {
       newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
       valid = false;
     }
 
-    // Validate Email (Must end with "@gatech.edu")
     const emailPattern = /^[a-zA-Z0-9._%+-]+@gatech\.edu$/;
     if (!emailPattern.test(email)) {
       newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
       valid = false;
     }
 
+    if (isAdmin && !adminCode.trim()) {
+      valid = false;
+      newErrors.adminCode = "Admin code is required.";
+    }
 
     setError(newErrors);
-
-
-    if (!valid) return; // Stop submission if there are errors
+    if (!valid) return;
 
     console.log("Submitted Email:", email);
     console.log("Submitted GTID:", gtid);
+    if (isAdmin) console.log("Admin Code:", adminCode);
 
     alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}${isAdmin ? `\nAdmin Code: ${adminCode}` : ''}`);
 
@@ -54,10 +61,10 @@ export default function Home() {
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='p-8 text-5xl font-mono font-bold text-[#003056]'>Junior Design</div>
+        <div className='p-8 text-5xl font-mono font-bold text-[#003056] justify-self-center'>Junior Design</div>
       </div>
 
-      <div className="flex place-content-center">
+      <div className="flex place-content-center mt-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -66,11 +73,10 @@ export default function Home() {
         >
           <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
             <div className='text-center space-y-2'>
-              <h1 className='text-2xl font-bold'>Enter your GT Account and Password</h1>
-              <hr className="rounded-sm border-[#6E5F33] border-1"></hr>
+              <h1 className='text-2xl font-bold'>Enter your GT Email and ID</h1>
+              <hr className="rounded-sm border-[#6E5F33] border-1" />
             </div>
-            
-            {/* Form with onSubmit */}
+
             <form className='space-y-4' onSubmit={handleSubmit}>
               <div className='space-y-2'>
                 <Label htmlFor="email">GT Email:</Label>
@@ -83,7 +89,6 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
-                {error.email && <p className="text-red-500 text-sm">{error.email}</p>}
               </div>
 
               <div className='space-y-2'>
@@ -97,24 +102,44 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
-                {error.gtid && <p className="text-red-500 text-sm">{error.gtid}</p>}
               </div>
 
-              {/* Submit Button inside Form */}
+              <div className='space-y-2'>
+                <CheckBox
+                  label="Admin"
+                  value={isAdmin}
+                  onChange={() => setIsAdmin(!isAdmin)}
+  
+                />
+              </div>
+
+              {isAdmin && (
+                <div className='space-y-2'>
+                  <Label htmlFor="adminCode">Admin Code:</Label>
+                  <Input
+                    id="adminCode"
+                    type="text"
+                    placeholder="123456"
+                    value={adminCode}
+                    onChange={(e) => setAdminCode(e.target.value)}
+                    required
+                    className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
+                  />
+                </div>
+              )}
+
               <div className="text-center">
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="bg-[#003056] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
                 >
                   Submit
                 </Button>
               </div>
             </form>
-
           </div>
         </motion.div>
       </div>
     </div>
   );
 }
-
