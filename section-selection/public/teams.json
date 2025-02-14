@@ -1,0 +1,30 @@
+{
+  "teams": [
+    {
+      "id": "JIF-4317",
+      "project": "Project 1",
+      "members": ["Esha", "Mia", "Jace", "Shane", "Cindy", "Matthew"]
+    },
+    {
+      "id": "JIF-4318",
+      "project": "Project 2",
+      "members": ["Abby", "Bella", "Carson", "David", "Eve", "Drank"]
+    },
+    {
+      "id": "JIF-4319",
+      "project": "Project 3",
+      "members": ["Grace", "Hank", "Ivy", "Jake", "Kate", "Leo"]
+    },
+    {
+      "id": "JIF-4320",
+      "project": "Project 4",
+      "members": ["Molly", "Nelson", "Ollie", "Patrick", "Quinn", "Rachel"]
+    },
+    {
+      "id": "JIF-4321",
+      "project": "Project 5",
+      "members": ["Sarah", "Tyler", "Vincent", "Wesley", "Yash", "Zachary"]
+    }
+  ]
+}
+
