@@ -50,7 +50,12 @@ export default function Home() {
 
     alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}${isAdmin ? `\nAdmin Code: ${adminCode}` : ''}`);
 
-    router.push('/admin');
+    if (isAdmin) {
+      router.push('/admin');
+    } else {
+      router.push('/student');
+    }
+    
   };
 
   return (
