@@ -41,9 +41,6 @@ export default function Home() {
     console.log("Submitted Email:", email);
     console.log("Submitted GTID:", gtid);
 
-<<<<<<< Updated upstream
-    alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}`);
-=======
     alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}${isAdmin ? `\nAdmin Code: ${adminCode}` : ''}`);
 
     if (isAdmin) {
@@ -52,7 +49,6 @@ export default function Home() {
       router.push('/student');
     }
     
->>>>>>> Stashed changes
   };
 
   return (
