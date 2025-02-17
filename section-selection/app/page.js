@@ -61,7 +61,8 @@ export default function Home() {
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='p-8 text-5xl font-mono font-bold text-[#003056] justify-self-center'>Junior Design</div>
+        <div className='pt-2 pb-0 pr-1 text-2xl font-sans font-bold text-[#003056] justify-self-center'>Junior Design</div>
+        <span className='pt-0 pb-2 pl-1 text-5xl font-mono font-bold text-[#232323] justify-self-center'> Team Sync</span>
       </div>
 
       <div className="flex place-content-center mt-10">
