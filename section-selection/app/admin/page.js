@@ -51,10 +51,11 @@ export default function Home() {
     <div className='min-h-screen bg-[#E5E2D3] font-mono'>
 
       {/* Header */}
-      <div className='bg-[#A5925A] grid grid-cols-3 w-screen'>
-        <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681'>
+        <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>Junior Design
+        <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span></div>
         <div></div>
-        <div className='p-5 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
+        <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
       </div>
 
       {/* Panels */}
