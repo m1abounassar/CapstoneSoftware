@@ -55,7 +55,7 @@ export default function Home() {
                 placeholder="Enter custom value"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
-                className="px-3 py-2 rounded-md border border-gray-300"
+                className="bg-[#E5E2D3] border-[#A5925A] border-2 text-sm rounded-3xl py-1.5 px-5"
               />
             )}
 
