@@ -6,9 +6,9 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [newSection, setNewSection] = useState({ title: '', description: '' });
+  const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
 
-  // Fetch teams data
+  // Fetch teams data (If we also move teams to a PHP API, update this)
   useEffect(() => {
     fetch('/teams.json')
       .then(response => response.json())
@@ -16,9 +16,9 @@ export default function Home() {
       .catch(error => console.error('Error loading teams:', error));
   }, []);
 
-  // Fetch sections data
+  // Fetch sections data from PHP API
   useEffect(() => {
-    fetch('/sections.json')
+    fetch('http://jdregistration.sci.gatech.edu/sections.php')
       .then(response => response.json())
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error loading sections:', error));
@@ -30,21 +30,22 @@ export default function Home() {
     setNewSection(prev => ({ ...prev, [name]: value }));
   };
 
-  // Add new section
+  // Add new section - Save to PHP backend
   const addSection = () => {
     if (!newSection.title.trim()) return;
 
-    const updatedSections = [...sections, { id: Date.now(), ...newSection }];
-    setSections(updatedSections);
-    setNewSection({ title: '', description: '' });
-    setIsPopupOpen(false);
-
-    // Simulate saving to backend (requires API for real updates)
-    fetch('/sections.json', {
+    fetch('http://jdregistration.sci.gatech.edu/sections.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sections: updatedSections })
-    }).catch(error => console.error('Error updating sections:', error));
+      body: JSON.stringify(newSection)
+    })
+    .then(response => response.json())
+    .then(() => {
+      setSections([...sections, { id: Date.now(), ...newSection }]);
+      setNewSection({ title: '', time: '', capacity: '' });
+      setIsPopupOpen(false);
+    })
+    .catch(error => console.error('Error updating sections:', error));
   };
 
   return (
@@ -52,8 +53,9 @@ export default function Home() {
 
       {/* Header */}
       <div className='bg-[#A5925A] grid grid-cols-3 w-681'>
-        <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>Junior Design
-        <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span></div>
+        <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>
+          Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span>
+        </div>
         <div></div>
         <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
       </div>
@@ -70,10 +72,10 @@ export default function Home() {
                 sections.map((section) => (
                   <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
                     <p className='font-bold'>{section.title}</p>
-                      <div className='flex'>
-                        <div className='text-sm mr-10'>{section.time}</div>
-                        <div className='text-sm'>{section.capacity}</div>
-                      </div>
+                    <div className='flex'>
+                      <div className='text-sm mr-10'>{section.time}</div>
+                      <div className='text-sm'>{section.capacity}</div>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -98,8 +100,6 @@ export default function Home() {
                 <div key={team.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
                   <p className='font-bold'>{team.id}</p>
                   <p className='text-sm'>{team.project}</p>
-                  
-
                 </div>
               ))
             ) : (
