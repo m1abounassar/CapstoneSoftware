@@ -1,6 +1,6 @@
 # Team Sync
 
-Team Synx is a web app designed to help Junior Design students plan their schedules for future semesters. It simplifies the process of finding the best time slot for admin and ensres that everyone’s availability is considered.
+Team Sync is a web app designed to help Junior Design students plan their schedules for future semesters. It simplifies the process of finding the best time slot for admin and ensres that everyone’s availability is considered.
 
 # Release Notes
 ## Version 0.2.0
