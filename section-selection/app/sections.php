@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 $host = "localhost:3306";
 $dbname = "teamsync;
 $username = "user1";
-$password = "";
+$password = "ronnie&matt4eva";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
