@@ -1,36 +1,48 @@
 <?php
-header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
 
-$host = "localhost:3306";
-$dbname = "teamsync;
+$servername = "localhost:3306";
 $username = "user1";
 $password = "ronnie&matt4eva";
+$dbname = "teamsync";
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-    if ($_SERVER["REQUEST_METHOD"] === "GET") {
-        $stmt = $pdo->query("SELECT id, title, time, capacity FROM sections");
-        $sections = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode(["sections" => $sections]);
+if ($conn->connect_error) {
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $sql = "SELECT * FROM sections";
+    $result = $conn->query($sql);
+    
+    $sections = [];
+    while ($row = $result->fetch_assoc()) {
+        $sections[] = $row;
     }
+    echo json_encode(["sections" => $sections]);
+}
 
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (isset($data["title"], $data["time"], $data["capacity"])) {
-            $stmt = $pdo->prepare("INSERT INTO sections (title, time, capacity) VALUES (?, ?, ?)");
-            $stmt->execute([$data["title"], $data["time"], $data["capacity"]]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+    if (isset($data['title'], $data['time'], $data['capacity'])) {
+        $title = $conn->real_escape_string($data['title']);
+        $time = $conn->real_escape_string($data['time']);
+        $capacity = (int)$data['capacity'];
+        
+        $sql = "INSERT INTO sections (title, time, capacity) VALUES ('$title', '$time', $capacity)";
+        if ($conn->query($sql) === TRUE) {
             echo json_encode(["message" => "Section added successfully"]);
         } else {
-            echo json_encode(["error" => "Invalid data"]);
+            echo json_encode(["error" => "Error: " . $conn->error]);
         }
+    } else {
+        echo json_encode(["error" => "Invalid input"]);
     }
-
-} catch (PDOException $e) {
-    echo json_encode(["error" => "Database connection failed: " . $e->getMessage()]);
 }
+
+$conn->close();
 ?>

@@ -7,6 +7,9 @@ export default function Home() {
   const [sections, setSections] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
+  const protocol = window.location.protocol === "https:" ? "https://" : "http://";
+  const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
+
 
   // Fetch teams data (If we also move teams to a PHP API, update this)
   useEffect(() => {
@@ -18,10 +21,10 @@ export default function Home() {
 
   // Fetch sections data from PHP API
   useEffect(() => {
-    fetch('http://jdregistration.sci.gatech.edu/sections.php')
+    fetch(apiUrl)
       .then(response => response.json())
       .then(data => setSections(data.sections))
-      .catch(error => console.error('Error loading sections:', error));
+      .catch(error => console.error("Error loading sections:", error));
   }, []);
 
   // Handle input change for new section
@@ -34,7 +37,7 @@ export default function Home() {
   const addSection = () => {
     if (!newSection.title.trim()) return;
 
-    fetch('http://jdregistration.sci.gatech.edu/sections.php', {
+    fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSection)
