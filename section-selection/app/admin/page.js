@@ -7,9 +7,28 @@ export default function Home() {
   const [sections, setSections] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
+
+  const [user, setUser] = useState(null); // NEW: Store user info from CAS session
+
   const protocol = window.location.protocol === "https:" ? "https://" : "http://";
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
+  // Fetch user session on load
+  useEffect(() => {
+    async function fetchSession() {
+      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
+      if (res.ok) {
+        const session = await res.json();
+        console.log('Session:', session);
+        setUser(session);  // Save session data to state
+      } else {
+        console.log('Not logged in');
+        window.location.href = '/app/cas-login.php';  // Redirect to CAS login
+      }
+    }
+
+    fetchSession();
+  }, []);
 
   // Fetch teams data (If we also move teams to a PHP API, update this)
   useEffect(() => {
@@ -27,13 +46,11 @@ export default function Home() {
       .catch(error => console.error("Error loading sections:", error));
   }, []);
 
-  // Handle input change for new section
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewSection(prev => ({ ...prev, [name]: value }));
   };
 
-  // Add new section - Save to PHP backend
   const addSection = () => {
     if (!newSection.title.trim()) return;
 
@@ -51,65 +68,96 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
   };
 
+
   return (
-    <div className='min-h-screen bg-[#E5E2D3] font-mono'>
+    <div className='min-h-screen bg-[#E5E2D3] font-sans'>
 
       {/* Header */}
-      <div className='bg-[#A5925A] grid grid-cols-3 w-681'>
+      <div className='bg-[#A5925A] grid grid-cols-2 w-full'>
         <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>
           Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span>
         </div>
-        <div></div>
+    
         <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
       </div>
 
-      {/* Panels */}
-      <div className="grid grid-rows-2 md:grid-cols-2">
-        
-        {/* Sections Panel */}
-        <div className='m-10'>
-          <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2'>
-            <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
-            <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3 border-5 border-[#003056]'>
-              {sections.length > 0 ? (
-                sections.map((section) => (
-                  <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
-                    <p className='font-bold'>{section.title}</p>
-                    <div className='flex'>
-                      <div className='text-sm mr-10'>{section.time}</div>
-                      <div className='text-sm'>{section.capacity}</div>
+      {/* Body */}
+      <div className="grid grid-rows-2">
+
+        {/* Header */}
+        <div className="grid grid-cols-2 rounded-xl bg-[#FFFFFF] h-10 m-5 w-9/10">
+
+          <div></div>
+
+
+
+        </div>
+
+
+        {/* Panels */}
+        <div className="grid grid-rows-2 md:grid-cols-2">
+
+
+        </div>
+
+
+
+
+
+          
+          {/* Left */}
+          <div className='m-10'>
+            
+            
+            {/* Sections Panel */}
+            <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2'>
+              <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
+              <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3 border-5 border-[#003056]'>
+                {sections.length > 0 ? (
+                  sections.map((section) => (
+                    <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
+                      <p className='font-bold'>{section.title}</p>
+                      <div className='flex'>
+                        <div className='text-sm mr-10'>{section.time}</div>
+                        <div className='text-sm'>{section.capacity}</div>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <p>Loading sections...</p>
+                )}
+              </div>
+            </div>
+            
+            
+            
+            <Button 
+              className="bg-[#A5925A] mt-5 text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+              onClick={() => setIsPopupOpen(true)}
+            >
+              Add Section
+            </Button>
+          </div>
+
+          {/* Teams Panel */}
+          <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2 m-10'>
+            <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
+            <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3'>
+              {teams.length > 0 ? (
+                teams.map((team) => (
+                  <div key={team.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
+                    <p className='font-bold'>{team.id}</p>
+                    <p className='text-sm'>{team.project}</p>
                   </div>
                 ))
               ) : (
-                <p>Loading sections...</p>
+                <p>Loading teams...</p>
               )}
             </div>
           </div>
-          <Button 
-            className="bg-[#A5925A] mt-5 text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
-            onClick={() => setIsPopupOpen(true)}
-          >
-            Add Section
-          </Button>
-        </div>
-
-        {/* Teams Panel */}
-        <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2 m-10'>
-          <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
-          <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3'>
-            {teams.length > 0 ? (
-              teams.map((team) => (
-                <div key={team.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
-                  <p className='font-bold'>{team.id}</p>
-                  <p className='text-sm'>{team.project}</p>
-                </div>
-              ))
-            ) : (
-              <p>Loading teams...</p>
-            )}
-          </div>
-        </div>
+      
+      
+      
       </div>
 
       {/* Pop-up Modal for Adding Section */}
