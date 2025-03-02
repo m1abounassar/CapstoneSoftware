@@ -1,8 +1,19 @@
-# Section Selection
+# Team Sync
 
-Section Selection is a web app designed to help Junior Design students plan their schedules for future semesters. It simplifies the process of finding the best time slot for admin and ensres that everyone’s availability is considered.
+Team Sync is a web app designed to help Junior Design students plan their schedules for future semesters. It simplifies the process of finding the best time slot for admin and ensres that everyone’s availability is considered.
 
 # Release Notes
+## Version 0.2.0
+
+### New Features
+- Admin Login and Dashboard access
+- Database to hold account information
+
+
+### Bug Fixes
+
+N/A
+
 ## Version 0.1.0
 
 ### New Features

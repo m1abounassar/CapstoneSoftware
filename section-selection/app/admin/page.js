@@ -13,8 +13,6 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
-
-
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
   const protocol = window.location.protocol === "https:" ? "https://" : "http://";
@@ -91,6 +89,7 @@ export default function Home() {
     })
     .catch(error => console.error('Error updating sections:', error));
   };
+
 
   const toggleRotation = (teamId) => {
     setRotatedTeams((prev) => {
