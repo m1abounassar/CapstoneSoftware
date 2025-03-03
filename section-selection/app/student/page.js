@@ -69,6 +69,7 @@ export default function Home() {
           </div>
         </div>
 
+
         {/* Team Members Panel */}
         <div className='col-span-1'>
           <div className='bg-[#003056] w-full h-min rounded-3xl'>
@@ -76,6 +77,7 @@ export default function Home() {
             <div className='bg-[#E6E6E6] h-full w-full rounded-3xl px-6 py-4 border-5 border-[#003056]'>
               <p className='text-center text-gray-700'>No team members added yet.</p>
             </div>
+
           </div>
         </div>
       </div>

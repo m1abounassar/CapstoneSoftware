@@ -18,11 +18,17 @@ const Dropdown = ({ value, onChange, className }) => {
           className
         )}
       >
-        <option value="">Select a Team</option>
-        <option value="t1">Team 1</option>
-        <option value="t2">Team 2</option>
-        <option value="t3">Team 3</option>
-        <option value="cus">Custom</option>
+        <option value="1">8:25 - 9:15</option>
+        <option value="2">9:30 - 10:20</option>
+        <option value="3">11:00 - 11:50</option>
+        <option value="4">12:30 - 1:20</option>
+        <option value="4">2:00 - 2:50</option>
+        <option value="4">3:30 - 4:20</option>
+        <option value="4">5:00 - 5:50</option>
+        <option value="4">6:30 - 7:20</option>
+
+
+
       </select>
     </div>
   );

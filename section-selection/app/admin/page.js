@@ -5,9 +5,14 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
+  const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
+  const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+  const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
+  const [rotate, setRotate] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
-
+  const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
+  const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
   const protocol = window.location.protocol === "https:" ? "https://" : "http://";
@@ -51,7 +56,7 @@ export default function Home() {
     setNewSection(prev => ({ ...prev, [name]: value }));
   };
 
-  const addSection = () => {
+  const addOrUpdateSection = () => {
     if (!newSection.title.trim()) return;
 
     fetch(apiUrl, {
@@ -63,31 +68,102 @@ export default function Home() {
     .then(() => {
       setSections([...sections, { id: Date.now(), ...newSection }]);
       setNewSection({ title: '', time: '', capacity: '' });
-      setIsPopupOpen(false);
+      setIsAddSectionPopupOpen(false);
+    })
+    .catch(error => console.error('Error updating sections:', error));
+  };
+
+  const addStudent = () => {
+    if (!newStudent.name.trim()) return;
+
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newStudent)
+    })
+    .then(response => response.json())
+    .then(() => {
+      setSections([...users, { id: Date.now(), ...newStudent }]);
+      setNewSection({ name: '', gtid: '', gtusername: '', team:'' });
+      setIsAddStudentPopupOpen(false);
     })
     .catch(error => console.error('Error updating sections:', error));
   };
 
 
-  return (
-    <div className='min-h-screen bg-[#E5E2D3] font-sans'>
+  const toggleRotation = (teamId) => {
+    setRotatedTeams((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(teamId)) {
+        newSet.delete(teamId);
+      } else {
+        newSet.add(teamId);
+      }
+      return newSet;
+    });
+  };
 
-      {/* Header */}
-      <div className='bg-[#A5925A] grid grid-cols-2 w-full'>
-        <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>
-          Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span>
-        </div>
-    
-        <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "1":
+        return '#66D575';
+      case "2":
+        return '#FFC943';
+      case "3":
+        return '#FF7556';
+    }
+  };
+  
+
+  return (
+    <div className='min-h-screen bg-[#E5E2D3] font-mono'>
+      <div className='bg-[#A5925A] grid grid-cols-3 w-screen'>
+        <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
+        <div></div>
+        <div className='p-5 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
       </div>
 
       {/* Body */}
-      <div className="grid grid-rows-2">
+      <div className="grid grid-rows-[fit_fit]">
 
         {/* Header */}
-        <div className="grid grid-cols-2 rounded-xl bg-[#FFFFFF] h-10 m-5 w-9/10">
+        <div className="grid grid-cols-2 mt-5 mx-10 w-9/10 h-fit">
 
-          <div></div>
+          <div className='flex justify-center rounded-xl bg-[#FFFFFF]'>
+
+            <div className='py-3 font-bold'>ADMIN MODE | 104/250 </div>
+
+            <div className='py-3 pl-2'> Registered Students have been assigned a section</div>
+
+
+          </div>
+
+          <div className='flex justify-around rounded-lg self-center text-white text-md rounded-lg'>
+
+            <Button 
+              className="bg-[#A5925A] hover:bg-[#80724b]"
+              onClick={() => setIsAddStudentPopupOpen(true)}
+            >
+              Add Student
+            </Button>
+
+            <Button 
+              className="bg-[#A5925A] hover:bg-[#80724b]"
+              onClick={() => setIsEditStudentPopupOpen(true)}
+            >
+              Edit Student
+            </Button>
+
+            <Button 
+              className="bg-[#A5925A] hover:bg-[#80724b] w-2xl"
+              onClick={() => setIsRefreshSemesterPopupOpen(true)}
+            >
+              Refresh Semester
+            </Button>
+
+
+
+          </div>
 
 
 
@@ -95,15 +171,7 @@ export default function Home() {
 
 
         {/* Panels */}
-        <div className="grid grid-rows-2 md:grid-cols-2">
-
-
-        </div>
-
-
-
-
-
+        <div className="grid grid-cols-2 m-0">
           
           {/* Left */}
           <div className='m-10'>
@@ -112,10 +180,10 @@ export default function Home() {
             {/* Sections Panel */}
             <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2'>
               <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
-              <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3 border-5 border-[#003056]'>
+              <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3 border-5 border-[#003056]'>
                 {sections.length > 0 ? (
                   sections.map((section) => (
-                    <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
+                    <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm'>
                       <p className='font-bold'>{section.title}</p>
                       <div className='flex'>
                         <div className='text-sm mr-10'>{section.time}</div>
@@ -133,7 +201,7 @@ export default function Home() {
             
             <Button 
               className="bg-[#A5925A] mt-5 text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
-              onClick={() => setIsPopupOpen(true)}
+              onClick={() => setIsAddSectionPopupOpen(true)}
             >
               Add Section
             </Button>
@@ -142,12 +210,43 @@ export default function Home() {
           {/* Teams Panel */}
           <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2 m-10'>
             <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
-            <div className='bg-[#E6E6E6] h-full w-50 rounded-3xl px-5 py-3'>
+            <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3'>
+              <div className='grid grid-cols-12 h-50'>
+
+                <div className='mb-3 col-start-1 col-end-12 grid grid-cols-8'>
+                  <input
+                    className='border-[#B4B2B2] border-2 rounded-l-lg text-lg p-2 col-start-1 col-end-8'
+                    placeholder='Search by Team Name or Number'
+                  
+                  
+                  />
+
+                  <div className='bg-[#D9D9D9] border-[#B4B2B2] border-2 border-l-0 text-4xl w-fit px-4 rounded-r-md hover:text-[#525252] cursor-pointer col-start-8 col-span-1'>⌕</div>
+                </div>
+                
+                
+                <div className='bg-[#D9D9D9] border-[#B4B2B2] border-2 col-start-12 font-bold text-xl w-fit h-12 rounded-lg py-2 px-4 hover:text-[#525252] cursor-pointer justify-self-end'>λ</div>
+
+
+              </div>
               {teams.length > 0 ? (
                 teams.map((team) => (
-                  <div key={team.id} className='p-3 bg-white rounded-md my-2 shadow-sm hover:bg-[#f0f0f0]'>
-                    <p className='font-bold'>{team.id}</p>
-                    <p className='text-sm'>{team.project}</p>
+                  <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
+                    <div
+                      className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
+                      style={{
+                        transform: rotatedTeams.has(team.id) ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                      onClick={() => toggleRotation(team.id)}>▶
+                    </div>     
+                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.id}</div>
+                    <div 
+                      className='bg-[#A5925A] rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
+                      style={{
+                        color: getStatusColor(team.status)
+                      }}
+                      >●</div>
                   </div>
                 ))
               ) : (
@@ -156,12 +255,12 @@ export default function Home() {
             </div>
           </div>
       
-      
+        </div>
       
       </div>
 
       {/* Pop-up Modal for Adding Section */}
-      {isPopupOpen && (
+      {isAddSectionPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
             <h2 className="text-lg font-bold">Add a New Section</h2>
@@ -189,7 +288,7 @@ export default function Home() {
             <div className="flex justify-end mt-5">
               <Button 
                 className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsPopupOpen(false)}
+                onClick={() => setIsAddSectionPopupOpen(false)}
               >
                 Cancel
               </Button>
@@ -204,6 +303,144 @@ export default function Home() {
         </div>
       )}
 
+      {/* Pop-up Modal for Adding Student */}
+      {isAddStudentPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Add a New Student</h2>
+            <input 
+              name="name" 
+              placeholder="George Burdell" 
+              value={newSection.name}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="gtid"
+              placeholder="903XXXXXX"
+              value={newSection.gtid}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="gtusername"
+              placeholder="gburdell3"
+              value={newSection.gtusername}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="team"
+              placeholder="1234"
+              value={newSection.team}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsAddStudentPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={addStudent}
+              >
+                Add
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up Modal for Adding Section */}
+      {isEditStudentPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Add a New Section</h2>
+            <input 
+              name="title" 
+              placeholder="Section Title" 
+              value={newSection.title}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="time"
+              placeholder="Times"
+              value={newSection.time}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="capacity"
+              placeholder="Capacity"
+              value={newSection.capacity}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsEditStudentPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={addSection}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up Modal for Adding Section */}
+      {isRefreshSemesterPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">{editingSection ? 'Edit Section' : 'Add a New Section'}</h2>
+            <input 
+              name="title" 
+              placeholder="Section Title" 
+              value={newSection.title}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="time"
+              placeholder="Times"
+              value={newSection.time}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="capacity"
+              placeholder="Capacity"
+              value={newSection.capacity}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsRefreshSemesterPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={addOrUpdateSection}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
