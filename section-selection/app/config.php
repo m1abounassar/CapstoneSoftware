@@ -2,6 +2,7 @@
 // Base URL for your site
 define('BASE_URL', 'https://jdregistration.sci.gatech.edu');
 
-// URL where CAS should return after login
-define('CAS_SERVICE', BASE_URL . '/cas-login.php');
+// CAS service URL (the page CAS returns to after login). It should not hardcode a specific redirect.
+define('CAS_SERVICE', BASE_URL . '/app/api/auth/cas-login.php');
+
 ?>

@@ -18,6 +18,7 @@ export default function Home() {
 
   const router = useRouter();
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -26,37 +27,40 @@ export default function Home() {
 
     const gtidPattern = /^90\d{7}$/;
     if (!gtidPattern.test(gtid)) {
-      newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
-      valid = false;
+        newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
+        valid = false;
     }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@gatech\.edu$/;
     if (!emailPattern.test(email)) {
-      newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
-      valid = false;
+        newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
+        valid = false;
     }
 
     if (isAdmin && !adminCode.trim()) {
-      valid = false;
-      newErrors.adminCode = "Admin code is required.";
+        valid = false;
+        newErrors.adminCode = "Admin code is required.";
     }
 
     setError(newErrors);
     if (!valid) return;
 
-    console.log("Submitted Email:", email);
-    console.log("Submitted GTID:", gtid);
-    if (isAdmin) console.log("Admin Code:", adminCode);
+    // Determine the redirect path based on role
+    const redirectPath = isAdmin ? '/admin' : '/student';
 
-    alert(`Submitted!\nEmail: ${email}\nGTID: ${gtid}${isAdmin ? `\nAdmin Code: ${adminCode}` : ''}`);
+    // Build query params (can also send adminCode if needed for future logic)
+    const params = new URLSearchParams({
+        email,
+        gtid,
+        redirect: redirectPath,
+        ...(isAdmin && { adminCode }) // optional, if you want to pass adminCode too
+    });
 
-    if (isAdmin) {
-      router.push('/admin');
-    } else {
-      router.push('/student');
-    }
-    
-  };
+    // Redirect to the PHP CAS login handler
+    window.location.href = `/app/api/auth/cas-login.php?${params.toString()}`;
+};
+
+
 
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
