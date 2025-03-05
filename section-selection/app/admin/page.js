@@ -15,20 +15,17 @@ export default function Home() {
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
-  const protocol = window.location.protocol === "https:" ? "https://" : "http://";
-  const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
-
   // Fetch user session on load
   useEffect(() => {
     async function fetchSession() {
-      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
+      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
       if (res.ok) {
         const session = await res.json();
         console.log('Session:', session);
         setUser(session);  // Save session data to state
       } else {
         console.log('Not logged in');
-        window.location.href = '/app/cas-login.php';  // Redirect to CAS login
+        window.location.href = '/cas-login.php';  // Redirect to CAS login
       }
     }
 
@@ -45,7 +42,7 @@ export default function Home() {
 
   // Fetch sections data from PHP API
   useEffect(() => {
-    fetch(apiUrl)
+    fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
       .then(data => setSections(data.sections))
       .catch(error => console.error("Error loading sections:", error));
@@ -59,7 +56,7 @@ export default function Home() {
   const addOrUpdateSection = () => {
     if (!newSection.title.trim()) return;
 
-    fetch(apiUrl, {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSection)
@@ -76,7 +73,7 @@ export default function Home() {
   const addStudent = () => {
     if (!newStudent.name.trim()) return;
 
-    fetch(apiUrl, {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newStudent)
