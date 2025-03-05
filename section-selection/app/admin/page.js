@@ -18,14 +18,14 @@ export default function Home() {
   // Fetch user session on load
   useEffect(() => {
     async function fetchSession() {
-      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
+      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
       if (res.ok) {
         const session = await res.json();
         console.log('Session:', session);
         setUser(session);  // Save session data to state
       } else {
         console.log('Not logged in');
-        window.location.href = '/app/cas-login.php';  // Redirect to CAS login
+        window.location.href = '/cas-login.php';  // Redirect to CAS login
       }
     }
 
@@ -73,7 +73,7 @@ export default function Home() {
   const addStudent = () => {
     if (!newStudent.name.trim()) return;
 
-    fetch(apiUrl, {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newStudent)
