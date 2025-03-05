@@ -110,6 +110,30 @@ export default function Home() {
         return '#FF7556';
     }
   };
+
+  // CSV Upload Handling
+  const handleCSVUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("csvFile", file);
+
+    fetch("/app/admin/upload.php.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("CSV uploaded and processed successfully!");
+          // Refresh data if necessary
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(error => console.error("Upload failed", error));
+  };
   
 
   return (
@@ -438,6 +462,23 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* CSV Upload Section */}
+      <div className="m-10">
+        <input 
+          type="file" 
+          id="csvFileInput" 
+          accept=".csv" 
+          style={{ display: "none" }} 
+          onChange={handleCSVUpload} 
+        />
+        <Button
+          className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+          onClick={() => document.getElementById("csvFileInput").click()}
+        >
+          Upload CSV
+        </Button>
+      </div>
     </div>
   );
 }
