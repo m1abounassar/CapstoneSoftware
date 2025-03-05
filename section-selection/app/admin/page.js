@@ -15,9 +15,6 @@ export default function Home() {
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
-  const protocol = window.location.protocol === "https:" ? "https://" : "http://";
-  const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
-
   // Fetch user session on load
   useEffect(() => {
     async function fetchSession() {
@@ -45,7 +42,7 @@ export default function Home() {
 
   // Fetch sections data from PHP API
   useEffect(() => {
-    fetch(apiUrl)
+    fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
       .then(data => setSections(data.sections))
       .catch(error => console.error("Error loading sections:", error));
@@ -59,7 +56,7 @@ export default function Home() {
   const addOrUpdateSection = () => {
     if (!newSection.title.trim()) return;
 
-    fetch(apiUrl, {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSection)
