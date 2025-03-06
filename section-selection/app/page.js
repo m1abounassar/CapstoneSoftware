@@ -24,27 +24,7 @@ export default function Home() {
 
     let valid = true;
     let newErrors = { email: '', gtid: '' };
-
-    const gtidPattern = /^90\d{7}$/;
-    if (!gtidPattern.test(gtid)) {
-        newErrors.gtid = "GTID must be exactly 9 digits and start with '90'.";
-        valid = false;
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@gatech\.edu$/;
-    if (!emailPattern.test(email)) {
-        newErrors.email = "Email must be a valid Georgia Tech email (@gatech.edu).";
-        valid = false;
-    }
-
-    if (isAdmin && !adminCode.trim()) {
-        valid = false;
-        newErrors.adminCode = "Admin code is required.";
-    }
-
-    setError(newErrors);
-    if (!valid) return;
-
+    
     // Determine the redirect path based on role
     const redirectPath = isAdmin ? '/admin' : '/student';
 
@@ -61,7 +41,6 @@ export default function Home() {
 };
 
 
-
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
@@ -69,7 +48,7 @@ export default function Home() {
         <span className='pt-0 pb-4 pl-1 text-5xl font-mono font-bold text-[#232323] justify-self-center'> Team Sync</span>
       </div>
 
-      <div className="flex place-content-center mt-10">
+      <div className="flex place-content-center mt-20">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,12 +57,12 @@ export default function Home() {
         >
           <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
             <div className='text-center space-y-2'>
-              <h1 className='text-2xl font-bold'>Enter your GT Email and ID</h1>
+              <h1 className='text-2xl font-bold'>Select Your Account Type</h1>
               <hr className="rounded-sm border-[#6E5F33] border-1" />
             </div>
 
             <form className='space-y-4' onSubmit={handleSubmit}>
-              <div className='space-y-2'>
+              {/* <div className='space-y-2'>
                 <Label htmlFor="email">GT Email:</Label>
                 <Input
                   id="email"
@@ -94,9 +73,9 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
-              </div>
+              </div> */}
 
-              <div className='space-y-2'>
+              {/* <div className='space-y-2'>
                 <Label htmlFor="gtid">GTID:</Label>
                 <Input
                   id="gtid"
@@ -107,18 +86,18 @@ export default function Home() {
                   required
                   className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                 />
-              </div>
+              </div> */}
 
-              <div className='space-y-2'>
+              {/* <div className='space-y-2'>
                 <CheckBox
                   label="Admin"
                   value={isAdmin}
                   onChange={() => setIsAdmin(!isAdmin)}
   
                 />
-              </div>
+              </div> */}
 
-              {isAdmin && (
+              {/* {isAdmin && (
                 <div className='space-y-2'>
                   <Label htmlFor="adminCode">Admin Code:</Label>
                   <Input
@@ -131,14 +110,25 @@ export default function Home() {
                     className="bg-[#E5E2D3] border-[#A5925A] border-2 rounded-3xl pt-5 pb-5"
                   />
                 </div>
-              )}
+              )} */}
 
               <div className="text-center">
                 <Button
                   type="submit"
-                  className="bg-[#003056] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
+                  className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
                 >
-                  Submit
+                  Student
+                </Button>
+              </div>
+
+              <div className="text-center">
+                <Button
+                  type="submit"
+                  className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
+                  // value={isAdmin}
+                  onClick={() => setIsAdmin(!isAdmin)}
+                >
+                  Admin
                 </Button>
               </div>
             </form>
