@@ -55,34 +55,15 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md"
         >
-          <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-10 space-y-6'>
+          <div className='bg-[#FFFEF8] w-auto opacity-70 border-[#6E5F33] border-4 rounded-2xl p-5 space-y-6'>
             <div className='text-center space-y-2'>
-              <h1 className='text-2xl font-bold'>Select Your Account Type</h1>
+              <h1 className='text-2xl font-bold'>Your Account is Not Recognized</h1>
               <hr className="rounded-sm border-[#6E5F33] border-1" />
             </div>
 
-            <form className='space-y-4' onSubmit={handleSubmit}>
-
-              <div className="text-center">
-                <Button
-                  type="submit"
-                  className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
-                >
-                  Student
-                </Button>
-              </div>
-
-              <div className="text-center">
-                <Button
-                  type="submit"
-                  className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
-                  // value={isAdmin}
-                  onClick={() => setIsAdmin(!isAdmin)}
-                >
-                  Admin
-                </Button>
-              </div>
-            </form>
+            <div className='space-y-2'>
+              <p className="text - l font-sans"> Please contact Ronnie Howard (rhoward46@gatech.edu) to be added to Team Sync. </p>
+            </div>
           </div>
         </motion.div>
       </div>
