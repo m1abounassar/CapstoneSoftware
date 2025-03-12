@@ -52,9 +52,21 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
+      <div className='grid grid-cols-4 gap-10 m-10'>
+        {/* Student Status bar */}
+        <div className='col-span-3'>
+          <div className='px-8 py-2 lg:py-4 text-black text-sm sm:text-s font-bold'> STUDENT MODE   |   You have not yet submitted your section preferences. The deadline to do so is 12/05/2025. </div>
+        </div>
+        {/* Leave Team button */}
+        <div className='flex flex-col space-y-2'>
+          {/* THIS IS A PLACEHOLDER BECAUSE I DON'T KNOW HOW TO NAVIGATE TO THE NEXT PAGE */}
+          {/* ALSO WE DON'T EVEN HAVE A NEXT PAGE TO NAVIGATE TO YET */}
+          <button onClick={() => moveUp(index)} className='font-bold text-lg bg-[#A5925A] px-3 py-2 rounded'>Leave Team</button>
+        </div>
+      </div>
       <div className='grid grid-cols-3 gap-10 m-10'>
         {/* Sections Panel */}
-        <div className='col-span-2'>
+        <div className='col-span-1'>
           <div className='bg-[#003056] w-full h-min rounded-3xl'>
             <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
             <div className='bg-[#E6E6E6] h-full w-full rounded-3xl px-6 py-4 border-5 border-[#003056]'>
@@ -70,14 +82,99 @@ export default function Home() {
         </div>
 
 
-        {/* Team Members Panel */}
-        <div className='col-span-1'>
-          <div className='bg-[#003056] w-full h-min rounded-3xl'>
-            <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Members</div>
-            <div className='bg-[#E6E6E6] h-full w-full rounded-3xl px-6 py-4 border-5 border-[#003056]'>
-              <p className='text-center text-gray-700'>No team members added yet.</p>
+        {/* Team Info Panel */}
+        <div className='col-span-2'>
+          <div className='bg-[#f0f0f0] w-full h-min rounded-3xl'>
+            <div className='px-8 py-2 lg:py-4 text-[#003056] text-lg lg:text-3xl font-bold'>Team Info - 4317</div>
+            <div className='bg-[#f0f0f0] h-full w-full rounded-3xl px-6 py-4 border-5 border-[#003056]'>
+              <p className='text-left text-gray-700 font-bold'>Team Section Preferences</p>
             </div>
-
+            <div className='grid grid-cols-4 gap-10'>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>You</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-[#FF7556] rounded-full align-center'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full align-center'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full align-center'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>Esha Singh</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-[#FF7556] rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>Jace Walden</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>Shane Mays</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-[#FF7556] rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-[#FFC943] rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>Cindy Kwok</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700'>Matthew Abernathy</p>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-[#FFC943] rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                <div className='w-6 h-6 bg-green-300 rounded-full'></div>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-right text-gray-700 m-4'>placeholdertext</p>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-left text-gray-700 m-4'>Section A</p>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-left text-gray-700 m-4'>Section B</p>
+              </div>
+              <div className='cols-span-1'>
+                  <p className='text-left text-gray-700 m-4'>Section C</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
