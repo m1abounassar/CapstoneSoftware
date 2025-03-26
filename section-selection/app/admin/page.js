@@ -21,7 +21,7 @@ export default function Home() {
   // comment out function below to use local hosting
   useEffect(() => {
     async function fetchSession() {
-      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
+      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
       if (res.ok) {
         const session = await res.json();
         console.log('Session:', session);
