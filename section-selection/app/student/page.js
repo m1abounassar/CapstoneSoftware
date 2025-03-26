@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function Section({ section, index, moveUp, moveDown }) {
   return (
@@ -19,11 +19,14 @@ function Section({ section, index, moveUp, moveDown }) {
 }
 
 export default function Home() {
-  const [sections, setSections] = useState([
-    { id: 1, title: 'Section A', time: '10:00 AM', capacity: '30' },
-    { id: 2, title: 'Section B', time: '11:00 AM', capacity: '25' },
-    { id: 3, title: 'Section C', time: '12:00 PM', capacity: '20' }
-  ]);
+  const [sections, setSections] = useState([]);
+
+  useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php")
+      .then(response => response.json())
+      .then(data => setSections(data.sections))
+      .catch(error => console.error('Error fetching sections:', error));
+  }, []);
 
   const moveUp = (index) => {
     if (index === 0) return;
@@ -41,7 +44,6 @@ export default function Home() {
 
   return (
     <div className='min-h-screen bg-[#E5E2D3] font-mono'>
-      {/* Header */}
       <div className='bg-[#A5925A] grid grid-cols-3 w-681'>
         <div className='p-4 text-lg lg:text-2xl font-sans font-normal w-max text-[#003056]'>
           Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-sans font-bold text-[#232323]'> Team Sync</span>
@@ -79,6 +81,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+
 
 
         {/* Team Info Panel */}
