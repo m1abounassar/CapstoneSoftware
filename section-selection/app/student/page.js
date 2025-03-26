@@ -5,7 +5,6 @@ function Section({ section, index, moveUp, moveDown }) {
   return (
     <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
       <div className='flex items-center space-x-4'>
-        <div className='w-6 h-6 bg-green-300 rounded-full'></div>
         <div>
           <p className='font-bold'>{section.title}</p>
           <div className='text-sm mt-1'>{section.time} | {section.capacity}</div>
@@ -163,7 +162,7 @@ export default function Home() {
                 <div className='w-6 h-6 bg-green-300 rounded-full'></div>
               </div>
               <div className='cols-span-1'>
-                  <p className='text-right text-gray-700 m-4'>placeholdertext</p>
+                  <p className='text-right text-gray-700 m-4'>Sections:</p>
               </div>
               <div className='cols-span-1'>
                   <p className='text-left text-gray-700 m-4'>Section A</p>
