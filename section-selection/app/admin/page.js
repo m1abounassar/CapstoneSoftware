@@ -15,10 +15,13 @@ export default function Home() {
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
-  // Fetch user session on load
+  const protocol = window.location.protocol === "https:" ? "https://" : "http://";
+  const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
+
+  // comment out function below to use local hosting
   useEffect(() => {
     async function fetchSession() {
-      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
+      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
       if (res.ok) {
         const session = await res.json();
         console.log('Session:', session);

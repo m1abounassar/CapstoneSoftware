@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckBox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -25,19 +24,21 @@ export default function Home() {
     let valid = true;
     let newErrors = { email: '', gtid: '' };
     
-    // Determine the redirect path based on role
     const redirectPath = isAdmin ? '/admin' : '/student';
 
-    // Build query params (can also send adminCode if needed for future logic)
-    const params = new URLSearchParams({
-        email,
-        gtid,
-        redirect: redirectPath,
-        ...(isAdmin && { adminCode }) // optional, if you want to pass adminCode too
-    });
+    // const params = new URLSearchParams({      // comment out this line to use local hosting
+    //     email,      // comment out this line to use local hosting
+    //     gtid,      // comment out this line to use local hosting
+    //     redirect: redirectPath,      // comment out this line to use local hosting
+    //     ...(isAdmin && { adminCode })      // comment out this line to use local hosting
+    // });      // comment out this line to use local hosting
 
-    // Redirect to the PHP CAS login handler
-    window.location.href = `/app/api/auth/cas-login.php?${params.toString()}`;
+    // window.location.href = `/cas-login.php?${params.toString()}`;      // comment out this line to use local hosting
+
+    // uncomment line below to use local hosting
+    router.push(redirectPath); 
+
+
 };
 
 
@@ -62,8 +63,7 @@ export default function Home() {
             </div>
 
             <form className='space-y-4' onSubmit={handleSubmit}>
-
-              <div className="text-center">
+            <div className="text-center">
                 <Button
                   type="submit"
                   className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
@@ -71,7 +71,6 @@ export default function Home() {
                   Student
                 </Button>
               </div>
-
               <div className="text-center">
                 <Button
                   type="submit"
