@@ -15,7 +15,12 @@ export default function Home() {
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
 
-  const protocol = window.location.protocol === "https:" ? "https://" : "http://";
+  const [protocol, setProtocol] = useState("http://");
+
+  useEffect(() => {
+    setProtocol(window.location.protocol === "https:" ? "https://" : "http://");
+  }, []);
+  
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
