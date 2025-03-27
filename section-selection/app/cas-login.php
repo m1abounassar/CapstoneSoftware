@@ -25,7 +25,7 @@ if (!isset($_GET['ticket'])) {
 
 // Validate CAS ticket
 $ticket = $_GET['ticket'];
-$casValidateUrl = "https://login.gatech.edu/cas/p3/serviceValidate?service=" . urlencode(CAS_SERVICE) . "&ticket=" . urlencode($ticket);
+$casValidateUrl = "https://login.gatech.edu/cas/p3/serviceValidate?service=" . urlencode($serviceUrl) . "&ticket=" . urlencode($ticket);
 
 $response = file_get_contents($casValidateUrl);
 
