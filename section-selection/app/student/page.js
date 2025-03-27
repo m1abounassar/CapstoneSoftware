@@ -1,6 +1,38 @@
 'use client'
 import { useState, useEffect } from 'react';
 
+export default function Home() {
+  const [teams, setTeams] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
+  const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
+  const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+  const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
+  const [rotate, setRotate] = useState(false);
+  const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
+  const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
+  const [rotatedTeams, setRotatedTeams] = useState(new Set());
+  const [user, setUser] = useState(null); // NEW: Store user info from CAS session
+
+  const [protocol, setProtocol] = useState("http://");
+  useEffect(() => {
+      async function fetchSession() {
+        const res = await fetch('/api/auth/session.php');  // Adjust path if needed
+        if (res.ok) {
+          const session = await res.json();
+          console.log('Session:', session);
+          setUser(session);  // Save session data to state
+        } else {
+          console.log('Not logged in');
+          window.location.href = '/cas-admin.php';  // Redirect to CAS login
+        }
+      }
+  
+      fetchSession();
+    }, []);
+}
+
+
 function Section({ section, index, moveUp, moveDown }) {
   return (
     <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
