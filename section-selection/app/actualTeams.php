@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT * FROM students";
+    $sql = "SELECT * FROM teams";
     $result = $conn->query($sql);
     
     $teams = [];
