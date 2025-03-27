@@ -57,8 +57,13 @@ if (preg_match('/<cas:user>(.*?)<\/cas:user>/', $response, $matches)) {
     exit;
 } else {
     // Log error if parsing CAS response failed
-    error_log("CAS Auth Failed. Response: " . $response);
+    // error_log("CAS Auth Failed. Response: " . $response);
 
-    echo "CAS authentication failed.";
+    // echo "CAS authentication failed.";
+
+    echo "CAS Redirect URL: " . $casLoginUrl . "<br>";
+    echo "CAS Validation URL: " . $casValidateUrl . "<br>";
+
+
     exit;
 }
