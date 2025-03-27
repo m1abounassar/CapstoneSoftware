@@ -24,7 +24,7 @@ export default function Home() {
           setUser(session);  // Save session data to state
         } else {
           console.log('Not logged in');
-          window.location.href = '/cas-admin.php';  // Redirect to CAS login
+          window.location.href = '/cas-student.php';  // Redirect to CAS login
         }
       }
   
