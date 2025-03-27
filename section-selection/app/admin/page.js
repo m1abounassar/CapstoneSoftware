@@ -9,7 +9,6 @@ export default function Home() {
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
   const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
-  const [rotate, setRotate] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
@@ -18,17 +17,17 @@ export default function Home() {
   const protocol = window.location.protocol === "https:" ? "https://" : "http://";
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
-  // Fetch user session on load
+  // comment out function below to use local hosting
   useEffect(() => {
     async function fetchSession() {
-      const res = await fetch('/app/api/auth/session.php');  // Adjust path if needed
+      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
       if (res.ok) {
         const session = await res.json();
         console.log('Session:', session);
         setUser(session);  // Save session data to state
       } else {
         console.log('Not logged in');
-        window.location.href = '/app/cas-login.php';  // Redirect to CAS login
+        window.location.href = '/cas-admin.php';  // Redirect to CAS login
       }
     }
 
@@ -116,11 +115,16 @@ export default function Home() {
   
 
   return (
-    <div className='min-h-screen bg-[#E5E2D3] font-mono'>
-      <div className='bg-[#A5925A] grid grid-cols-3 w-screen'>
+    <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
+      <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center'>
         <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
         <div></div>
-        <div className='p-5 text-sm lg:text-lg justify-self-end text-[#003056]'>Admin Name</div>
+        <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+          
+          <div>Admin</div>
+          <div className='hover:text-[#2b6b9e] hover:cursor-pointer text-xl lg:text-2xl p-0 pb-1'>☰</div>
+
+        </div>
       </div>
 
       {/* Body */}
@@ -183,11 +187,15 @@ export default function Home() {
               <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3 border-5 border-[#003056]'>
                 {sections.length > 0 ? (
                   sections.map((section) => (
-                    <div key={section.id} className='p-3 bg-white rounded-md my-2 shadow-sm'>
-                      <p className='font-bold'>{section.title}</p>
+                    <div key={section.id} className='p-3 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg'>
+                      <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
+                        <div className='font-bold w-auto'>{section.title}</div>
+                        <div className='mr-10'>- {section.time}</div>
+
+                      </div>
                       <div className='flex'>
-                        <div className='text-sm mr-10'>{section.time}</div>
-                        <div className='text-sm'>{section.capacity}</div>
+                        
+                        <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
                       </div>
                     </div>
                   ))
