@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config.php';
+require 'config-student.php';
 
 // Capture initial query parameters (sent from Next.js page.js)
 $email = isset($_GET['email']) ? $_GET['email'] : '';
