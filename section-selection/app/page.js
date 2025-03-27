@@ -25,17 +25,6 @@ export default function Home() {
     let newErrors = { email: '', gtid: '' };
     
     const redirectPath = isAdmin ? '/admin' : '/student';
-
-    // const params = new URLSearchParams({      // comment out this line to use local hosting
-    //     email,      // comment out this line to use local hosting
-    //     gtid,      // comment out this line to use local hosting
-    //     redirect: redirectPath,      // comment out this line to use local hosting
-    //     ...(isAdmin && { adminCode })      // comment out this line to use local hosting
-    // });      // comment out this line to use local hosting
-
-    // window.location.href = `/cas-login.php?${params.toString()}`;      // comment out this line to use local hosting
-
-    // uncomment line below to use local hosting
     router.push(redirectPath); 
 
 
