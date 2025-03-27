@@ -23,11 +23,41 @@ export default function Home() {
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
+      .then(response => response.json())
+      .then(({ loggedIn, username }) => {
+        if (loggedIn === "true" && username) {
+          checkAndAddUser(username);
+        }
+      })
+      .catch(error => console.error('Error fetching session:', error));
+
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
+
+  const checkAndAddUser = async (username) => {
+    try {
+      const checkResponse = await fetch("https://jdregistration.sci.gatech.edu/teams.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "checkUser", username })
+      });
+      const checkData = await checkResponse.json();
+
+      if (!checkData.exists) {
+        await fetch("https://jdregistration.sci.gatech.edu/teams.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "addUser", username })
+        });
+      }
+    } catch (error) {
+      console.error("Error checking or adding user:", error);
+    }
+  };
 
   const moveUp = (index) => {
     if (index === 0) return;
