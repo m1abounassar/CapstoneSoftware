@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'config.php';
+require 'config-student.php';
 
 // Capture initial query parameters (sent from Next.js page.js)
 $email = isset($_GET['email']) ? $_GET['email'] : '';
@@ -18,14 +18,32 @@ if (!isset($_GET['ticket'])) {
         'redirect' => $redirect,
     ]);
 
+    // Store the service URL in the session to use it after CAS validation
+    $_SESSION['service_url'] = $serviceUrl;
+
+    // Construct the CAS login URL
     $casLoginUrl = "https://login.gatech.edu/cas/login?service=" . urlencode($serviceUrl);
+
+    // Debugging: Output the constructed CAS login URL (optional)
+    // echo "CAS Login URL: " . $casLoginUrl . "<br>";
+
+    // Redirect to CAS login
     header("Location: $casLoginUrl");
     exit;
 }
 
 // Validate CAS ticket
 $ticket = $_GET['ticket'];
-$casValidateUrl = "https://login.gatech.edu/cas/p3/serviceValidate?service=" . urlencode(CAS_SERVICE) . "&ticket=" . urlencode($ticket);
+// Get the service URL from the session
+$serviceUrl = isset($_SESSION['service_url']) ? $_SESSION['service_url'] : CAS_SERVICE;
+
+// Make sure we have a valid service URL
+if (!$serviceUrl) {
+    echo "Service URL is missing.";
+    exit;
+}
+
+$casValidateUrl = "https://login.gatech.edu/cas/p3/serviceValidate?service=" . urlencode($serviceUrl) . "&ticket=" . urlencode($ticket);
 
 $response = file_get_contents($casValidateUrl);
 
@@ -59,6 +77,9 @@ if (preg_match('/<cas:user>(.*?)<\/cas:user>/', $response, $matches)) {
     // Log error if parsing CAS response failed
     error_log("CAS Auth Failed. Response: " . $response);
 
-    echo "CAS authentication failed.";
+    echo "CAS authentication failed.<br>";
+    echo "CAS Redirect URL: " . $casLoginUrl . "<br>";
+    echo "CAS Validation URL: " . $casValidateUrl . "<br>";
+
     exit;
 }
