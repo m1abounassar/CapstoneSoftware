@@ -15,6 +15,18 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $sql = "SELECT * FROM students";
+    $result = $conn->query($sql);
+
+    $students = [];
+    while ($row = $result->fetch_assoc()) {
+        $students[] = $row;
+    }
+
+    echo json_encode(["students" => $students]);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
