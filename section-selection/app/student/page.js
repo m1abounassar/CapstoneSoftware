@@ -8,32 +8,26 @@ export default function Home() {
   const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
   const [username, setUsername] = useState([]);
-  const [name, setName] = useState([]);
+  const [name, setName] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   
 
   useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
-      .then(response => response.json())
-      .then(({ loggedIn, username }) => {
-        if (loggedIn === "true" && username) {
-          checkAndAddUser(username);
-        }
-      })
-      .catch(error => console.error('Error fetching session:', error));
-
       async function fetchSession() {
-        const res = await fetch('/api/auth/session.php');  // Adjust path if needed
+        const res = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");  // Adjust path if needed
         if (res.ok) {
           const session = await res.json();
           console.log('Session:', session);
-          setUser(session);  // Save session data to state
+          if (session.loggedIn === 'true') {
+            setUsername(session.username);
+          } else {
+            window.location.href = '/cas-student.php';
+          }
         } else {
-          console.log('Not logged in');
-          window.location.href = '/cas-student.php';  // Redirect to CAS login
+          window.location.href = '/cas-student.php';
         }
       }
-  
+
       fetchSession();
     }, []);
 
@@ -53,45 +47,30 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      // Fetch session data to get 'curr'
-      const sessionResponse = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-      const sessionData = await sessionResponse.json();
-      setUsername(sessionData.username);
-
-      if (!username) {
-        console.error('No username found in session data');
-        return; // If no username is found, exit early.
-      }
-
-      // Now fetch the students data using the username (curr)
-      const studentsResponse = await fetch('https://jdregistration.sci.gatech.edu/students.php');
-      const studentsData = await studentsResponse.json();
-
-      if (studentsData.students) {
-        // Find the student with the matching username
-        const matchedStudent = studentsData.students.find(student => student.username === username);
-
-        console.log(matchedStudent ? matchedStudent.name : 'Student not found', username);
-        console.log(matchedStudent.name);
-
-        if (matchedStudent) {
-          setName(matchedStudent.name);
-          console.log("2");
+    const fetchData = async () => {
+        const studentsResponse = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+        const studentsData = await studentsResponse.json();
+  
+        if (studentsData.students) {
+          // Find the student with the matching username
+          const matchedStudent = studentsData.students.find(student => student.username === username);
+  
+          console.log(matchedStudent ? matchedStudent.name : 'Student not found');
+          console.log(matchedStudent.name);
+  
+          if (matchedStudent) {
+            setName(matchedStudent.name);
+          } else {
+            window.location.href = '/notFound';
+          }
         } else {
-          window.location.href = '/notFound';
+          console.error("Unexpected data format: ", studentsData);
         }
-      } else {
-        console.error("Unexpected data format: ", studentsData);
-      }
-    } catch (error) {
-      console.error('Error during fetch operations:', error);
-    }
-  };
 
-  fetchData();
-}, []);
+    };
+  
+    fetchData();
+  }, []);
 
   const handlePriorityChange = (index, newValue) => {
     setPriorities((prev) => ({
