@@ -23,21 +23,21 @@ export default function Home() {
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
-  useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-      if (res.ok) {
-        const session = await res.json();
-        console.log('Session:', session);
-        setUser(session);  // Save session data to state
-      } else {
-        console.log('Not logged in');
-        window.location.href = '/cas-admin.php';  // Redirect to CAS login
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchSession() {
+  //     const res = await fetch('/api/auth/session.php');  // Adjust path if needed
+  //     if (res.ok) {
+  //       const session = await res.json();
+  //       console.log('Session:', session);
+  //       setUser(session);  // Save session data to state
+  //     } else {
+  //       console.log('Not logged in');
+  //       window.location.href = '/cas-admin.php';  // Redirect to CAS login
+  //     }
+  //   }
 
-    fetchSession();
-  }, []);
+  //   fetchSession();
+  // }, []);
 
   // Fetch teams data (If we also move teams to a PHP API, update this)
   useEffect(() => {
