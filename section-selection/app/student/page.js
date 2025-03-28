@@ -78,9 +78,7 @@ export default function Home() {
         if (matchedStudent) {
           setName(matchedStudent.name);
         } else {
-          setName("else");
-          // Optional: Uncomment this if you want to redirect in case the student is not found.
-          // window.location.href = '/notFound';
+          window.location.href = '/notFound';
         }
       } else {
         console.error("Unexpected data format: ", studentsData);
