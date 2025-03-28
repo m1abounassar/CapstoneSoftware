@@ -3,21 +3,28 @@ import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
 import { DropdownTwo } from "@/components/ui/dropdown2";
 
-function Section({ section, index, onPriorityChange }) {
-  const [priority, setPriority] = useState("3"); // Default priority
-
-  const handlePriorityChange = (newValue) => {
-    setPriority(newValue);
-    onPriorityChange(index, newValue);
-  };
-
+function Section({ section, index, moveUp, moveDown }) {
+  return (
+    <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
+      <div className='flex items-center space-x-4'>
+        <div>
+          <p className='font-bold'>{section.title}</p>
+          <div className='text-sm mt-1'>{section.time} | {section.capacity}</div>
+        </div>
+      </div>
+      <div className='flex flex-col space-y-2'>
+        <button onClick={() => moveUp(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▲</button>
+        <button onClick={() => moveDown(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▼</button>
+      </div>
+    </div>
+  );
 }
 
 export default function Home() {
   const [sections, setSections] = useState([]);
   const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
-  const [curr, setCurr] = useState([]);
+  const [username, setUsername] = useState([]);
   const [name, setName] = useState([]);
   
 
@@ -61,13 +68,13 @@ export default function Home() {
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch session data to get 'curr'
+        // Fetch session data to get 'username'
         const sessionResponse = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
         const sessionData = await sessionResponse.json();
-        const username = sessionData.username;
+        setUsername(sessionData.username);
   
         if (!username) {
           console.error('No username found in session data');
@@ -83,6 +90,7 @@ export default function Home() {
           const matchedStudent = studentsData.students.find(student => student.username === username);
   
           console.log(matchedStudent ? matchedStudent.name : 'Student not found');
+          console.log(matchedStudent.name);
   
           if (matchedStudent) {
             setName(matchedStudent.name);
@@ -98,8 +106,7 @@ export default function Home() {
     };
   
     fetchData();
-  }, []); 
-
+  }, []);
 
 
 const handlePriorityChange = (index, newValue) => {
@@ -110,134 +117,134 @@ const handlePriorityChange = (index, newValue) => {
 };
 
 
-  return (
-    <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
+return (
+  <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
-        <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
-              <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
-                Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
-              </div>
-              <div></div>
-              <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
-                
-                <div>{name}</div>
-    
-                <DropdownTwo/>
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
+            <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
+              Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
+            </div>
+            <div></div>
+            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+              
+              <div>{name}</div>
+  
+              <DropdownTwo/>
 
-              </div>
-          
-        </div>
-
-
-
-        {/* Below Header */}
-        <div className='grid grid-rows-14 gap-8 h-[100%] m-10 mb-15'>
-
-            {/* Panels */}
-            <div className='row-span-12 grid grid-cols-5 gap-10'>
+            </div>
+        
+      </div>
 
 
 
-                {/* Sections */}
-                <div className='col-span-2 bg-[#003056] h-[100%] rounded-3xl flex flex-col'>
+      {/* Below Header */}
+      <div className='grid grid-rows-14 gap-8 h-[100%] m-10 mb-15'>
 
-                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
-
-
-                    <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                        {sections.length > 0 ? (
-                          sections.map((section) => (
-                            <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                              <div>
-                                  <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                                    <div className='font-bold w-auto'>{section.title}</div>
-                                    <div className='mr-10'>- {section.time}</div>
-
-                                  </div>
-                                  <div className='flex'>
-                                    
-                                    <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
-                                  </div>
-                              </div>
+          {/* Panels */}
+          <div className='row-span-12 grid grid-cols-5 gap-10'>
 
 
-                              <Dropdown/>
+
+              {/* Sections */}
+              <div className='col-span-2 bg-[#003056] h-[100%] rounded-3xl flex flex-col'>
+
+                  <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
 
 
+                  <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
+                      {sections.length > 0 ? (
+                        sections.map((section) => (
+                          <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                            <div>
+                                <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
+                                  <div className='font-bold w-auto'>{section.title}</div>
+                                  <div className='mr-10'>- {section.time}</div>
+
+                                </div>
+                                <div className='flex'>
+                                  
+                                  <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                                </div>
                             </div>
-                          ))
-                        ) : (
-                          <p>Loading sections...</p>
-                        )}
-
-                    </div>
 
 
-                </div>
+                            <Dropdown/>
 
 
-                {/* Team */}
-                <div className='col-span-3 bg-[#003056] rounded-3xl h-[100%] flex flex-col'>
+                          </div>
+                        ))
+                      ) : (
+                        <p>Loading sections...</p>
+                      )}
 
-                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
-
-                    <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                        {teams.length > 0 ? (
-                              teams.map((team) => (
-                                <div key={team.name}>
-
-                                    <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
-
-                                      <div className='font-bold text-nowrap'>Team {team.name} - </div>
-
-                                      <div className=' ml-1 text-nowrap'>{team.projectName}</div>
-
-                                      <div className='flex w-full justify-end'>
-                                        <div className='font-bold'>Client:</div>
-                                        <div className='ml-1'>{team.clientName}</div>
-                                      </div>
+                  </div>
 
 
+              </div>
+
+
+              {/* Team */}
+              <div className='col-span-3 bg-[#003056] rounded-3xl h-[100%] flex flex-col'>
+
+                  <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
+
+                  <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
+                      {teams.length > 0 ? (
+                            teams.map((team) => (
+                              <div key={team.name}>
+
+                                  <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
+
+                                    <div className='font-bold text-nowrap'>Team {team.name} - </div>
+
+                                    <div className=' ml-1 text-nowrap'>{team.projectName}</div>
+
+                                    <div className='flex w-full justify-end'>
+                                      <div className='font-bold'>Client:</div>
+                                      <div className='ml-1'>{team.clientName}</div>
                                     </div>
 
 
+                                  </div>
 
-                                    
+
+
                                   
-                                </div>
-                              ))
-                            ) : (
-                              <p>Loading team...</p>
-                            )
-                        }
-                    </div>
+                                
+                              </div>
+                            ))
+                          ) : (
+                            <p>Loading team...</p>
+                          )
+                      }
+                  </div>
 
 
-                </div>
+              </div>
 
-            </div>
-
-
-
-      
-
-            {/* Buttons */}
-            <div className='row-span-1 grid grid-cols-10'>
-
-
-                <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Save Preferences</button>
-
-                <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
-
-
-            </div>
+          </div>
 
 
 
-          
-        </div>
+    
+
+          {/* Buttons */}
+          <div className='row-span-1 grid grid-cols-10'>
 
 
-    </div>
+              <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Save Preferences</button>
+
+              <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
+
+
+          </div>
+
+
+
+        
+      </div>
+
+
+  </div>
   );
 }
