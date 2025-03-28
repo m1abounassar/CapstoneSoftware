@@ -15,31 +15,20 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT * FROM students";
-    $result = $conn->query($sql);
-    
-    $students = [];
-    while ($row = $result->fetch_assoc()) {
-        $students[] = $row;
-    }
-    echo json_encode(["students" => $students]);
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
-    if (isset($data['gtID'], $data['name'], $data['username'], $data['team'], $data['firstChoice'], $data['secondChoice'], $data['thirdChoice'])) {
-        $gtID = $conn->real_escape_string($data['gtID']);
-        $name = $conn->real_escape_string($data['name']);
+
+    if (isset($data['username'], $data['firstChoice'], $data['secondChoice'], $data['thirdChoice'])) {
         $username = $conn->real_escape_string($data['username']);
-        $team = $conn->real_escape_string($data['team']);
-        $firstChoice = $conn->real_escape_string($data['firstChoice']);
-        $secondChoice = $conn->real_escape_string($data['secondChoice']);
-        $thirdChoice = $conn->real_escape_string($data['thirdChoice']);
-        
-        $sql = "INSERT INTO students (gtID, name, username, team) VALUES ('$gtID', '$name', '$username', '$team')";
+        $firstChoice = json_encode($data['firstChoice']); // Encode array to JSON
+        $secondChoice = json_encode($data['secondChoice']); // Encode array to JSON
+        $thirdChoice = json_encode($data['thirdChoice']); // Encode array to JSON
+
+        // Update the student preferences in the database
+        $sql = "UPDATE students SET firstChoice='$firstChoice', secondChoice='$secondChoice', thirdChoice='$thirdChoice' WHERE username='$username'";
+
         if ($conn->query($sql) === TRUE) {
-            echo json_encode(["message" => "Student added successfully"]);
+            echo json_encode(["message" => "Preferences saved successfully"]);
         } else {
             echo json_encode(["error" => "Error: " . $conn->error]);
         }
