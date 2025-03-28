@@ -82,10 +82,10 @@ useEffect(() => {
         if (matchedStudent) {
           setName(matchedStudent.name);
         } else {
-           setName("else1");
+           window.location.href = '/studentNotFound';
         }
       } else {
-        setName("else2");
+        console.error("Unexpected data format: ", data);
       }
     })
     .catch(error => console.error('Error fetching students:', error));
