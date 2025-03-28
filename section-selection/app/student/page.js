@@ -21,30 +21,30 @@ export default function Home() {
   const [name, setName] = useState([]);
   
 
-  // useEffect(() => {
-  //   fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
-  //     .then(response => response.json())
-  //     .then(({ loggedIn, username }) => {
-  //       if (loggedIn === "true" && username) {
-  //         checkAndAddUser(username);
-  //       }
-  //     })
-  //     .catch(error => console.error('Error fetching session:', error));
+  useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
+      .then(response => response.json())
+      .then(({ loggedIn, username }) => {
+        if (loggedIn === "true" && username) {
+          checkAndAddUser(username);
+        }
+      })
+      .catch(error => console.error('Error fetching session:', error));
 
-  //     async function fetchSession() {
-  //       const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-  //       if (res.ok) {
-  //         const session = await res.json();
-  //         console.log('Session:', session);
-  //         setUser(session);  // Save session data to state
-  //       } else {
-  //         console.log('Not logged in');
-  //         window.location.href = '/cas-student.php';  // Redirect to CAS login
-  //       }
-  //     }
+      async function fetchSession() {
+        const res = await fetch('/api/auth/session.php');  // Adjust path if needed
+        if (res.ok) {
+          const session = await res.json();
+          console.log('Session:', session);
+          setUser(session);  // Save session data to state
+        } else {
+          console.log('Not logged in');
+          window.location.href = '/cas-student.php';  // Redirect to CAS login
+        }
+      }
   
-  //     fetchSession();
-  //   }, []);
+      fetchSession();
+    }, []);
 
 
   useEffect(() => {
@@ -80,8 +80,7 @@ useEffect(() => {
           setName(matchedStudent.name);
         } else {
           setName("else");
-          //  window.location.href = '/notFound'; 
-           window.location.href = '/notFound';
+          //window.location.href = '/notFound';
         }
       } else {
         console.error("Unexpected data format: ", data);
