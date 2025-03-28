@@ -58,7 +58,7 @@ export default function Home() {
       // Fetch session data to get 'curr'
       const sessionResponse = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
       const sessionData = await sessionResponse.json();
-      const username = sessionData.username;
+      setUsername(sessionData.username);
 
       if (!username) {
         console.error('No username found in session data');
