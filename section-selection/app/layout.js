@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GT Section Selection",
+  title: "GT Team Sync",
   description: "Find your team's ideal section",
 };
 
