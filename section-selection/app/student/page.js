@@ -70,7 +70,7 @@ export default function Home() {
     };
   
     fetchData();
-  }, []);
+  }, [username]);
 
   const handlePriorityChange = (index, newValue) => {
     setPriorities((prev) => ({
