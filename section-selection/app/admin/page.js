@@ -126,7 +126,7 @@ export default function Home() {
     const formData = new FormData();
     formData.append("csvFile", file);
 
-    fetch("/app/admin/upload.php.php", {
+    fetch("/admin/upload.php", {
       method: "POST",
       body: formData,
     })
