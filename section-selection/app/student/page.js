@@ -7,8 +7,8 @@ export default function Home() {
   const [sections, setSections] = useState([]);
   const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
-  const [username, setUsername] = useState([]);
-  const [name, setName] = useState([]);
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   
 
