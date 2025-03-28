@@ -22,6 +22,7 @@ export default function Home() {
   const [sections, setSections] = useState([]);
   const [teams, setTeams] = useState([]);
   const [curr, setCurr] = useState([]);
+  const [name, setName] = useState([]);
 
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
@@ -70,6 +71,21 @@ export default function Home() {
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
 
+useEffect(() => {
+  fetch('/teams.php')
+    .then(response => response.json())
+    .then(data => {
+      if (data.students) {
+        // Example: Only include students who are in a team
+        const filteredStudents = data.students.filter(student => student.username === curr);
+        setName(student.name);
+      } else {
+        console.error("Unexpected data format: ", data);
+      }
+    })
+    .catch(error => console.error('Error fetching students:', error));
+}, []);
+
 
   const moveUp = (index) => {
     if (index === 0) return;
@@ -96,7 +112,8 @@ export default function Home() {
               <div></div>
               <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
                 
-                <div>{curr}</div>
+                <div>{name}</div>
+    
                 <div className='hover:text-[#2b6b9e] hover:cursor-pointer text-xl lg:text-2xl p-0 pb-1'>☰</div>
 
               </div>
