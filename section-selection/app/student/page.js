@@ -74,9 +74,11 @@ export default function Home() {
         const matchedStudent = studentsData.students.find(student => student.username === username);
 
         console.log(matchedStudent ? matchedStudent.name : 'Student not found');
+        console.log(matchedStudent.name);
 
         if (matchedStudent) {
           setName(matchedStudent.name);
+          console.log("2");
         } else {
           window.location.href = '/notFound';
         }
