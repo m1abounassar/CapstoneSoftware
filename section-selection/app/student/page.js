@@ -81,7 +81,6 @@ useEffect(() => {
         } else {
           setName("else");
           //  window.location.href = '/notFound'; 
-           window.location.href = '/notFound';
         }
       } else {
         console.error("Unexpected data format: ", data);
