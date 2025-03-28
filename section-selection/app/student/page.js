@@ -53,44 +53,45 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch session data to get 'username'
-        const sessionResponse = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-        const sessionData = await sessionResponse.json();
-        setUsername(sessionData.username);
-  
-        if (!username) {
-          console.error('No username found in session data');
-          return; // If no username is found, exit early.
-        }
-  
-        // Now fetch the students data using the username (curr)
-        const studentsResponse = await fetch('https://jdregistration.sci.gatech.edu/students.php');
-        const studentsData = await studentsResponse.json();
-  
-        if (studentsData.students) {
-          // Find the student with the matching username
-          const matchedStudent = studentsData.students.find(student => student.username === username);
-  
-          console.log(matchedStudent ? matchedStudent.name : 'Student not found');
-          console.log(matchedStudent.name);
-  
-          if (matchedStudent) {
-            setName(matchedStudent.name);
-          } else {
-            window.location.href = '/notFound';
-          }
-        } else {
-          console.error("Unexpected data format: ", studentsData);
-        }
-      } catch (error) {
-        console.error('Error during fetch operations:', error);
+  const fetchData = async () => {
+    try {
+      // Fetch session data to get 'curr'
+      const sessionResponse = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+      const sessionData = await sessionResponse.json();
+      const username = sessionData.username;
+
+      if (!username) {
+        console.error('No username found in session data');
+        return; // If no username is found, exit early.
       }
-    };
-  
-    fetchData();
-  }, []);
+
+      // Now fetch the students data using the username (curr)
+      const studentsResponse = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+      const studentsData = await studentsResponse.json();
+
+      if (studentsData.students) {
+        // Find the student with the matching username
+        const matchedStudent = studentsData.students.find(student => student.username === username);
+
+        console.log(matchedStudent ? matchedStudent.name : 'Student not found');
+
+        if (matchedStudent) {
+          setName(matchedStudent.name);
+        } else {
+          setName("else");
+          // Optional: Uncomment this if you want to redirect in case the student is not found.
+          // window.location.href = '/notFound';
+        }
+      } else {
+        console.error("Unexpected data format: ", studentsData);
+      }
+    } catch (error) {
+      console.error('Error during fetch operations:', error);
+    }
+  };
+
+  fetchData();
+}, []);
 
   const handlePriorityChange = (index, newValue) => {
     setPriorities((prev) => ({
