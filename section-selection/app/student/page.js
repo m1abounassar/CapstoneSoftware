@@ -114,7 +114,7 @@ export default function Home() {
     };
 
     try {
-      const response = await fetch("path-to-your-php-endpoint.php", {
+      const response = await fetch("/students.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
