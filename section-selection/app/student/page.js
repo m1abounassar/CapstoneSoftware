@@ -76,15 +76,20 @@ useEffect(() => {
     .then(response => response.json())
     .then(data => {
       if (data.students) {
-        // Example: Only include students who are in a team
-        const filteredStudents = data.students.filter(student => student.username === curr);
-        setName(student.name);
+        // Find the student with the matching username
+        const matchedStudent = data.students.find(student => student.username === curr);
+
+        if (matchedStudent) {
+          setName(matchedStudent.name);
+        } else {
+           window.location.href = '/studentNotFound'; 
+        }
       } else {
         console.error("Unexpected data format: ", data);
       }
     })
     .catch(error => console.error('Error fetching students:', error));
-}, []);
+}, [curr]); 
 
 
   const moveUp = (index) => {
