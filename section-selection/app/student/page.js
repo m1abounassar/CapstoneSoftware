@@ -56,7 +56,7 @@ export default function Home() {
       <div className='grid grid-cols-4 gap-10 m-10'>
         {/* Student Status bar */}
         <div className='col-span-3'>
-          <div className='px-8 py-2 lg:py-4 text-black text-sm sm:text-s font-bold'> STUDENT MODE   |   You have not yet submitted your section preferences. The deadline to do so is 12/05/2025. </div>
+          <div className='px-8 py-2 lg:py-4 text-black text-sm sm:text-s font-bold'> STUDENT MODE   |   Submit your section preferences using the arrow buttons next to each section. </div>
         </div>
         {/* Leave Team button */}
         <div className='flex flex-col space-y-2'>
