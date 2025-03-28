@@ -1,35 +1,49 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const Dropdown = ({ value, onChange, className }) => {
-  const handleChange = (event) => {
+const colorMap = {
+  "1": "text-green-500",
+  "2": "text-yellow-500",
+  "3": "text-red-500",
+};
+
+const Dropdown = ({ value: propValue = "3", onChange, className }) => {
+  const [value, setValue] = React.useState(propValue); // Local state for color change
+  const [open, setOpen] = React.useState(false);
+
+  const handleSelect = (newValue) => {
+    setValue(newValue); // Update local state
     if (onChange) {
-      onChange(event.target.value);
+      onChange(newValue);
     }
+    setOpen(false);
   };
 
   return (
-    <div>
-      <select
-        value={value}
-        onChange={handleChange}
-        className={cn(
-          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          className
-        )}
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-center rounded-md border border-gray-300 bg-white px-2 shadow-sm transition-all focus:outline-none justify-self-end mr-5"
       >
-        <option value="1">8:25 - 9:15</option>
-        <option value="2">9:30 - 10:20</option>
-        <option value="3">11:00 - 11:50</option>
-        <option value="4">12:30 - 1:20</option>
-        <option value="4">2:00 - 2:50</option>
-        <option value="4">3:30 - 4:20</option>
-        <option value="4">5:00 - 5:50</option>
-        <option value="4">6:30 - 7:20</option>
+        <span className={cn("text-3xl", colorMap[value])}>●</span>
+      </button>
 
-
-
-      </select>
+      {open && (
+        <div className="absolute left-3/4 px-1 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+          {["1", "2", "3"].map((item) => (
+            <div
+              key={item}
+              onClick={() => handleSelect(item)}
+              className={cn(
+                "p-1 cursor-pointer text-3xl hover:bg-gray-100 flex justify-center",
+                colorMap[item]
+              )}
+            >
+              ●
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
