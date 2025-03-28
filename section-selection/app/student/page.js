@@ -21,10 +21,10 @@ export default function Home() {
         console.log('Session:', sessionData);
   
         if (sessionData.loggedIn === 'true') {
-		  console.log('true');
+	  console.log('true');
 
           setUsername(sessionData.username);
-		  console.log(sessionData.username);
+	  console.log(sessionData.username);
 
           const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
           if (!studentsRes.ok) throw new Error("Students fetch failed");
@@ -36,9 +36,7 @@ export default function Home() {
           }
     
           // Find the student with the matching username
-          const matchedStudent = studentsData.students.find(student => 
-            student.username.trim().toLowerCase() === currUsername.trim().toLowerCase()
-          );
+          const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === username.trim().toLowerCase() );
     
           if (matchedStudent) {
             console.log(matchedStudent.name);
