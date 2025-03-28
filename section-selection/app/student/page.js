@@ -70,7 +70,6 @@ export default function Home() {
 
 useEffect(() => {
   fetch('https://jdregistration.sci.gatech.edu/students.php')
-  fetch('https://jdregistration.sci.gatech.edu/students.php')
     .then(response => response.json())
     .then(data => {
       if (data.students) {
@@ -82,7 +81,7 @@ useEffect(() => {
         } else {
           setName("else");
           //  window.location.href = '/notFound'; 
-           window.location.href = '/studentNotFound';
+           window.location.href = '/notFound';
         }
       } else {
         console.error("Unexpected data format: ", data);
