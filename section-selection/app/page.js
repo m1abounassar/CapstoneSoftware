@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CheckBox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -25,27 +24,18 @@ export default function Home() {
     let valid = true;
     let newErrors = { email: '', gtid: '' };
     
-    // Determine the redirect path based on role
     const redirectPath = isAdmin ? '/admin' : '/student';
+    router.push(redirectPath); 
 
-    // Build query params (can also send adminCode if needed for future logic)
-    const params = new URLSearchParams({
-        email,
-        gtid,
-        redirect: redirectPath,
-        ...(isAdmin && { adminCode }) // optional, if you want to pass adminCode too
-    });
 
-    // Redirect to the PHP CAS login handler
-    window.location.href = `/app/api/auth/cas-login.php?${params.toString()}`;
 };
 
 
   return (
-    <div className='min-h-screen bg-[url(../public/logBack.jpg)]'>
+    <div className='min-h-screen bg-[url(../public/logBack.jpg)] font-figtree'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='pt-2 pb-0 pr-1 text-2xl font-sans font-normal text-[#003056] justify-self-center'>Junior Design</div>
-        <span className='pt-0 pb-4 pl-1 text-5xl font-mono font-bold text-[#232323] justify-self-center'> Team Sync</span>
+        <div className='pt-4 pb-0 pr-1 text-2xl font-normal text-[#003056] justify-self-center'>Junior Design</div>
+        <span className='pt-2 pb-4 pl-1 text-5xl font-bold text-[#232323] justify-self-center'> Team Sync</span>
       </div>
 
       <div className="flex place-content-center mt-20">
@@ -62,8 +52,7 @@ export default function Home() {
             </div>
 
             <form className='space-y-4' onSubmit={handleSubmit}>
-
-              <div className="text-center">
+            <div className="text-center">
                 <Button
                   type="submit"
                   className="bg-[#A5925A] text-white text-md rounded-lg hover:bg-[#002040] shadow-none"
@@ -71,7 +60,6 @@ export default function Home() {
                   Student
                 </Button>
               </div>
-
               <div className="text-center">
                 <Button
                   type="submit"
