@@ -3,29 +3,13 @@ import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
 import { DropdownTwo } from "@/components/ui/dropdown2";
 
-function Section({ section, index, moveUp, moveDown }) {
-  return (
-    <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
-      <div className='flex items-center space-x-4'>
-        <div>
-          <p className='font-bold'>{section.title}</p>
-          <div className='text-sm mt-1'>{section.time} | {section.capacity}</div>
-        </div>
-      </div>
-      <div className='flex flex-col space-y-2'>
-        <button onClick={() => moveUp(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▲</button>
-        <button onClick={() => moveDown(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▼</button>
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
   const [sections, setSections] = useState([]);
   const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
   const [username, setUsername] = useState([]);
   const [name, setName] = useState([]);
+  const [dropdownValues, setDropdownValues] = useState({});
   
 
   useEffect(() => {
@@ -108,13 +92,57 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const handlePriorityChange = (index, newValue) => {
+    setPriorities((prev) => ({
+      ...prev,
+      [index]: newValue,
+    }));
+  };
 
-const handlePriorityChange = (index, newValue) => {
-  setPriorities((prev) => ({
-    ...prev,
-    [index]: newValue,
-  }));
-};
+  const handleSavePreferences = async () => {
+    // Create arrays for each priority (first, second, third)
+    const preferences = {
+      firstChoice: [],
+      secondChoice: [],
+      thirdChoice: []
+    };
+
+    // Iterate over the sections and assign them to the respective priority
+    sections.forEach((section, index) => {
+      const priority = priorities[index] || "3";  // Default to "3" if not selected
+
+      if (priority === "1") {
+        preferences.firstChoice.push(section.title); // Add to firstChoice array
+      } else if (priority === "2") {
+        preferences.secondChoice.push(section.title); // Add to secondChoice array
+      } else {
+        preferences.thirdChoice.push(section.title); // Add to thirdChoice array
+      }
+    });
+
+    const postData = {
+      username,
+      firstChoice: preferences.firstChoice,
+      secondChoice: preferences.secondChoice,
+      thirdChoice: preferences.thirdChoice,
+    };
+
+    try {
+      const response = await fetch("path-to-your-php-endpoint.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+    }
+  };
+
 
 
 return (
@@ -168,7 +196,12 @@ return (
                             </div>
 
 
-                            <Dropdown/>
+                            <Dropdown
+                              sectionName={section.title}
+                              value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
+                              onChange={handlePriorityChange}
+                            />
+                  
 
 
                           </div>
@@ -232,7 +265,7 @@ return (
           <div className='row-span-1 grid grid-cols-10'>
 
 
-              <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Save Preferences</button>
+              <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</button>
 
               <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
 
