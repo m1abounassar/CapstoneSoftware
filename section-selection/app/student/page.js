@@ -8,28 +8,56 @@ export default function Home() {
   const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
   const [username, setUsername] = useState([]);
-  const [name, setName] = useState("");
+  const [name, setName] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   
 
   useEffect(() => {
-      async function fetchSession() {
-        const res = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");  // Adjust path if needed
-        if (res.ok) {
-          const session = await res.json();
-          console.log('Session:', session);
-          if (session.loggedIn === 'true') {
-            setUsername(session.username);
-          } else {
-            window.location.href = '/cas-student.php';
+    async function fetchData() {
+        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        if (!sessionRes.ok) throw new Error("Session fetch failed");
+  
+        const sessionData = await sessionRes.json();
+        console.log('Session:', sessionData);
+  
+        if (sessionData.loggedIn === 'true') {
+
+          setUsername(sessionData.username);
+
+          const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+          if (!studentsRes.ok) throw new Error("Students fetch failed");
+    
+          const studentsData = await studentsRes.json();
+          if (!Array.isArray(studentsData.students)) {
+            console.error("Unexpected data format:", studentsData);
+            return;
           }
+    
+          // Find the student with the matching username
+          const matchedStudent = studentsData.students.find(student => 
+            student.username.trim().toLowerCase() === currUsername.trim().toLowerCase()
+          );
+    
+          if (matchedStudent) {
+            console.log(matchedStudent.name);
+            setName(matchedStudent.name);
+          } else {
+            console.error("Student not found in the list.");
+            window.location.href = '/notFound';
+          }
+          
         } else {
+
           window.location.href = '/cas-student.php';
         }
-      }
+  
+    
+    }
+  
+    fetchData();
+  }, []);
+  
 
-      fetchSession();
-    }, []);
 
 
   useEffect(() => {
@@ -46,31 +74,7 @@ export default function Home() {
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-        const studentsResponse = await fetch('https://jdregistration.sci.gatech.edu/students.php');
-        const studentsData = await studentsResponse.json();
   
-        if (studentsData.students) {
-          // Find the student with the matching username
-          const matchedStudent = studentsData.students.find(student => student.username === username);
-  
-          console.log(matchedStudent ? matchedStudent.name : 'Student not found');
-          console.log(matchedStudent.name);
-  
-          if (matchedStudent) {
-            setName(matchedStudent.name);
-          } else {
-            window.location.href = '/notFound';
-          }
-        } else {
-          console.error("Unexpected data format: ", studentsData);
-        }
-
-    };
-  
-    fetchData();
-  }, [username]);
 
   const handlePriorityChange = (index, newValue) => {
     setPriorities((prev) => ({
