@@ -1,12 +1,10 @@
 'use client'
 import { useState, useEffect } from 'react';
 
-
 function Section({ section, index, moveUp, moveDown }) {
   return (
     <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
       <div className='flex items-center space-x-4'>
-        <div className='w-6 h-6 bg-green-300 rounded-full'></div>
         <div>
           <p className='font-bold'>{section.title}</p>
           <div className='text-sm mt-1'>{section.time} | {section.capacity}</div>
@@ -26,6 +24,15 @@ export default function Home() {
   const [curr, setCurr] = useState([]);
 
   useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
+      .then(response => response.json())
+      .then(({ loggedIn, username }) => {
+        if (loggedIn === "true" && username) {
+          checkAndAddUser(username);
+        }
+      })
+      .catch(error => console.error('Error fetching session:', error));
+
       async function fetchSession() {
         const res = await fetch('/api/auth/session.php');  // Adjust path if needed
         if (res.ok) {
