@@ -36,7 +36,7 @@ export default function Home() {
           }
     
           // Find the student with the matching username
-          const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === username.trim().toLowerCase() );
+          const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
     	  console.log('info: ');
 	  console.log(matchedStudent);
 		
