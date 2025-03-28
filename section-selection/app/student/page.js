@@ -73,7 +73,7 @@ export default function Home() {
         // Find the student with the matching username
         const matchedStudent = studentsData.students.find(student => student.username === username);
 
-        console.log(matchedStudent ? matchedStudent.name : 'Student not found');
+        console.log(matchedStudent ? matchedStudent.name : 'Student not found', username);
         console.log(matchedStudent.name);
 
         if (matchedStudent) {
