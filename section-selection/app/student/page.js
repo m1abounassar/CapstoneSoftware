@@ -118,6 +118,7 @@ export default function Home() {
 
                     <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
 
+
                     <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
                         {sections.length > 0 ? (
                           sections.map((section) => (
