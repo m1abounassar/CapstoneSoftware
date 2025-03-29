@@ -15,7 +15,9 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
         const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-        if (!sessionRes.ok) throw new Error("Session fetch failed");
+        if (!sessionRes.ok) {
+            window.location.href = '/error';
+        }
   
         const sessionData = await sessionRes.json();
         console.log('Session:', sessionData);
