@@ -1,52 +1,92 @@
 'use client'
 import { useState, useEffect } from 'react';
-
-function Section({ section, index, moveUp, moveDown }) {
-  return (
-    <div className='p-4 bg-white rounded-md my-3 shadow-sm hover:bg-[#f0f0f0] flex justify-between items-center'>
-      <div className='flex items-center space-x-4'>
-        <div>
-          <p className='font-bold'>{section.title}</p>
-          <div className='text-sm mt-1'>{section.time} | {section.capacity}</div>
-        </div>
-      </div>
-      <div className='flex flex-col space-y-2'>
-        <button onClick={() => moveUp(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▲</button>
-        <button onClick={() => moveDown(index)} className='text-xs bg-gray-300 px-3 py-2 rounded'>▼</button>
-      </div>
-    </div>
-  );
-}
+import { Dropdown } from "@/components/ui/dropdown";
+import { DropdownTwo } from "@/components/ui/dropdown2";
 
 export default function Home() {
   const [sections, setSections] = useState([]);
+  const [priorities, setPriorities] = useState({});
   const [teams, setTeams] = useState([]);
-  const [curr, setCurr] = useState([]);
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [dropdownValues, setDropdownValues] = useState({});
+  const [savePrefOpen, setSavePrefOpen] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState("3");
+  const [teamNumber, setTeamNumber] = useState("");
+  const [teamMembers, setTeamMembers] = useState({});
+  
 
   useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
-      .then(response => response.json())
-      .then(({ loggedIn, username }) => {
-        if (loggedIn === "true" && username) {
-          checkAndAddUser(username);
+    async function fetchData() {
+        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        if (!sessionRes.ok) {
+            window.location.href = '/error';
         }
-      })
-      .catch(error => console.error('Error fetching session:', error));
-
-      async function fetchSession() {
-        const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-        if (res.ok) {
-          const session = await res.json();
-          console.log('Session:', session);
-          setUser(session);  // Save session data to state
-        } else {
-          console.log('Not logged in');
-          window.location.href = '/cas-student.php';  // Redirect to CAS login
-        }
-      }
   
-      fetchSession();
-    }, []);
+        const sessionData = await sessionRes.json();
+        console.log('Session:', sessionData);
+  
+        if (sessionData.loggedIn === 'true') {
+
+            console.log('true');
+
+            setUsername(sessionData.username);
+            console.log(sessionData.username);
+
+            const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+            if (!studentsRes.ok) throw new Error("Students fetch failed");
+        
+            const studentsData = await studentsRes.json();
+            if (!Array.isArray(studentsData.students)) {
+              console.error("Unexpected data format:", studentsData);
+              return;
+            }
+        
+              // Find the student with the matching username
+            const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+            console.log('info: ');
+            console.log(matchedStudent);
+        
+            if (matchedStudent) {
+              console.log(matchedStudent.name);
+              setName(matchedStudent.name);
+
+              const initialDropdownValues = {};
+              
+              const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
+              const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
+              const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
+
+              // Assign priorities from student's choices
+              firstChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "1";
+              });
+              secondChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "2";
+              });
+              thirdChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "3";
+              });
+
+              setDropdownValues(initialDropdownValues);
+
+              setTeamNumber(matchedStudent.team);
+              
+            } else {
+              console.error("Student not found in the list.");
+              window.location.href = '/notFound';
+            }
+          
+        } else {
+
+          window.location.href = '/cas-student.php';
+        }
+  
+    
+    }
+  
+    fetchData();
+  }, []);
 
 
   useEffect(() => {
@@ -55,192 +95,305 @@ export default function Home() {
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
+  
 
+  useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php")
+      .then(response => response.json())
+      .then(data => setSections(data.sections))
+      .catch(error => console.error('Error fetching sections:', error));
+  }, []);
+
+  
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
       .then(response => response.json())
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
-  }, []);
 
-  useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php")
-      .then(response => response.json())
-      .then(data => setCurr(data.username))
-      .catch(error => console.error('Error fetching sections:', error));
-  }, []);
+    // const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
 
+    // currMembers.forEach((mem) => {
+    //   (teams.teams.find(team => team.name === teamNumber)).members;
 
-  const moveUp = (index) => {
-    if (index === 0) return;
-    const updatedSections = [...sections];
-    [updatedSections[index], updatedSections[index - 1]] = [updatedSections[index - 1], updatedSections[index]];
-    setSections(updatedSections);
+      
+    // });
+
+    //   setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
+  }, [teamNumber]);
+
+  
+
+  const handlePriorityChange = (sectionName, newValue) => {
+    setPriorities((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Set priority based on section title
+    }));
+  
+    setDropdownValues((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Update the dropdown value
+    }));
   };
 
-  const moveDown = (index) => {
-    if (index === sections.length - 1) return;
-    const updatedSections = [...sections];
-    [updatedSections[index], updatedSections[index + 1]] = [updatedSections[index + 1], updatedSections[index]];
-    setSections(updatedSections);
+
+  const handleSavePreferences = async () => {
+
+    setSavePrefOpen(!savePrefOpen);
+    
+    // Create arrays for each priority (first, second, third)
+    const preferences = {
+      firstChoice: [],
+      secondChoice: [],
+      thirdChoice: []
+    };
+  
+    sections.forEach((section) => {
+      const priority = priorities[section.title] || "3";  // Default to "3" if not selected
+  
+      if (priority === "1") {
+        preferences.firstChoice.push(section.title); // Add to firstChoice array
+      } else if (priority === "2") {
+        preferences.secondChoice.push(section.title); // Add to secondChoice array
+      } else {
+        preferences.thirdChoice.push(section.title); // Add to thirdChoice array
+      }
+    });
+  
+    console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
+  
+    const postData = {
+      username,
+      firstChoice: preferences.firstChoice,
+      secondChoice: preferences.secondChoice,
+      thirdChoice: preferences.thirdChoice,
+    };
+      
+    console.log(postData);
+  
+  
+    try {
+      const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+  
+      const textResponse = await response.text();  // Get the raw response as text
+      console.log("Raw response from server:", textResponse);  // Log the response text
+  
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} - ${textResponse}`);
+      }
+  
+      const result = JSON.parse(textResponse);  // Try to parse it as JSON
+      console.log(result);  // Log the parsed result
+    } catch (error) {
+      console.error("Error saving preferences:", error);
+    }
+};
+
+useEffect(() => {
+  const fetchStudentData = async () => {
+    try {
+      const response = await fetch("/students.php");
+      const data = await response.json();
+
+      const student = data.students.find(s => s.username === username);
+      if (student) {
+        student.firstChoice.forEach((section) => {
+          setSelectedChoice("1");
+        });
+        student.secondChoice.forEach((section) => {
+          setSelectedChoice("2");
+        });
+        student.thirdChoice.forEach((section) => {
+          setSelectedChoice("3");
+        });
+        
+      }
+    } catch (error) {
+      console.error("Error fetching student data:", error);
+    }
   };
 
-
-  return (
-    <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
-
-        <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center'>
-              <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
-                Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
-              </div>
-              <div></div>
-              <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
-                
-                <div>{curr}</div>
-                <div className='hover:text-[#2b6b9e] hover:cursor-pointer text-xl lg:text-2xl p-0 pb-1'>☰</div>
-
-              </div>
-          
-        </div>
+  fetchStudentData();
+}, [username]);
 
 
 
-        {/* Below Header */}
-        <div className='grid grid-rows-14 gap-8 h-[100%] m-10 mb-15'>
 
-            {/* Panels */}
-            <div className='row-span-12 grid grid-cols-5 gap-10'>
+return (
+  <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
+
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
+            <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
+              Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
+            </div>
+            <div></div>
+            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+              
+              <div>{name}</div>
+  
+              <DropdownTwo/>
+
+            </div>
+        
+      </div>
 
 
 
-                {/* Sections */}
-                <div className='col-span-2 bg-[#003056] h-[100%] rounded-3xl flex flex-col'>
+      {/* Below Header */}
+      <div className='grid grid-rows-14 gap-8 h-[100%] m-10 mb-15'>
 
-                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
+          {/* Panels */}
+          <div className='row-span-12 grid grid-cols-5 gap-10'>
 
 
-                    <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                        {sections.length > 0 ? (
-                          sections.map((section) => (
-                            <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg'>
-                              <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                                <div className='font-bold w-auto'>{section.title}</div>
-                                <div className='mr-10'>- {section.time}</div>
 
-                              </div>
-                              <div className='flex'>
-                                
-                                <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
-                              </div>
+              {/* Sections */}
+              <div className='col-span-2 bg-[#003056] h-[100%] rounded-3xl flex flex-col'>
+
+                  <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
+
+
+                  <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
+                      {sections.length > 0 ? (
+                        sections.map((section) => (
+                          <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                            <div>
+                                <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
+                                  <div className='font-bold w-auto'>{section.title}</div>
+                                  <div className='mr-10'>- {section.time}</div>
+
+                                </div>
+                                <div className='flex'>
+                                  
+                                  <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                                </div>
                             </div>
-                          ))
-                        ) : (
-                          <p>Loading sections...</p>
-                        )}
-                    </div>
 
 
-                </div>
+                            <Dropdown
+                              sectionName={section.title} // Pass section name to the dropdown
+                              value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
+                              onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
+                            />
+
+                  
 
 
-                {/* Team */}
-                <div className='col-span-3 bg-[#003056] rounded-3xl h-[100%] flex flex-col'>
+                          </div>
+                        ))
+                      ) : (
+                        <p>Loading sections...</p>
+                      )}
 
-                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
-
-                    <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                        {teams.length > 0 ? (
-                              teams.map((team) => (
-                                <div key={team.name}>
-
-                                    <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
-
-                                      <div className='font-bold text-nowrap'>Team {team.name} - </div>
-
-                                      <div className=' ml-1 text-nowrap'>{team.projectName}</div>
-
-                                      <div className='flex w-full justify-end'>
-                                        <div className='font-bold'>Client:</div>
-                                        <div className='ml-1'>{team.clientName}</div>
-                                      </div>
+                  </div>
 
 
+              </div>
+
+
+              {/* Team */}
+              <div className='col-span-3 bg-[#003056] rounded-3xl h-[100%] flex flex-col'>
+
+                  <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
+
+                  <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
+                      {teams.length > 0 ? (
+                            teams.map((team) => (
+                              <div key={team.name}>
+
+                                  <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
+
+                                    <div className='font-bold text-nowrap'>Team {team.name} - </div>
+
+                                    <div className=' ml-1 text-nowrap'>{team.projectName}</div>
+
+                                    <div className='flex w-full justify-end'>
+                                      <div className='font-bold'>Client:</div>
+                                      <div className='ml-1'>{team.clientName}</div>
                                     </div>
+
+
+                                  </div>
+
+
+                                  <div className='flex flex-col'>
+
+                                    <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
+
+                                    {teamMembers.length > 0 ? (
+                                        teamMembers.map((member, index) => (
+                                          <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                                            {member}
+                                          </div>
+                                        ))
+                                      ) : (
+                                        <p>Loading information...</p>
+                                      )}
 
 
 
                                     
+                                  </div>
+
+
+
                                   
-                                </div>
-                              ))
-                            ) : (
-                              <p>Loading team...</p>
-                            )
-                        }
-                    </div>
+                                
+                              </div>
+                            ))
+                          ) : (
+                            <p>Loading team...</p>
+                          )
+                      }
+                  </div>
 
 
-                </div>
+              </div>
 
-            </div>
-
-
-
-      
-
-            {/* Buttons */}
-            <div className='row-span-1 grid grid-cols-10'>
-
-
-                <button className='col-span-2 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#002040] hover:text-white'>Save Preferences</button>
-
-                <button className='col-span-2 col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#002040] hover:text-white'>Leave Team</button>
-
-
-            </div>
+          </div>
 
 
 
-          
-        </div>
+    
+
+          {/* Buttons */}
+          <div className='row-span-1 grid grid-cols-10'>
 
 
-    </div>
+              <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</button>
+
+              <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
+
+
+          </div>
+
+          {/* PopUp */}
+          {savePrefOpen && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                          <p>Saved!</p>
+                          <button
+                            onClick={() => setSavePrefOpen(!savePrefOpen)}
+                            className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+
+
+        
+      </div>
+
+
+  </div>
   );
 }
-
-
-
-// {/* Sections Panel */}
-// <div className='col-span-2'>
-//   <div className='bg-[#003056] w-full h-[100%] rounded-3xl'>
-//     <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
-
-
-//     <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-//       
-//     </div>
-//   </div>
-// </div>
-
-
-
-// {/* Team Info Panel */}
-// <div className='col-span-3'>
-//   <div className=''>
-//     <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
-//     <div className='bg-white h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-//       <p className='text-left text-gray-700 font-bold'>Team Section Preferences</p>
-      
-//     </div>
-//   </div>
-// </div>
-
-// </div>
-
-
-
-
-
-
-
