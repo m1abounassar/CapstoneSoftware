@@ -108,6 +108,7 @@ export default function Home() {
 
                   rawTeamMembers.forEach((person) => {
                   const currStudent = allStudents.find(student => student.gtID === person);
+                  console.log(currStudent);
             
                   setTeamMembers(prev => ({
                     ...prev, 
