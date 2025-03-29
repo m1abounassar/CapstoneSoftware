@@ -32,18 +32,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($data['username'], $data['firstChoice'], $data['secondChoice'], $data['thirdChoice'])) {
         $username = $conn->real_escape_string($data['username']);
-        $firstChoice = json_encode($data['firstChoice']); // Encode array to JSON
-        $secondChoice = json_encode($data['secondChoice']); // Encode array to JSON
-        $thirdChoice = json_encode($data['thirdChoice']); // Encode array to JSON
-
-        // Update the student preferences in the database
-        $sql = "UPDATE students SET 'firstChoice'='$firstChoice', 'secondChoice'='$secondChoice', 'thirdChoice'='$thirdChoice' WHERE 'username'='$username'";
-
+        $firstChoice = json_encode($data['firstChoice']);
+        $secondChoice = json_encode($data['secondChoice']);
+        $thirdChoice = json_encode($data['thirdChoice']);
+        
+        // Escape the values before inserting them into the SQL query
+        $firstChoice = $conn->real_escape_string($firstChoice);
+        $secondChoice = $conn->real_escape_string($secondChoice);
+        $thirdChoice = $conn->real_escape_string($thirdChoice);
+        
+        // Corrected SQL query
+        $sql = "UPDATE students SET firstChoice='$firstChoice', secondChoice='$secondChoice', thirdChoice='$thirdChoice' WHERE username='$username'";
+        
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["message" => "Preferences saved successfully"]);
         } else {
             echo json_encode(["error" => "Error: " . $conn->error]);
         }
+
     } else {
         echo json_encode(["error" => "Invalid input"]);
     }
