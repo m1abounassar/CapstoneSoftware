@@ -58,6 +58,7 @@ export default function Home() {
               console.log(matchedStudent.thirdChoice);
 
               console.log(typeof matchedStudent.firstChoice);
+              console.log((matchedStudent.firstChoice)[0]);
 
               // const firstChoiceArray = matchedStudent.firstChoice.split(' ');
               // const secondChoiceArray = matchedStudent.secondChoice.split(' ');
