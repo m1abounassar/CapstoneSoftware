@@ -91,8 +91,9 @@ export default function Home() {
                   
               // Find the student with the matching username
 
+              console.log("Team Number: ", teamNumber);
+
               const matchedTeam = teamData.teams.find(team => team.name.trim() === teamNumber.trim());
-              console.log(teamNumber);
 
               console.log(matchedTeam);
               
