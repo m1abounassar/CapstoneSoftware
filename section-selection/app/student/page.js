@@ -106,29 +106,31 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error fetching sections:', error));
+    const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+    if (!teamsRes.ok) throw new Error("Team fetch failed");
+        
+    const teamData = await teamsRes.json();
+    if (!Array.isArray(teamsRes.students)) {
+        console.error("Unexpected data format:", teamData);
+        return;
+    }
+        
+    // Find the student with the matching username
+    const teamInfo = teamData.teams.find(team => team.name === teamNumber).members;
 
-
-    const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
-
-    currMembers.forEach((mem) => {
-      (allStudents.find(student => student.gtID === mem));
+    teamInfo.forEach((person) => {
+      const currStudent = allStudents.find(student => student.gtID === person);
 
       setTeamMembers(prev => ({
         ...prev, 
-        [student.name]: { firstChoice: student.firstChoice, secondChoice: student.secondChoice, thirdChoice: student.thirdChoice, }
+        [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
         
       }));
 
       
     });
 
-    setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
-
-
+    console.log(setTeamMembers);
 
 
   }, [teamNumber, allStudents]);
