@@ -80,22 +80,16 @@ export default function Home() {
   
 
   const handlePriorityChange = (sectionName, newValue) => {
-  // Update both priorities and dropdownValues
-  setPriorities((prev) => ({
-    ...prev,
-    [sectionName]: newValue, // Set priority based on section title
-  }));
-
-  setDropdownValues((prev) => ({
-    ...prev,
-    [sectionName]: newValue, // Update the dropdown value
-  }));
-
-    console.log(priorities);
-    console.log(dropdownValues);
-    console.log(sections);
-    
-};
+    setPriorities((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Set priority based on section title
+    }));
+  
+    setDropdownValues((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Update the dropdown value
+    }));
+  };
 
 
   const handleSavePreferences = async () => {
