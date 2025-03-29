@@ -110,7 +110,7 @@ export default function Home() {
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
 
-      setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
+      // setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
   }, [teamNumber]);
 
   
