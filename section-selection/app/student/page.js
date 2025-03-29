@@ -106,9 +106,9 @@ export default function Home() {
       thirdChoice: []
     };
   
-    sections.forEach((section, index) => {
-      const priority = priorities[index] || "3";
-    
+    sections.forEach((section) => {
+      const priority = priorities[section.title] || "3";  // Default to "3" if not selected
+  
       if (priority === "1") {
         preferences.firstChoice.push(section.title); // Add to firstChoice array
       } else if (priority === "2") {
