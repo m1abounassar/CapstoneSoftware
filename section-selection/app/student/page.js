@@ -13,7 +13,7 @@ export default function Home() {
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
   const [teamNumber, setTeamNumber] = useState("");
-  const [teamMembers, setTeamMembers] = useState([]);
+  const [teamMembers, setTeamMembers] = useState({});
   
 
   useEffect(() => {
@@ -87,8 +87,6 @@ export default function Home() {
   
     fetchData();
   }, []);
-  
-
 
 
   useEffect(() => {
@@ -97,14 +95,31 @@ export default function Home() {
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
+  
 
+  useEffect(() => {
+    fetch("https://jdregistration.sci.gatech.edu/sections.php")
+      .then(response => response.json())
+      .then(data => setSections(data.sections))
+      .catch(error => console.error('Error fetching sections:', error));
+  }, []);
+
+  
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
       .then(response => response.json())
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
 
-      // setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
+    // const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
+
+    // currMembers.forEach((mem) => {
+    //   (teams.teams.find(team => team.name === teamNumber)).members;
+
+      
+    // });
+
+    //   setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
   }, [teamNumber]);
 
   
@@ -186,9 +201,18 @@ useEffect(() => {
       const response = await fetch("/students.php");
       const data = await response.json();
 
-      const student = data.find((s) => s.username === username);
+      const student = data.students.find(s => s.username === username);
       if (student) {
-        setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
+        student.firstChoice.forEach((section) => {
+          setSelectedChoice("1");
+        });
+        student.secondChoice.forEach((section) => {
+          setSelectedChoice("2");
+        });
+        student.thirdChoice.forEach((section) => {
+          setSelectedChoice("3");
+        });
+        
       }
     } catch (error) {
       console.error("Error fetching student data:", error);
