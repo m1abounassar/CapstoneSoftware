@@ -9,6 +9,7 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [allStudents, setAllStudents] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
@@ -44,6 +45,8 @@ export default function Home() {
               console.error("Unexpected data format:", studentsData);
               return;
             }
+
+            setAllStudents(studentsData.students);
         
               // Find the student with the matching username
             const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
@@ -108,8 +111,27 @@ export default function Home() {
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
 
-      // setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
-  }, [teamNumber]);
+
+    const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
+
+    currMembers.forEach((mem) => {
+      (allStudents.find(student => student.gtID === mem));
+
+      setTeamMembers(prev => ({
+        ...prev, 
+        [student.name]: { firstChoice: student.firstChoice, secondChoice: student.secondChoice, thirdChoice: student.thirdChoice, }
+        
+      }));
+
+      
+    });
+
+    setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
+
+
+
+
+  }, [teamNumber, allStudents]);
 
   
 
@@ -354,7 +376,7 @@ export default function Home() {
                                     {teamMembers.length > 0 ? (
                                         teamMembers.map((member, index) => (
                                           <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member}
+                                            {member.name}
                                           </div>
                                         ))
                                       ) : (
