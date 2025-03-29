@@ -398,14 +398,28 @@ export default function Home() {
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
                                     {teamMembers.length > 0 ? (
-                                        teamMembers.map((member) => (
-                                          <div key={member} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member}
+                                      teamMembers.map(([name, choices]) => (
+                                        <div key={name} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                                          <div>
+                                              <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
+                                                <div className='font-bold w-auto'>{name}</div>
+                                                <div className='mr-10'>{choices.firstChoice}</div>
+                                                <div className='mr-10'>{choices.secondChoice}</div>
+                                                <div className='mr-10'>{choices.thirdChoice}</div>
+
+              
+                                              </div>
+                                              <div className='flex'>
+                                                
+                                                <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                                              </div>
                                           </div>
-                                        ))
-                                      ) : (
-                                        <p>Loading information...</p>
-                                      )}
+              
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <p>Loading information...</p>
+                                    )}
                                     
                                   </div>
 
