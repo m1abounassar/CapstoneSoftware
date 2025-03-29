@@ -100,25 +100,29 @@ export default function Home() {
                   console.log(typeof rawTeamMembers);
                   console.log(typeof JSON.parse(rawTeamMembers));
                   console.log(matchedTeam, rawTeamMembers);
+
+                  rawTeamMembers.forEach((person) => {
+                  const currStudent = allStudents.find(student => student.gtID === person);
+            
+                  setTeamMembers(prev => ({
+                    ...prev, 
+                    [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+                    
+                    }));
+              
+                    
+                    });
+              
+                    console.log(setTeamMembers);
+
+
               } else {
                   window.location.href = '/error';
               }
 
               console.log(teams, rawTeamMembers);
           
-              rawTeamMembers.forEach((person) => {
-                const currStudent = allStudents.find(student => student.gtID === person);
-          
-                setTeamMembers(prev => ({
-                  ...prev, 
-                  [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
-                  
-                }));
-          
-                
-              });
-          
-              console.log(setTeamMembers);
+        
 
               
               
