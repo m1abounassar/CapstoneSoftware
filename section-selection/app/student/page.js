@@ -92,6 +92,8 @@ export default function Home() {
               // Find the student with the matching username
 
               const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
+
+              console.log(matchedTeam);
               
               if (matchedTeam) {
                   setTeams(matchedTeam); // Store the entire matched team in state
@@ -118,7 +120,7 @@ export default function Home() {
 
 
               } else {
-                  window.location.href = '/error';
+                  console.log("naur!");
               }
 
               
