@@ -1,3 +1,4 @@
+const [teamNumber, setTeamNumber] = useState(null);
 'use client'
 import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
@@ -77,6 +78,7 @@ export default function Home() {
 
               setDropdownValues(initialDropdownValues);
               console.log(initialDropdownValues);
+              console.log("im so sad: ", matchedStudent.team);
 
               setTeamNumber(matchedStudent.team);
 
@@ -93,7 +95,7 @@ export default function Home() {
 
               console.log("Team Number: ", teamNumber);
 
-              const matchedTeam = teamData.teams.find(team => team.name.trim() === teamNumber.trim());
+              const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
 
               console.log(matchedTeam);
               
