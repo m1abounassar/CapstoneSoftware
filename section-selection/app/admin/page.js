@@ -14,8 +14,14 @@ export default function Home() {
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
+  const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [username, setUsername] = useState("");
+  const [gtid, setGTID] = useState("");
+
 
   const [protocol, setProtocol] = useState("http://");
+  
 
   useEffect(() => {
     setProtocol(window.location.protocol === "https:" ? "https://" : "http://");
@@ -25,20 +31,61 @@ export default function Home() {
 
   // comment out function below to use local hosting
   useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-      if (res.ok) {
-        const session = await res.json();
-        console.log('Session:', session);
-        setUser(session);  // Save session data to state
-      } else {
-        console.log('Not logged in');
-        window.location.href = '/cas-admin.php';  // Redirect to CAS login
-      }
-    }
+    async function fetchData() {
+        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        if (!sessionRes.ok) {
+            window.location.href = '/error';
+        }
+  
+        const sessionData = await sessionRes.json();
+        console.log('Session:', sessionData);
+  
+        if (sessionData.loggedIn === 'true') {
 
-    fetchSession();
+            console.log('true');
+
+            setUsername(sessionData.username);
+            console.log(sessionData.username);
+
+            const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+            if (!adminRes.ok) throw new Error("Admin fetch failed");
+        
+            const adminData = await adminRes.json();
+            if (!Array.isArray(adminData.adm)) {
+              console.error("Unexpected data format:", adminData);
+              return;
+            }
+        
+              // Find the student with the matching username
+            const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+            console.log('info: ');
+            console.log(matchedAdmin);
+        
+            if (matchedAdmin) {
+              console.log(matchedAdmin.name);
+              setName(matchedAdmin.name);
+              setNewName(matchedAdmin.name); 
+              setGTID(matchedAdmin.gtid); 
+              setUsername(matchedAdmin.username);
+
+              
+            } else {
+              console.error("Admin not found in the list.");
+              window.location.href = '/notFound';
+            }
+          
+        } else {
+
+          window.location.href = '/cas-admin.php';
+        }
+  
+    
+    }
+  
+    fetchData();
   }, []);
+
+
 
   // Fetch teams data (If we also move teams to a PHP API, update this)
   useEffect(() => {
@@ -119,6 +166,41 @@ export default function Home() {
     }
   };
 
+  const handleSaveName = async () => {
+    if (!newName.trim()) {
+      return; // Don't save empty names
+    }
+    
+    try {
+      const postData = {
+        username,
+        name: newName
+      };
+      
+      const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+      
+      const textResponse = await response.text();
+      
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} - ${textResponse}`);
+      }
+      
+      // Update the name in the UI
+      setName(newName);
+      // Close the popup
+      setNameEditOpen(false);
+    } catch (error) {
+      console.error("Error updating name:", error);
+    }
+  };
+  
+
   // CSV Upload Handling
   const handleCSVUpload = (event) => {
     const file = event.target.files[0];
@@ -150,8 +232,14 @@ export default function Home() {
         <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
         <div></div>
         <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
-          
+          {/* Added pencil edit icon to admin page */}
           <div>Admin</div>
+          <button 
+                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
+                  onClick={() => setNameEditOpen(true)}
+                >
+                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
+          </button>
           <DropdownTwo/>
 
         </div>
@@ -307,6 +395,48 @@ export default function Home() {
         </div>
       
       </div>
+
+      {nameEditOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-6 rounded-md shadow-lg w-96">
+      <h3 className="text-lg font-bold text-[#003056] mb-6 text-center">Student Info</h3>
+
+      <div className="space-y-4 text-[#003056]">
+        <div className="flex justify-between items-center">
+          <label className="font-bold w-1/3">Name:</label>
+          <input
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="Enter Name"
+            className="border border-gray-300 p-2 rounded-md w-2/3"
+          />
+        </div>
+
+        <div className="flex justify-between">
+          <span className="font-bold w-1/3">{gtid}:</span>
+          <span className="w-2/3 text-right">{username}</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="font-bold w-1/3">Username:</span>
+          <span className="w-2/3 text-right">mholm3</span>
+        </div>
+      </div>
+
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={() => setNameEditOpen(false)}
+          className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
       {/* Pop-up Modal for Adding Section */}
       {isAddSectionPopupOpen && (
