@@ -101,14 +101,15 @@ export default function Home() {
       thirdChoice: []
     };
   
-    // Iterate over the sections and assign them to the respective priority
-    Object.entries(priorities).forEach(([sectionTitle, priority]) => {
+    sections.forEach((section, index) => {
+      const priority = priorities[index] || "3";
+    
       if (priority === "1") {
-        preferences.firstChoice.push(sectionTitle); // Add to firstChoice array
+        preferences.firstChoice.push(section.title); // Add to firstChoice array
       } else if (priority === "2") {
-        preferences.secondChoice.push(sectionTitle); // Add to secondChoice array
+        preferences.secondChoice.push(section.title); // Add to secondChoice array
       } else {
-        preferences.thirdChoice.push(sectionTitle); // Add to thirdChoice array
+        preferences.thirdChoice.push(section.title); // Add to thirdChoice array
       }
     });
   
