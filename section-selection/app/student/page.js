@@ -113,20 +113,28 @@ export default function Home() {
       thirdChoice: preferences.thirdChoice,
     };
 
-    try {
-      const response = await fetch("/students.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
+	try {
+	  const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+	    method: "POST",
+	    headers: {
+	      "Content-Type": "application/json",
+	    },
+	    body: JSON.stringify(postData),
+	  });
+	
+	  const textResponse = await response.text();  // Get the raw response as text
+	  console.log("Raw response from server:", textResponse);  // Log the response text
+	
+	  if (!response.ok) {
+	    throw new Error(`Server error: ${response.status} - ${textResponse}`);
+	  }
+	
+	  const result = JSON.parse(textResponse);  // Try to parse it as JSON
+	  console.log(result);  // Log the parsed result
+	} catch (error) {
+	  console.error("Error saving preferences:", error);
+	}
 
-      const result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.error("Error saving preferences:", error);
-    }
   };
 
 
