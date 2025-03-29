@@ -63,7 +63,7 @@ export default function Home() {
               const secondChoiceArray = matchedStudent.secondChoice.split(' ');
               const thirdChoiceArray = matchedStudent.thirdChoice.split(' ');
 
-              console.log(typeof matchedStudent.firstChoice);
+              console.log(typeof firstChoiceArray);
 
               // // Assign priorities from student's choices
               // matchedStudent.firstChoiceArray.forEach((section) => {
