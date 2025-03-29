@@ -107,15 +107,15 @@ export default function Home() {
                   console.log(typeof allStudents);
 
                   rawTeamMembers.forEach((person) => {
-                  const currStudent = allStudents.find(student => student.gtID === person);
-                  console.log(currStudent);
-            
-                  setTeamMembers(prev => ({
-                    ...prev, 
-                    [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
-                    
-                    }));
+                    const currStudent = studentsData.students.find(student => student.gtID === person);
+                    console.log("Person", person, "Curr Student: ", currStudent);
               
+                    setTeamMembers(prev => ({
+                      ...prev, 
+                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+                      
+                      }));
+                
                     
                     });
               
