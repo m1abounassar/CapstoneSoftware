@@ -57,14 +57,18 @@ export default function Home() {
               console.log(matchedStudent.secondChoice);
               console.log(matchedStudent.thirdChoice);
 
+              const firstChoiceArray = matchedStudent.firstChoice || [];
+              const secondChoiceArray = matchedStudent.secondChoice || [];
+              const thirdChoiceArray = matchedStudent.thirdChoice || [];
+
               // Assign priorities from student's choices
-              matchedStudent.firstChoice.forEach((section) => {
+              matchedStudent.firstChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "1";
               });
-              matchedStudent.secondChoice.forEach((section) => {
+              matchedStudent.secondChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "2";
               });
-              matchedStudent.thirdChoice.forEach((section) => {
+              matchedStudent.thirdChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "3";
               });
 
