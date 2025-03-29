@@ -9,7 +9,7 @@ export default function Home() {
   const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [allStudents, setAllStudents] = useState("");
+  const [allStudents, setAllStudents] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
@@ -104,6 +104,7 @@ export default function Home() {
                   const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
                   console.log(typeof rawTeamMembers);
+                  console.log(typeof allStudents);
 
                   rawTeamMembers.forEach((person) => {
                   const currStudent = allStudents.find(student => student.gtID === person);
