@@ -9,6 +9,7 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [allStudents, setAllStudents] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
@@ -44,6 +45,8 @@ export default function Home() {
               console.error("Unexpected data format:", studentsData);
               return;
             }
+
+            setAllStudents(studentsData.students);
         
               // Find the student with the matching username
             const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
@@ -75,6 +78,34 @@ export default function Home() {
               setDropdownValues(initialDropdownValues);
 
               setTeamNumber(matchedStudent.team);
+
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+                  
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamsRes.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+                  
+              // Find the student with the matching username
+              const teamInfo = teamData.teams.find(team => team.name === teamNumber).members;
+          
+              teamInfo.forEach((person) => {
+                const currStudent = allStudents.find(student => student.gtID === person);
+          
+                setTeamMembers(prev => ({
+                  ...prev, 
+                  [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+                  
+                }));
+          
+                
+              });
+          
+              console.log(setTeamMembers);
+
+              
               
             } else {
               console.error("Student not found in the list.");
@@ -101,16 +132,6 @@ export default function Home() {
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
-
-  useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error fetching sections:', error));
-
-      // setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
-  }, [teamNumber]);
-
   
 
   const handlePriorityChange = (sectionName, newValue) => {
@@ -354,7 +375,7 @@ export default function Home() {
                                     {teamMembers.length > 0 ? (
                                         teamMembers.map((member, index) => (
                                           <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member}
+                                            {member.name}
                                           </div>
                                         ))
                                       ) : (
