@@ -1,4 +1,3 @@
-const [teamNumber, setTeamNumber] = useState(null);
 'use client'
 import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
