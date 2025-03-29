@@ -53,22 +53,22 @@ export default function Home() {
 
               const initialDropdownValues = {};
 
+              // const stringToArray = (choice) => {
+              //   choice = choice.slice(1);
+              //   choice = choice.slice(0, -1);
+
+                
+              // };
+
               console.log(matchedStudent.firstChoice);
               console.log(matchedStudent.secondChoice);
               console.log(matchedStudent.thirdChoice);
-
-              console.log(typeof matchedStudent.firstChoice);
-              console.log((matchedStudent.firstChoice)[0]);
-
-              // const firstChoiceArray = matchedStudent.firstChoice.split(' ');
-              // const secondChoiceArray = matchedStudent.secondChoice.split(' ');
-              // const thirdChoiceArray = matchedStudent.thirdChoice.split(' ');
 
               const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
               const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
               const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
 
-              console.log(typeof firstChoiceArray);
+              console.log(firstChoiceArray[0]);
 
               // Assign priorities from student's choices
               matchedStudent.firstChoiceArray.forEach((section) => {
