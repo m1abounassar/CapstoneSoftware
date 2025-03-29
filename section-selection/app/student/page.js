@@ -13,7 +13,7 @@ export default function Home() {
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
-  const [teamNumber, setTeamNumber] = useState();
+  const [teamNumber, setTeamNumber] = useState(0);
   const [teamMembers, setTeamMembers] = useState([]);
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
