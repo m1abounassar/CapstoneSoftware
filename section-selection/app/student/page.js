@@ -371,7 +371,7 @@ export default function Home() {
 
                                   <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
 
-                                    <div className='font-bold text-nowrap'>Team {teamName} - </div>
+                                    <div className='font-bold text-nowrap'>Team {teamNumber} - </div>
 
                                     <div className=' ml-1 text-nowrap'>{teams.projectName}</div>
 
