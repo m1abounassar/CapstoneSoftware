@@ -202,10 +202,11 @@ return (
 
 
                             <Dropdown
-                              sectionName={section.title}
+                              sectionName={section.title} // Pass section name to the dropdown
                               value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
-                              onChange={handlePriorityChange}
+                              onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
                             />
+
                   
 
 
