@@ -109,21 +109,13 @@ export default function Home() {
 
   console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
 
-  // const postData = {
-  //   username,
-  //   firstChoice: preferences.firstChoice,
-  //   secondChoice: preferences.secondChoice,
-  //   thirdChoice: preferences.thirdChoice,
-  // };
-
   const postData = {
     username,
-    firstChoice: ['JIA'],
-    secondChoice: ['JIF'],
-    thirdChoice:  ['JIC'],
+    firstChoice: preferences.firstChoice,
+    secondChoice: preferences.secondChoice,
+    thirdChoice: preferences.thirdChoice,
   };
-
-  console.log(postData);
+    
   console.log(postData);
 
 
