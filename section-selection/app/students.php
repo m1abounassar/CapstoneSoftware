@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
+    // Handle preferences update
     if (isset($data['username'], $data['firstChoice'], $data['secondChoice'], $data['thirdChoice'])) {
         $username = $conn->real_escape_string($data['username']);
         $firstChoice = json_encode($data['firstChoice']);
@@ -49,11 +50,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["error" => "Error: " . $conn->error]);
         }
-
-    } else {
+    } 
+    // Handle name update
+    else if (isset($data['username'], $data['name'])) {
+        $username = $conn->real_escape_string($data['username']);
+        $name = $conn->real_escape_string($data['name']);
+        
+        $sql = "UPDATE students SET name='$name' WHERE username='$username'";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Name updated successfully"]);
+        } else {
+            echo json_encode(["error" => "Error updating name: " . $conn->error]);
+        }
+    }
+    else {
         echo json_encode(["error" => "Invalid input"]);
     }
 }
 
 $conn->close();
-?>
