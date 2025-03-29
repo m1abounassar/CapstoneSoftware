@@ -99,7 +99,7 @@ export default function Home() {
               console.log(matchedTeam);
               
               if (matchedTeam) {
-                  setTeams(matchedTeam); // Store the entire matched team in state
+                  teams = matchedTeam; // Store the entire matched team in state
               
                   const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
