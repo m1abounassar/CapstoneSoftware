@@ -117,11 +117,12 @@ export default function Home() {
                       [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
                       
                       }));
+                      console.log(teamMembers);
                 
                     
                     });
               
-                    console.log(teamMembers);
+                    
 
 
               } else {
