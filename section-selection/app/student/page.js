@@ -109,14 +109,23 @@ export default function Home() {
 
   console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
 
+  // const postData = {
+  //   username,
+  //   firstChoice: preferences.firstChoice,
+  //   secondChoice: preferences.secondChoice,
+  //   thirdChoice: preferences.thirdChoice,
+  // };
+
   const postData = {
     username,
-    firstChoice: preferences.firstChoice,
-    secondChoice: preferences.secondChoice,
-    thirdChoice: preferences.thirdChoice,
+    firstChoice: ['JIA'],
+    secondChoice: ['JIF'],
+    thirdChoice:  ['JIC'],
   };
 
   console.log(postData);
+  console.log(postData);
+
 
   try {
     const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
