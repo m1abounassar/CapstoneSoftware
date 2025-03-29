@@ -12,6 +12,8 @@ export default function Home() {
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
+  const [teamNumber, setTeamNumber] = useState("");
+  const [teamMembers, setTeamMembers] = useState([]);
   
 
   useEffect(() => {
@@ -48,6 +50,24 @@ export default function Home() {
             if (matchedStudent) {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
+
+              const initialDropdownValues = {};
+
+              // Assign priorities from student's choices
+              matchedStudent.firstChoice.forEach((section) => {
+                initialDropdownValues[section] = "1";
+              });
+              matchedStudent.secondChoice.forEach((section) => {
+                initialDropdownValues[section] = "2";
+              });
+              matchedStudent.thirdChoice.forEach((section) => {
+                initialDropdownValues[section] = "3";
+              });
+
+              setDropdownValues(initialDropdownValues);
+
+              setTeamNumber(matchedStudent.team);
+              
             } else {
               console.error("Student not found in the list.");
               window.location.href = '/notFound';
@@ -79,7 +99,9 @@ export default function Home() {
       .then(response => response.json())
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
-  }, []);
+
+      setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
+  }, [teamNumber]);
 
   
 
@@ -247,22 +269,6 @@ return (
               </div>
 
 
-              {/* PopUp */}
-              {savePrefOpen && (
-                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-                          <p>Saved!</p>
-                          <button
-                            onClick={() => setSavePrefOpen(!savePrefOpen)}
-                            className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-
               {/* Team */}
               <div className='col-span-3 bg-[#003056] rounded-3xl h-[100%] flex flex-col'>
 
@@ -285,6 +291,26 @@ return (
                                     </div>
 
 
+                                  </div>
+
+
+                                  <div className='flex flex-cols'>
+
+                                    <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
+
+                                    {teamMembers.length > 0 ? (
+                                        teamMembers.map((member, index) => (
+                                          <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                                            {member}
+                                          </div>
+                                        ))
+                                      ) : (
+                                        <p>Loading information...</p>
+                                      )}
+
+
+
+                                    
                                   </div>
 
 
@@ -318,6 +344,21 @@ return (
 
 
           </div>
+
+          {/* PopUp */}
+          {savePrefOpen && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                          <p>Saved!</p>
+                          <button
+                            onClick={() => setSavePrefOpen(!savePrefOpen)}
+                            className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
 
 
