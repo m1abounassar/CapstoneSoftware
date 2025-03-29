@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $thirdChoice = json_encode($data['thirdChoice']); // Encode array to JSON
 
         // Update the student preferences in the database
-        $sql = "UPDATE students SET firstChoice='$firstChoice', secondChoice='$secondChoice', thirdChoice='$thirdChoice' WHERE username='$username'";
+        $sql = "UPDATE students SET 'firstChoice'='$firstChoice', 'secondChoice'='$secondChoice', 'thirdChoice'='$thirdChoice' WHERE 'username'='$username'";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["message" => "Preferences saved successfully"]);
