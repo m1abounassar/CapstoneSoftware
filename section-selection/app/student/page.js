@@ -80,7 +80,7 @@ export default function Home() {
               console.log("im so sad: ", matchedStudent.team);
 
               teamNumber = matchedStudent.team;
-              seatTeamNumber(teamNumber);
+              setTeamNumber(teamNumber);
 
               const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
               if (!teamsRes.ok) throw new Error("Team fetch failed");
