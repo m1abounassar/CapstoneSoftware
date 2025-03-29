@@ -84,7 +84,7 @@ export default function Home() {
               if (!teamsRes.ok) throw new Error("Team fetch failed");
                   
               const teamData = await teamsRes.json();
-              if (!Array.isArray(teamsRes.teams)) {
+              if (!Array.isArray(teamData.teams)) {
                   console.error("Unexpected data format:", teamData);
                   return;
               }
@@ -244,23 +244,23 @@ export default function Home() {
   }
 };
 
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
-        const response = await fetch("/students.php");
-        const data = await response.json();
+  // useEffect(() => {
+  //   const fetchStudentData = async () => {
+  //     try {
+  //       const response = await fetch("/students.php");
+  //       const data = await response.json();
 
-        const student = data.find((s) => s.username === username);
-        if (student) {
-          setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
-        }
-      } catch (error) {
-        console.error("Error fetching student data:", error);
-      }
-    };
+  //       const student = data.find((s) => s.username === username);
+  //       if (student) {
+  //         setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching student data:", error);
+  //     }
+  //   };
 
-    fetchStudentData();
-  }, [username]);
+  //   fetchStudentData();
+  // }, [username]);
 
 
 
