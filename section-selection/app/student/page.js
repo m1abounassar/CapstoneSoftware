@@ -116,6 +116,8 @@ export default function Home() {
     thirdChoice: preferences.thirdChoice,
   };
 
+  console.log(postData);
+
   try {
     const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
       method: "POST",
