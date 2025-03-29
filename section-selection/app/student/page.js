@@ -108,19 +108,24 @@ export default function Home() {
                   console.log(typeof rawTeamMembers);
                   console.log(typeof allStudents);
 
-                  rawTeamMembers.forEach((person) => {
+                  const updatedMembers = rawTeamMembers.reduce((acc, person) => {
                     const currStudent = studentsData.students.find(student => student.gtID === person);
-                    console.log("Person", person, "Curr Student: ", currStudent);
-              
-                    setTeamMembers(prev => ({
-                      ...prev, 
-                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
-                      
-                      }));
-                      console.log(teamMembers);
-                
+                    console.log("Person:", person, "Curr Student:", currStudent);
                     
-                    });
+                    if (currStudent) {
+                        acc[currStudent.name] = {
+                            firstChoice: currStudent.firstChoice,
+                            secondChoice: currStudent.secondChoice,
+                            thirdChoice: currStudent.thirdChoice,
+                        };
+                    }
+                    return acc;
+                }, {});
+            
+                setTeamMembers(updatedMembers);
+                console.log(teamMembers);
+
+
               
                     
 
@@ -280,6 +285,10 @@ export default function Home() {
 
   //   fetchStudentData();
   // }, [username]);
+
+  useEffect(() => {
+    console.log("Updated Team Members:", teamMembers);
+  }, [teamMembers]);
 
 
 
