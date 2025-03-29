@@ -90,6 +90,10 @@ export default function Home() {
     ...prev,
     [sectionTitle]: newValue, // Update the dropdown value
   }));
+
+    console.log(priorities);
+    console.log(sections);
+    
 };
 
 
