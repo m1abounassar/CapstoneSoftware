@@ -14,7 +14,10 @@ export default function Home() {
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
   const [teamNumber, setTeamNumber] = useState("");
-  const [teamMembers, setTeamMembers] = useState({});
+  const [teamMembers, setTeamMembers] = useState([]);
+  // New state for the name edit popup
+  const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [newName, setNewName] = useState("");
   
 
   useEffect(() => {
@@ -53,6 +56,7 @@ export default function Home() {
             if (matchedStudent) {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
+              setNewName(matchedStudent.name); // Initialize newName with current name
 
               const initialDropdownValues = {};
               
@@ -90,6 +94,8 @@ export default function Home() {
   
     fetchData();
   }, []);
+  
+
 
 
   useEffect(() => {
@@ -98,21 +104,13 @@ export default function Home() {
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
-  
 
-  useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/sections.php")
-      .then(response => response.json())
-      .then(data => setSections(data.sections))
-      .catch(error => console.error('Error fetching sections:', error));
-  }, []);
-
-  
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
       .then(response => response.json())
       .then(data => setTeams(data.teams))
       .catch(error => console.error('Error fetching sections:', error));
+
 
     const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
 
@@ -206,40 +204,66 @@ export default function Home() {
     } catch (error) {
       console.error("Error saving preferences:", error);
     }
-};
-
-useEffect(() => {
-  const fetchStudentData = async () => {
-    try {
-      const response = await fetch("/students.php");
-      const data = await response.json();
-
-      const student = data.students.find(s => s.username === username);
-      if (student) {
-        student.firstChoice.forEach((section) => {
-          setSelectedChoice("1");
-        });
-        student.secondChoice.forEach((section) => {
-          setSelectedChoice("2");
-        });
-        student.thirdChoice.forEach((section) => {
-          setSelectedChoice("3");
-        });
-        
-      }
-    } catch (error) {
-      console.error("Error fetching student data:", error);
-    }
   };
 
-  fetchStudentData();
-}, [username]);
+  // New function to save the updated name
+  const handleSaveName = async () => {
+  if (!newName.trim()) {
+    return; // Don't save empty names
+  }
+  
+  try {
+    const postData = {
+      username,
+      name: newName
+    };
+    
+    const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+    
+    const textResponse = await response.text();
+    
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status} - ${textResponse}`);
+    }
+    
+    // Update the name in the UI
+    setName(newName);
+    // Close the popup
+    setNameEditOpen(false);
+  } catch (error) {
+    console.error("Error updating name:", error);
+  }
+};
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await fetch("/students.php");
+        const data = await response.json();
+
+        const student = data.find((s) => s.username === username);
+        if (student) {
+          setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
+        }
+      } catch (error) {
+        console.error("Error fetching student data:", error);
+      }
+    };
+
+    fetchStudentData();
+  }, [username]);
 
 
 
 
-return (
-  <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
+  return (
+    <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
             <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
@@ -248,7 +272,17 @@ return (
             <div></div>
             <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
               
-              <div>{name}</div>
+              <div className="flex items-center gap-2">
+                <div>{name}</div>
+                
+                {/* Edit Name Button */}
+                <button 
+                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
+                  onClick={() => setNameEditOpen(true)}
+                >
+                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
+                </button>
+              </div>
   
               <DropdownTwo/>
 
@@ -386,27 +420,54 @@ return (
 
           </div>
 
-          {/* PopUp */}
+          {/* Save Preferences PopUp */}
           {savePrefOpen && (
-                      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-                          <p>Saved!</p>
-                          <button
-                            onClick={() => setSavePrefOpen(!savePrefOpen)}
-                            className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    )}
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                <p>Saved!</p>
+                <button
+                  onClick={() => setSavePrefOpen(!savePrefOpen)}
+                  className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
 
-
-
+          {/* Name Edit PopUp */}
+          {nameEditOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96">
+                <h3 className="text-lg font-bold text-[#003056] mb-4">Edit Display Name</h3>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                  placeholder="Enter your name"
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setNameEditOpen(false)}
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveName}
+                    className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         
       </div>
 
 
-  </div>
+    </div>
   );
 }
