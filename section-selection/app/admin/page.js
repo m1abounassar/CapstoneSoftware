@@ -482,50 +482,6 @@ export default function Home() {
 
 
 
-      {/* Pop-up Modal for Adding Section */}
-      {isAddSectionPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Add a New Section</h2>
-            <input 
-              name="title" 
-              placeholder="Section Title" 
-              value={newSection.title}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="time"
-              placeholder="Times"
-              value={newSection.time}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="capacity"
-              placeholder="Capacity"
-              value={newSection.capacity}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <div className="flex justify-end mt-5">
-              <Button 
-                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsAddSectionPopupOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addSection}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Pop-up Modal for Adding Student */}
       {isAddStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
