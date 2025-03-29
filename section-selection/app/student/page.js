@@ -90,8 +90,19 @@ export default function Home() {
               }
                   
               // Find the student with the matching username
-              setTeams(teamData.teams.find(team => team.name === teamNumber));
-              const rawTeamMembers = teams.members;
+
+              const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
+              
+              if (matchedTeam) {
+                  setTeams(matchedTeam); // Store the entire matched team in state
+              
+                  const rawTeamMembers = (matchedTeam.members); // Now access members safely
+                  console.log(typeof rawTeamMembers);
+                  console.log(typeof JSON.parse(rawTeamMembers));
+                  console.log(matchedTeam, rawTeamMembers);
+              } else {
+                  window.location.href = '/error';
+              }
 
               console.log(teams, rawTeamMembers);
           
