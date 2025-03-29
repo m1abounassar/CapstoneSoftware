@@ -87,58 +87,58 @@ export default function Home() {
   };
 
   const handleSavePreferences = async () => {
-    // Create arrays for each priority (first, second, third)
-    const preferences = {
-      firstChoice: [],
-      secondChoice: [],
-      thirdChoice: []
-    };
+  // Create arrays for each priority (first, second, third)
+  const preferences = {
+    firstChoice: [],
+    secondChoice: [],
+    thirdChoice: []
+  };
 
-    // Iterate over the sections and assign them to the respective priority
-    sections.forEach((section, index) => {
-      const priority = priorities[index] || "3";  // Default to "3" if not selected
+  // Iterate over the sections and assign them to the respective priority
+  sections.forEach((section, index) => {
+    const priority = priorities[index] || "3";  // Default to "3" if not selected
 
-      if (priority === "1") {
-        preferences.firstChoice.push(section.title); // Add to firstChoice array
-      } else if (priority === "2") {
-        preferences.secondChoice.push(section.title); // Add to secondChoice array
-      } else {
-        preferences.thirdChoice.push(section.title); // Add to thirdChoice array
-      }
+    if (priority === "1") {
+      preferences.firstChoice.push(section.title); // Add to firstChoice array
+    } else if (priority === "2") {
+      preferences.secondChoice.push(section.title); // Add to secondChoice array
+    } else {
+      preferences.thirdChoice.push(section.title); // Add to thirdChoice array
+    }
+  });
+
+  console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
+
+  const postData = {
+    username,
+    firstChoice: preferences.firstChoice,
+    secondChoice: preferences.secondChoice,
+    thirdChoice: preferences.thirdChoice,
+  };
+
+  try {
+    const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
     });
 
-    console.log(firstChoice, secondChoice, thirdChoice);
+    const textResponse = await response.text();  // Get the raw response as text
+    console.log("Raw response from server:", textResponse);  // Log the response text
 
-    const postData = {
-      username,
-      firstChoice: preferences.firstChoice,
-      secondChoice: preferences.secondChoice,
-      thirdChoice: preferences.thirdChoice,
-    };
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status} - ${textResponse}`);
+    }
 
-	try {
-	  const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
-	    method: "POST",
-	    headers: {
-	      "Content-Type": "application/json",
-	    },
-	    body: JSON.stringify(postData),
-	  });
-	
-	  const textResponse = await response.text();  // Get the raw response as text
-	  console.log("Raw response from server:", textResponse);  // Log the response text
-	
-	  if (!response.ok) {
-	    throw new Error(`Server error: ${response.status} - ${textResponse}`);
-	  }
-	
-	  const result = JSON.parse(textResponse);  // Try to parse it as JSON
-	  console.log(result);  // Log the parsed result
-	} catch (error) {
-	  console.error("Error saving preferences:", error);
-	}
+    const result = JSON.parse(textResponse);  // Try to parse it as JSON
+    console.log(result);  // Log the parsed result
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+  }
+};
 
-  };
 
 
 
