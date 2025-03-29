@@ -90,7 +90,7 @@ export default function Home() {
               }
                   
               // Find the student with the matching username
-              setTeam(teamData.teams.find(team => team.name === teamNumber);
+              setTeam(teamData.teams.find(team => team.name === teamNumber));
               const rawTeamMembers = team.members;
 
               console.log(team, rawTeamMembers);
