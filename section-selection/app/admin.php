@@ -19,54 +19,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $sql = "SELECT * FROM admin";
     $result = $conn->query($sql);
 
-    $admin = [];
+    $admins = [];
     while ($row = $result->fetch_assoc()) {
-        $admin[] = $row;
+        $admins[] = $row;
     }
 
-    echo json_encode(["admin" => $admin]);
+    // Important: Return "adm" to match frontend expectation
+    echo json_encode(["adm" => $admins]);
 }
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $data = json_decode(file_get_contents("php://input"), true);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
 
-//     // Handle preferences update
-//     if (isset($data['username'], $data['firstChoice'], $data['secondChoice'], $data['thirdChoice'])) {
-//         $username = $conn->real_escape_string($data['username']);
-//         $firstChoice = json_encode($data['firstChoice']);
-//         $secondChoice = json_encode($data['secondChoice']);
-//         $thirdChoice = json_encode($data['thirdChoice']);
-        
-//         // Escape the values before inserting them into the SQL query
-//         $firstChoice = $conn->real_escape_string($firstChoice);
-//         $secondChoice = $conn->real_escape_string($secondChoice);
-//         $thirdChoice = $conn->real_escape_string($thirdChoice);
-        
-//         // Corrected SQL query
-//         $sql = "UPDATE students SET firstChoice='$firstChoice', secondChoice='$secondChoice', thirdChoice='$thirdChoice' WHERE username='$username'";
-        
-//         if ($conn->query($sql) === TRUE) {
-//             echo json_encode(["message" => "Preferences saved successfully"]);
-//         } else {
-//             echo json_encode(["error" => "Error: " . $conn->error]);
-//         }
-//     } 
-//     // Handle name update
-//     else if (isset($data['username'], $data['name'])) {
-//         $username = $conn->real_escape_string($data['username']);
-//         $name = $conn->real_escape_string($data['name']);
-        
-//         $sql = "UPDATE students SET name='$name' WHERE username='$username'";
-        
-//         if ($conn->query($sql) === TRUE) {
-//             echo json_encode(["message" => "Name updated successfully"]);
-//         } else {
-//             echo json_encode(["error" => "Error updating name: " . $conn->error]);
-//         }
-//     }
-//     else {
-//         echo json_encode(["error" => "Invalid input"]);
-//     }
-// }
+    if (isset($data['username'])) {
+        $username = $conn->real_escape_string($data['username']);
+        $updates = [];
+
+        if (isset($data['name'])) {
+            $name = $conn->real_escape_string($data['name']);
+            $updates[] = "name='$name'";
+        }
+
+        if (isset($data['gtID'])) {
+            $gtID = $conn->real_escape_string($data['gtID']);
+            $updates[] = "gtID='$gtID'";
+        }
+
+        if (isset($data['newUsername'])) {
+            $newUsername = $conn->real_escape_string($data['newUsername']);
+            $updates[] = "username='$newUsername'";
+        }
+
+        if (!empty($updates)) {
+            $updateSQL = implode(", ", $updates);
+            $sql = "UPDATE admin SET $updateSQL WHERE username='$username'";
+
+            if ($conn->query($sql) === TRUE) {
+                echo json_encode(["message" => "Admin info updated successfully"]);
+            } else {
+                echo json_encode(["error" => "Error updating admin: " . $conn->error]);
+            }
+        } else {
+            echo json_encode(["error" => "No fields provided to update"]);
+        }
+    } else {
+        echo json_encode(["error" => "Username is required for update"]);
+    }
+}
+
 
 $conn->close();

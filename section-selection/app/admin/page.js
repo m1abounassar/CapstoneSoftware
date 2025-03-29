@@ -199,6 +199,42 @@ export default function Home() {
       console.error("Error updating name:", error);
     }
   };
+
+  const handleSaveAdminInfo = async () => {
+    if (!newName.trim() || !gtid.trim() || !username.trim()) {
+      return; // prevent empty fields
+    }
+  
+    try {
+      const postData = {
+        name: newName,
+        gtid,
+        username
+      };
+  
+      const response = await fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(postData)
+      });
+  
+      const textResponse = await response.text();
+  
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} - ${textResponse}`);
+      }
+  
+      setName(newName); // update locally
+      setNameEditOpen(false); // close popup
+      alert("Admin info updated successfully!");
+    } catch (error) {
+      console.error("Error updating admin info:", error);
+      alert("Failed to update admin info.");
+    }
+  };
+  
   
 
   // CSV Upload Handling
@@ -399,7 +435,7 @@ export default function Home() {
       {nameEditOpen && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div className="bg-white p-6 rounded-md shadow-lg w-96">
-      <h3 className="text-lg font-bold text-[#003056] mb-6 text-center">Student Info</h3>
+      <h3 className="text-lg font-bold text-[#003056] mb-6 text-center">Edit Admin Info</h3>
 
       <div className="space-y-4 text-[#003056]">
         <div className="flex justify-between items-center">
@@ -414,27 +450,35 @@ export default function Home() {
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-bold w-1/3">GTID:</span>
+          <label className="font-bold w-1/3">GTID:</label>
           <span className="w-2/3 text-right">{gtid}</span>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="font-bold w-1/3">Username:</span>
+          <label className="font-bold w-1/3">Username:</label>
           <span className="w-2/3 text-right">{username}</span>
         </div>
       </div>
 
-      <div className="flex justify-end mt-6">
+      <div className="flex justify-end mt-6 gap-2">
         <button
           onClick={() => setNameEditOpen(false)}
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSaveAdminInfo}
           className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
         >
-          Close
+          Save
         </button>
       </div>
     </div>
   </div>
 )}
+
+
 
 
 
