@@ -99,7 +99,7 @@ export default function Home() {
 
               console.log(matchedTeam);
               
-              if (matchedTeam) {
+               if (matchedTeam) {
                   teams = matchedTeam; // Store the entire matched team in state
                   setTeams(teams);
               
@@ -107,27 +107,22 @@ export default function Home() {
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
                   console.log(typeof rawTeamMembers);
                   console.log(typeof allStudents);
-
-                  const updatedMembers = rawTeamMembers.reduce((acc, person) => {
+                  rawTeamMembers.forEach((person) => {
                     const currStudent = studentsData.students.find(student => student.gtID === person);
-                    console.log("Person:", person, "Curr Student:", currStudent);
-                    
-                    if (currStudent) {
-                        acc[currStudent.name] = {
-                            firstChoice: currStudent.firstChoice,
-                            secondChoice: currStudent.secondChoice,
-                            thirdChoice: currStudent.thirdChoice,
-                        };
-                    }
-                    return acc;
-                }, {});
-            
-                setTeamMembers(updatedMembers);
-                console.log(teamMembers);
-
-
+                    console.log("Person", person, "Curr Student: ", currStudent);
               
-                    
+                    setTeamMembers(prev => ({
+                      ...prev, 
+                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+
+                      }));
+                      console.log(teamMembers);
+
+
+                    });
+
+                    console.log(teamMembers);
+
 
 
               } else {
