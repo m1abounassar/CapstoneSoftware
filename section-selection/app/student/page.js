@@ -283,8 +283,8 @@ export default function Home() {
     <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
-            <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
-              Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
+            <div className='p-4 text-lg lg:text-2xl w-max text-[#232323] font-bold'>
+              Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
             </div>
             <div></div>
             <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
