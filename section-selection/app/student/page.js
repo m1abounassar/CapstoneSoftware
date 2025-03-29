@@ -52,32 +52,19 @@ export default function Home() {
               setName(matchedStudent.name);
 
               const initialDropdownValues = {};
-
-              // const stringToArray = (choice) => {
-              //   choice = choice.slice(1);
-              //   choice = choice.slice(0, -1);
-
-                
-              // };
-
-              console.log(matchedStudent.firstChoice);
-              console.log(matchedStudent.secondChoice);
-              console.log(matchedStudent.thirdChoice);
-
+              
               const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
               const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
               const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
 
-              console.log(firstChoiceArray[0]);
-
               // Assign priorities from student's choices
-              matchedStudent.firstChoiceArray.forEach((section) => {
+              firstChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "1";
               });
-              matchedStudent.secondChoiceArray.forEach((section) => {
+              secondChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "2";
               });
-              matchedStudent.thirdChoiceArray.forEach((section) => {
+              thirdChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "3";
               });
 
