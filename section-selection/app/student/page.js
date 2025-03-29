@@ -63,9 +63,9 @@ export default function Home() {
               // const secondChoiceArray = matchedStudent.secondChoice.split(' ');
               // const thirdChoiceArray = matchedStudent.thirdChoice.split(' ');
 
-              const firstChoiceArray = Array.from(matchedStudent.firstChoice);
-              const secondChoiceArray = Array.from(matchedStudent.secondChoice);
-              const thirdChoiceArray = Array.from(matchedStudent.thirdChoice);
+              const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
+              const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
+              const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
 
               console.log(typeof firstChoiceArray);
 
