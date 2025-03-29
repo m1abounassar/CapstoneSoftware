@@ -51,13 +51,13 @@ export default function Home() {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
 
-              // const initialDropdownValues = {};
+              const initialDropdownValues = {};
 
-              // console.log(matchedStudent.firstChoice);
-              // console.log(matchedStudent.secondChoice);
-              // console.log(matchedStudent.thirdChoice);
+              console.log(matchedStudent.firstChoice);
+              console.log(matchedStudent.secondChoice);
+              console.log(matchedStudent.thirdChoice);
 
-              // console.log(typeof matchedStudent.firstChoice);
+              console.log(typeof matchedStudent.firstChoice);
 
               // const firstChoiceArray = matchedStudent.firstChoice || [];
               // const secondChoiceArray = matchedStudent.secondChoice || [];
