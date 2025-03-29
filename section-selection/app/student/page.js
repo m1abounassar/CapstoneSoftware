@@ -403,7 +403,6 @@ export default function Home() {
                                           <div>
                                               <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
                                                 <div className='font-bold w-auto'>{name}</div>
-                                                <div className='font-bold w-auto'>{choices.firstChoice}</div>
               
                                               </div>
                                               <div className='flex'>
