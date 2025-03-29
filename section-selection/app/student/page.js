@@ -53,6 +53,10 @@ export default function Home() {
 
               const initialDropdownValues = {};
 
+              const firstChoice = Array.isArray(matchedStudent.firstChoice) ? matchedStudent.firstChoice : matchedStudent.firstChoice?.split(',') || [];
+              const secondChoice = Array.isArray(matchedStudent.secondChoice) ? matchedStudent.secondChoice : matchedStudent.secondChoice?.split(',') || [];
+              const thirdChoice = Array.isArray(matchedStudent.thirdChoice) ? matchedStudent.thirdChoice : matchedStudent.thirdChoice?.split(',') || [];
+
               // Assign priorities from student's choices
               matchedStudent.firstChoice.forEach((section) => {
                 initialDropdownValues[section] = "1";
