@@ -11,6 +11,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
+  const [selectedChoice, setSelectedChoice] = useState("3");
   
 
   useEffect(() => {
@@ -152,6 +153,24 @@ export default function Home() {
       console.error("Error saving preferences:", error);
     }
 };
+
+useEffect(() => {
+  const fetchStudentData = async () => {
+    try {
+      const response = await fetch("/students.php");
+      const data = await response.json();
+
+      const student = data.find((s) => s.username === username);
+      if (student) {
+        setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
+      }
+    } catch (error) {
+      console.error("Error fetching student data:", error);
+    }
+  };
+
+  fetchStudentData();
+}, [username]);
 
 
 
