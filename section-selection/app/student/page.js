@@ -101,11 +101,9 @@ export default function Home() {
               if (matchedTeam) {
                   setTeams(matchedTeam); // Store the entire matched team in state
               
-                  const rawTeamMembers = (matchedTeam.members); // Now access members safely
+                  const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
-                  console.log("Raw Team Members Type: ", typeof rawTeamMembers);
-                  console.log(typeof JSON.parse(rawTeamMembers));
-                  console.log("Matched Team: ", matchedTeam);
+                  console.log(typeof rawTeamMembers);
 
                   rawTeamMembers.forEach((person) => {
                   const currStudent = allStudents.find(student => student.gtID === person);
