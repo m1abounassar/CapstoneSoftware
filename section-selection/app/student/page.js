@@ -57,6 +57,8 @@ export default function Home() {
               console.log(matchedStudent.secondChoice);
               console.log(matchedStudent.thirdChoice);
 
+              console.log(matchedStudent.firstChoice instanceOf Array);
+
               const firstChoiceArray = matchedStudent.firstChoice || [];
               const secondChoiceArray = matchedStudent.secondChoice || [];
               const thirdChoiceArray = matchedStudent.thirdChoice || [];
