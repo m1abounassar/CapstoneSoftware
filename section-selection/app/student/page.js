@@ -403,15 +403,11 @@ export default function Home() {
                                           <div>
                                               <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
                                                 <div className='font-bold w-auto'>{name}</div>
-                                                <div className='mr-10'>{choices.firstChoice}</div>
-                                                <div className='mr-10'>{choices.secondChoice}</div>
-                                                <div className='mr-10'>{choices.thirdChoice}</div>
-
+                                                <div className='font-bold w-auto'>{choices.firstChoice}</div>
               
                                               </div>
                                               <div className='flex'>
                                                 
-                                                <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
                                               </div>
                                           </div>
               
