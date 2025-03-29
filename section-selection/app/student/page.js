@@ -367,19 +367,17 @@ export default function Home() {
                   <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {teams.length > 0 ? (
-                            teams.map((team) => (
-                              <div key={team.name}>
+                              <div>
 
                                   <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
 
-                                    <div className='font-bold text-nowrap'>Team {team.name} - </div>
+                                    <div className='font-bold text-nowrap'>Team {teamName} - </div>
 
-                                    <div className=' ml-1 text-nowrap'>{team.projectName}</div>
+                                    <div className=' ml-1 text-nowrap'>{teams.projectName}</div>
 
                                     <div className='flex w-full justify-end'>
                                       <div className='font-bold'>Client:</div>
-                                      <div className='ml-1'>{team.clientName}</div>
+                                      <div className='ml-1'>{teams.clientName}</div>
                                     </div>
 
 
@@ -393,28 +391,18 @@ export default function Home() {
                                     {teamMembers.length > 0 ? (
                                         teamMembers.map((member, index) => (
                                           <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member.name}
+                                            {member}
                                           </div>
                                         ))
                                       ) : (
                                         <p>Loading information...</p>
                                       )}
-
-
-
                                     
                                   </div>
 
-
-
-                                  
                                 
                               </div>
-                            ))
-                          ) : (
-                            <p>Loading team...</p>
-                          )
-                      }
+ 
                   </div>
 
 
