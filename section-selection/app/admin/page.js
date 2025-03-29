@@ -413,14 +413,14 @@ export default function Home() {
           />
         </div>
 
-        <div className="flex justify-between">
-          <span className="font-bold w-1/3">{gtid}:</span>
-          <span className="w-2/3 text-right">{username}</span>
+        <div className="flex justify-between items-center">
+          <span className="font-bold w-1/3">GTID:</span>
+          <span className="w-2/3 text-right">{gtid}</span>
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <span className="font-bold w-1/3">Username:</span>
-          <span className="w-2/3 text-right">mholm3</span>
+          <span className="w-2/3 text-right">{username}</span>
         </div>
       </div>
 
