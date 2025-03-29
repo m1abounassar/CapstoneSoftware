@@ -93,7 +93,7 @@ export default function Home() {
               setTeams(teamData.teams.find(team => team.name === teamNumber));
               const rawTeamMembers = teams.members;
 
-              console.log(team, rawTeamMembers);
+              console.log(teams, rawTeamMembers);
           
               rawTeamMembers.forEach((person) => {
                 const currStudent = allStudents.find(student => student.gtID === person);
