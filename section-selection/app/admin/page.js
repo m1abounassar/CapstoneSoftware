@@ -15,6 +15,7 @@ export default function Home() {
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
   const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [name, setName] = useState(false);
   const [newName, setNewName] = useState("");
   const [username, setUsername] = useState("");
   const [gtid, setGTID] = useState("");
