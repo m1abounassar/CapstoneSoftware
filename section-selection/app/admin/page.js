@@ -216,16 +216,27 @@ export default function Home() {
               <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3 border-5 border-[#003056]'>
                 {sections.length > 0 ? (
                   sections.map((section) => (
-                    <div key={section.id} className='p-3 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg'>
-                      <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                        <div className='font-bold w-auto'>{section.title}</div>
-                        <div className='mr-10'>- {section.time}</div>
+                    <div key={section.id} className='p-3 pl-5 bg-[#E5E2D3] flex rounded-md my-2 shadow-sm text-lg items-center'>
+                      <div className='flex flex-col'>
 
+                          <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
+                            <div className='font-bold w-auto'>{section.title}</div>
+                            <div className='mr-10'>- {section.time}</div>
+
+                          </div>
+                          <div className='flex'>
+                            
+                            <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                          </div>
                       </div>
-                      <div className='flex'>
-                        
-                        <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+
+                      <div className='flex justify-items-end'>
+                        <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></button>
                       </div>
+
+      
+
+
                     </div>
                   ))
                 ) : (

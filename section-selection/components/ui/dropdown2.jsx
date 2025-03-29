@@ -28,7 +28,7 @@ const DropdownTwo = () => {
             onClick={() => handleSelect("profile")}
             className="p-2 cursor-pointer hover:bg-gray-100 text-center"
           >
-            Profile
+            Settings
           </div>
           <div
             onClick={() => handleSelect("logout")}
@@ -42,8 +42,8 @@ const DropdownTwo = () => {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4 text-[#003056]">Profile</h2>
-            <p className="text-[#003056]">Your profile details go here.</p>
+            <h2 className="text-xl font-bold mb-4 text-[#003056]">Settings</h2>
+            <p className="text-[#003056]">Settings go here.</p>
             <button
               onClick={() => setShowPopup(false)}
               className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
