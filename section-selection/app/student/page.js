@@ -78,6 +78,34 @@ export default function Home() {
               setDropdownValues(initialDropdownValues);
 
               setTeamNumber(matchedStudent.team);
+
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+                  
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamsRes.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+                  
+              // Find the student with the matching username
+              const teamInfo = teamData.teams.find(team => team.name === teamNumber).members;
+          
+              teamInfo.forEach((person) => {
+                const currStudent = allStudents.find(student => student.gtID === person);
+          
+                setTeamMembers(prev => ({
+                  ...prev, 
+                  [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+                  
+                }));
+          
+                
+              });
+          
+              console.log(setTeamMembers);
+
+              
               
             } else {
               console.error("Student not found in the list.");
@@ -104,37 +132,6 @@ export default function Home() {
       .then(data => setSections(data.sections))
       .catch(error => console.error('Error fetching sections:', error));
   }, []);
-
-  useEffect(() => {
-    const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
-    if (!teamsRes.ok) throw new Error("Team fetch failed");
-        
-    const teamData = await teamsRes.json();
-    if (!Array.isArray(teamsRes.students)) {
-        console.error("Unexpected data format:", teamData);
-        return;
-    }
-        
-    // Find the student with the matching username
-    const teamInfo = teamData.teams.find(team => team.name === teamNumber).members;
-
-    teamInfo.forEach((person) => {
-      const currStudent = allStudents.find(student => student.gtID === person);
-
-      setTeamMembers(prev => ({
-        ...prev, 
-        [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
-        
-      }));
-
-      
-    });
-
-    console.log(setTeamMembers);
-
-
-  }, [teamNumber, allStudents]);
-
   
 
   const handlePriorityChange = (sectionName, newValue) => {
