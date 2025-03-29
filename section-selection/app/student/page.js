@@ -125,6 +125,7 @@ export default function Home() {
 
 
 
+
               } else {
                   console.log("naur!");
               }
@@ -283,6 +284,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log("Updated Team Members:", teamMembers);
+    console.log(typeof teamMembers);
   }, [teamMembers]);
 
 
