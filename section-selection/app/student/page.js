@@ -76,6 +76,7 @@ export default function Home() {
               });
 
               setDropdownValues(initialDropdownValues);
+              console.log(initialDropdownValues);
 
               setTeamNumber(matchedStudent.team);
 
@@ -89,9 +90,12 @@ export default function Home() {
               }
                   
               // Find the student with the matching username
-              const teamInfo = teamData.teams.find(team => team.name === teamNumber).members;
+              setTeam(teamData.teams.find(team => team.name === teamNumber);
+              const rawTeamMembers = team.members;
+
+              console.log(team, rawTeamMembers);
           
-              teamInfo.forEach((person) => {
+              rawTeamMembers.forEach((person) => {
                 const currStudent = allStudents.find(student => student.gtID === person);
           
                 setTeamMembers(prev => ({
