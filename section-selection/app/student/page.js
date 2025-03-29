@@ -121,7 +121,7 @@ export default function Home() {
                     
                     });
               
-                    console.log(setTeamMembers);
+                    console.log(teamMembers);
 
 
               } else {
@@ -393,8 +393,8 @@ export default function Home() {
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
                                     {teamMembers.length > 0 ? (
-                                        teamMembers.map((member, index) => (
-                                          <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                                        teamMembers.map((member) => (
+                                          <div key={member} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
                                             {member}
                                           </div>
                                         ))
