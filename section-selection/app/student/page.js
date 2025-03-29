@@ -51,32 +51,32 @@ export default function Home() {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
 
-              const initialDropdownValues = {};
+              // const initialDropdownValues = {};
 
-              console.log(matchedStudent.firstChoice);
-              console.log(matchedStudent.secondChoice);
-              console.log(matchedStudent.thirdChoice);
+              // console.log(matchedStudent.firstChoice);
+              // console.log(matchedStudent.secondChoice);
+              // console.log(matchedStudent.thirdChoice);
 
-              console.log(typeof matchedStudent.firstChoice);
+              // console.log(typeof matchedStudent.firstChoice);
 
-              const firstChoiceArray = matchedStudent.firstChoice || [];
-              const secondChoiceArray = matchedStudent.secondChoice || [];
-              const thirdChoiceArray = matchedStudent.thirdChoice || [];
+              // const firstChoiceArray = matchedStudent.firstChoice || [];
+              // const secondChoiceArray = matchedStudent.secondChoice || [];
+              // const thirdChoiceArray = matchedStudent.thirdChoice || [];
 
-              // Assign priorities from student's choices
-              matchedStudent.firstChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "1";
-              });
-              matchedStudent.secondChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "2";
-              });
-              matchedStudent.thirdChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "3";
-              });
+              // // Assign priorities from student's choices
+              // matchedStudent.firstChoiceArray.forEach((section) => {
+              //   initialDropdownValues[section] = "1";
+              // });
+              // matchedStudent.secondChoiceArray.forEach((section) => {
+              //   initialDropdownValues[section] = "2";
+              // });
+              // matchedStudent.thirdChoiceArray.forEach((section) => {
+              //   initialDropdownValues[section] = "3";
+              // });
 
-              setDropdownValues(initialDropdownValues);
+              // setDropdownValues(initialDropdownValues);
 
-              setTeamNumber(matchedStudent.team);
+              // setTeamNumber(matchedStudent.team);
               
             } else {
               console.error("Student not found in the list.");
