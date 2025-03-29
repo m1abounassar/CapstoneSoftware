@@ -6,14 +6,14 @@ import { DropdownTwo } from "@/components/ui/dropdown2";
 export default function Home() {
   const [sections, setSections] = useState([]);
   const [priorities, setPriorities] = useState({});
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [allStudents, setAllStudents] = useState("");
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
   const [selectedChoice, setSelectedChoice] = useState("3");
-  const [teamNumber, setTeamNumber] = useState("");
+  const [teamNumber, setTeamNumber] = useState(null);
   const [teamMembers, setTeamMembers] = useState([]);
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
