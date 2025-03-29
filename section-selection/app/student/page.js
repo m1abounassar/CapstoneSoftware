@@ -97,9 +97,10 @@ export default function Home() {
                   setTeams(matchedTeam); // Store the entire matched team in state
               
                   const rawTeamMembers = (matchedTeam.members); // Now access members safely
-                  console.log(typeof rawTeamMembers);
+                  console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
+                  console.log("Raw Team Members Type: ", typeof rawTeamMembers);
                   console.log(typeof JSON.parse(rawTeamMembers));
-                  console.log(matchedTeam, rawTeamMembers);
+                  console.log("Matched Team: ", matchedTeam);
 
                   rawTeamMembers.forEach((person) => {
                   const currStudent = allStudents.find(student => student.gtID === person);
@@ -120,11 +121,6 @@ export default function Home() {
                   window.location.href = '/error';
               }
 
-              console.log(teams, rawTeamMembers);
-          
-        
-
-              
               
             } else {
               console.error("Student not found in the list.");
