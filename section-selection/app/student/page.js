@@ -65,20 +65,20 @@ export default function Home() {
 
               console.log(typeof firstChoiceArray);
 
-              // // Assign priorities from student's choices
-              // matchedStudent.firstChoiceArray.forEach((section) => {
-              //   initialDropdownValues[section] = "1";
-              // });
-              // matchedStudent.secondChoiceArray.forEach((section) => {
-              //   initialDropdownValues[section] = "2";
-              // });
-              // matchedStudent.thirdChoiceArray.forEach((section) => {
-              //   initialDropdownValues[section] = "3";
-              // });
+              // Assign priorities from student's choices
+              matchedStudent.firstChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "1";
+              });
+              matchedStudent.secondChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "2";
+              });
+              matchedStudent.thirdChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "3";
+              });
 
-              // setDropdownValues(initialDropdownValues);
+              setDropdownValues(initialDropdownValues);
 
-              // setTeamNumber(matchedStudent.team);
+              setTeamNumber(matchedStudent.team);
               
             } else {
               console.error("Student not found in the list.");
