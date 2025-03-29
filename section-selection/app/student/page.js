@@ -59,9 +59,13 @@ export default function Home() {
 
               console.log(typeof matchedStudent.firstChoice);
 
-              const firstChoiceArray = matchedStudent.firstChoice.split(' ');
-              const secondChoiceArray = matchedStudent.secondChoice.split(' ');
-              const thirdChoiceArray = matchedStudent.thirdChoice.split(' ');
+              // const firstChoiceArray = matchedStudent.firstChoice.split(' ');
+              // const secondChoiceArray = matchedStudent.secondChoice.split(' ');
+              // const thirdChoiceArray = matchedStudent.thirdChoice.split(' ');
+
+              const firstChoiceArray = Array.from(matchedStudent.firstChoice);
+              const secondChoiceArray = Array.from(matchedStudent.secondChoice);
+              const thirdChoiceArray = Array.from(matchedStudent.thirdChoice);
 
               console.log(typeof firstChoiceArray);
 
@@ -306,7 +310,7 @@ return (
                                   </div>
 
 
-                                  <div className='flex flex-cols'>
+                                  <div className='flex flex-col'>
 
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
