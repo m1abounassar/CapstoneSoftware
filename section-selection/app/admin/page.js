@@ -21,7 +21,6 @@ export default function Home() {
   const [addAdmin, setAllAdmin] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
   const [allTeams, setAllTeams] = useState([]);
-  const [nameEditOpen, setNameEditOpen] = useState(false);
   const [isLeadAdmin, setIsLeadAdmin] = useState(false);
 
   const [protocol, setProtocol] = useState("http://");
