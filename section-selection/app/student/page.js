@@ -76,6 +76,7 @@ export default function Home() {
               });
 
               setDropdownValues(initialDropdownValues);
+              dropdownValues = initialDropdownValues;
               console.log(initialDropdownValues);
               console.log("im so sad: ", matchedStudent.team);
 
