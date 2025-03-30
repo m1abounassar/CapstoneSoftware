@@ -78,6 +78,7 @@ export default function Home() {
               setDropdownValues(dropdownValues);
               console.log("inital:", initialDropdownValues);
               console.log("actual:", dropdownValues);
+              console.log(typeof dropdownValues);
               console.log(Object.keys(dropdownValues));
               console.log(Object.values(dropdownValues));
               console.log("im so sad: ", matchedStudent.team);
