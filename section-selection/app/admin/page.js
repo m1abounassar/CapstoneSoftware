@@ -323,7 +323,7 @@ export default function Home() {
               </div>
   
               <button
-                onClick={() => setHamburgerOpen(true)}
+                onClick={() => setHamburgerOptionsOpen(true)}
                 className="flex items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
                 ☰</button>
 
