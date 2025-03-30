@@ -316,7 +316,6 @@ export default function Home() {
 
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {sections.length > 0 ? (
                       {sections.length > 0 && Object.keys(dropdownValues).length > 0 ? (
                         sections.map((section) => (
                           console.log(`Rendering dropdown for ${section.title}:`, dropdownValues[section.title], ". Type: ", typeof dropdownValues[section.title]),
