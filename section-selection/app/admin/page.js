@@ -38,29 +38,80 @@ export default function Home() {
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
-  // useEffect(() => {
-  //   async function fetchSession() {
-  //     const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-  //     if (res.ok) {
-  //       const session = await res.json();
-  //       console.log('Session:', session);
-  //       setUser(session);  // Save session data to state
-  //     } else {
-  //       console.log('Not logged in');
-  //       window.location.href = '/cas-admin.php';  // Redirect to CAS login
-  //     }
-  //   }
+   useEffect(() => {
+      async function fetchData() {
+          const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+          if (!sessionRes.ok) {
+              window.location.href = '/error';
+          }
+    
+          const sessionData = await sessionRes.json();
+          console.log('Session:', sessionData);
+    
+          if (sessionData.loggedIn === 'true') {
+              console.log('true');
+              username = sessionData.username;
+              setUsername(username);
+              console.log(sessionData.username);
 
-  //   fetchSession();
-  // }, []);
+            
+              const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+              if (!adminRes.ok) throw new Error("Admin fetch failed");
+          
+              const adminData = await adminRes.json();
+              if (!Array.isArray(adminData.adm)) {
+                console.error("Unexpected data format:", adminData);
+                return;
+              }
 
-  // Fetch teams data (If we also move teams to a PHP API, update this)
-  useEffect(() => {
-    fetch('/teams.json')
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error loading teams:', error));
-  }, []);
+              allAdmin = adminData.adm;
+              setAllAdmin(allAdmin);
+          
+              // Find the admin info
+              const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+              console.log('info: ');
+              console.log(matchedAdmin);
+          
+              if (matchedAdmin) {
+                console.log(matchedAdmin.name);
+                
+                name = matchedAdmin.name
+                setName(name);
+                
+                newName = matchedAdmin.name
+                setNewName(newName);
+
+                gtid = matchedAdmin.gtid
+                setGTID(gtid);
+
+                const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+                if (!teamsRes.ok) throw new Error("Team fetch failed");
+                    
+                const teamData = await teamsRes.json();
+                if (!Array.isArray(teamData.teams)) {
+                    console.error("Unexpected data format:", teamData);
+                    return;
+                }
+
+                allTeams = teamData.teams;
+                setAllTeams(teamData.teams);
+
+                
+              } else {
+                console.error("Student not found in the list.");
+                window.location.href = '/notFound';
+              }
+            
+          } else {
+            window.location.href = '/cas-admin.php';
+          }
+    
+      
+      }
+    
+      fetchData();
+    }, []);
+  
 
   // Fetch sections data from PHP API
   useEffect(() => {
