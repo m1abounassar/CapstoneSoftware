@@ -231,7 +231,7 @@ export default function Home() {
       // Update the name in the UI
       setName(newName);
       // Close the popup
-      setHamburgerOpen(false);
+      setHamburgerOptionsOpen(false);
     } catch (error) {
       console.error("Error updating name:", error);
     }
@@ -627,7 +627,7 @@ export default function Home() {
               <div
                 onClick={() => {
                   setSettingsOpen(true);
-                  setHamburgerOpen(false);
+                  setHamburgerOptionsOpen(false);
                 }}
                 className="p-2 cursor-pointer hover:bg-gray-100 text-center"
               >
@@ -636,7 +636,7 @@ export default function Home() {
               <div
                 onClick={() => {
                   setLogoutOpen(true);
-                  setHamburgerOpen(false);
+                  setHamburgerOptionsOpen(false);
                 }}
                 className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
               >
@@ -672,7 +672,7 @@ export default function Home() {
               </div>
             </div>
             <button
-              onClick={() => setHamburgerOpen(false)}
+              onClick={() => setHamburgerOptionsOpen(false)}
               className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
             >
               Close
@@ -680,7 +680,7 @@ export default function Home() {
             <button
               onClick={() => {
                 handleSaveName();
-                setHamburgerOpen(false);
+                setHamburgerOptionsOpen(false);
               }}
               className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
             >
