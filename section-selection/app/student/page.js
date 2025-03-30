@@ -79,9 +79,13 @@ export default function Home() {
                 initialDropdownValues[section] = "3";
               });
 
-              setDropdownValues(initialDropdownValues);
+              dropdownValues = initialDropdownValues;
+              setDropdownValues(dropdownValues);
 
-              setTeamNumber(matchedStudent.team);
+              teamNumber = matchedStudent.team;
+              setTeamNumber(teamNumber);
+
+              console.log('after team number');
               
             } else {
               console.error("Student not found in the list.");
@@ -99,8 +103,6 @@ export default function Home() {
     fetchData();
   }, []);
   
-
-
 
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
