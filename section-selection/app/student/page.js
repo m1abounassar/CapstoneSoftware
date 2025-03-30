@@ -177,7 +177,7 @@ export default function Home() {
         
         // Log dropdownValues for each section
         data.sections.forEach(section => {
-          console.log(`Dropdown value for ${section.name}:`, dropdownValues[section.name]);
+          console.log(`Dropdown value for ${section.title}:`, dropdownValues[section.title]);
         });
       })
       .catch(error => console.error('Error fetching sections:', error));
