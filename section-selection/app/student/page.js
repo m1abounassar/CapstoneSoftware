@@ -285,7 +285,7 @@ export default function Home() {
   useEffect(() => {
     console.log("Updated Team Members:", teamMembers);
     console.log(typeof teamMembers);
-    console.log(teamMembers.length);
+    console.log(Object.keys(teamMembers).length);
   }, [teamMembers]);
 
 
