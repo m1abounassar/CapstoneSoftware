@@ -18,7 +18,6 @@ export default function Home() {
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
