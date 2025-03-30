@@ -79,8 +79,12 @@ export default function Home() {
         
             if (matchedAdmin) {
               console.log(matchedAdmin.name);
-              setName(matchedAdmin.name);
-              setNewName(matchedAdmin.name); // Initialize newName with current name
+              name = matchedAdmin.name;
+              setName(name);
+
+              newName = matchedAdmin.name;
+              setNewName(name);
+
               if (matchedAdmin.isLead === '1') {
                 setIsLeadAdmin(true);
               }
@@ -441,20 +445,20 @@ export default function Home() {
               </div>
               {Object.keys(allTeams).length > 0 ? (
                 Object.keys(allTeams).map(([name, members, section, status, clientName, projectName]) => (
-                  <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
+                  <div key={name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
                     <div
                       className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
                       style={{
-                        transform: rotatedTeams.has(team.id) ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transform: rotatedTeams.has(name) ? 'rotate(90deg)' : 'rotate(0deg)',
                         transition: 'transform 0.3s ease'
                       }}
-                      onClick={() => toggleRotation(team.id)}>▶
+                      onClick={() => toggleRotation(name)}>▶
                     </div>     
-                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.id}</div>
+                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{name}</div>
                     <div 
                       className='bg-[#A5925A] rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
                       style={{
-                        color: getStatusColor(team.status)
+                        color: getStatusColor(status)
                       }}
                       >●</div>
                   </div>
