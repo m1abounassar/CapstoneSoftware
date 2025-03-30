@@ -13,7 +13,23 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
+<<<<<<< Updated upstream
   const [user, setUser] = useState(null); // NEW: Store user info from CAS session
+=======
+  const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const [name, setName] = useState("");
+  const [newName, setNewName] = useState("");
+  const [username, setUsername] = useState("");
+  const [gtid, setGTID] = useState(0);
+  const [allAdmin, setAllAdmin] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
+  const [allTeams, setAllTeams] = useState({});
+  const [isLeadAdmin, setIsLeadAdmin] = useState(true);
+>>>>>>> Stashed changes
 
   const [protocol, setProtocol] = useState("http://");
 
@@ -119,6 +135,84 @@ export default function Home() {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  const startLogout = () => {
+    window.location.href = '/logout.php';
+  };
+
+  const handleSaveName = async () => {
+    if (!newName.trim()) {
+      return; // Don't save empty names
+    }
+    
+    try {
+      const postData = {
+        username,
+        name: newName
+      };
+      
+      const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+      
+      const textResponse = await response.text();
+      
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} - ${textResponse}`);
+      }
+      
+      // Update the name in the UI
+      setName(newName);
+      // Close the popup
+      setHamburgerOptionsOpen(false);
+    } catch (error) {
+      console.error("Error updating name:", error);
+    }
+  };
+
+  const handleSaveAdminInfo = async () => {
+    if (!newName.trim() || !gtid.trim() || !username.trim()) {
+      return; // prevent empty fields
+    }
+  
+    try {
+      const postData = {
+        name: newName,
+        gtid,
+        username
+      };
+  
+      const response = await fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(postData)
+      });
+  
+      const textResponse = await response.text();
+  
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} - ${textResponse}`);
+      }
+  
+      setName(newName); // update locally
+      setNameEditOpen(false); // close popup
+      alert("Admin info updated successfully!");
+    } catch (error) {
+      console.error("Error updating admin info:", error);
+      alert("Failed to update admin info.");
+    }
+  };
+  
+  
+
+>>>>>>> Stashed changes
   // CSV Upload Handling
   const handleCSVUpload = (event) => {
     const file = event.target.files[0];
@@ -154,7 +248,31 @@ export default function Home() {
           <div>Admin</div>
           <DropdownTwo/>
 
+<<<<<<< Updated upstream
         </div>
+=======
+      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
+
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
+            <div className='p-4 text-lg lg:text-2xl w-max text-[#232323] font-bold'>
+              Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
+            </div>
+            <div></div>
+            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+              
+              <div className="flex items-center gap-2">
+                <div>{name}</div>
+                
+              </div>
+  
+              <button
+                onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                className="flex items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+                ☰</button>
+
+            </div>
+        
+>>>>>>> Stashed changes
       </div>
 
       {/* Body */}
@@ -491,6 +609,224 @@ export default function Home() {
         </div>
       )}
 
+<<<<<<< Updated upstream
+=======
+      {hamburgerOptionsOpen && (
+            <div className="absolute right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+              <div
+                onClick={() => {
+                  setSettingsOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+              >
+                Settings
+              </div>
+              <div
+                onClick={() => {
+                  setLogoutOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-[#D01717]"
+              >
+                Logout
+              </div>
+            </div>
+      )}
+
+      {logoutOpen && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                  <button
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSettingsOpen(false);
+                      startLogout();
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                  >
+                    Logout
+                  </button>
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
+
+      {(settingsOpen && (isLeadAdmin == false)) && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+            <div className="grid grid-rows-4">
+
+              <div className='flex items-center'>
+                <label className="font-bold w-1/3 mr-1">Name:</label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Enter Name"
+                  className="border border-gray-300 p-2 rounded-md w-2/3"
+                />
+              </div>
+
+
+              
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">GTID:</label>
+                <span className="w-2/3 text-right">{gtid}</span>
+              </div>
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">Username:</label>
+                <span className="w-2/3 text-right">{username}</span>
+              </div>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                  <button
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleSaveName();
+                      setSettingsOpen(false);
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Save
+                  </button>
+              </div>
+
+            </div>
+
+
+            </div>
+            
+        </div>
+      )}
+
+      {(settingsOpen && (isLeadAdmin == true)) && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white grid grid-cols-2 gap-4 p-6 rounded-md shadow-lg w-max h-max text-center">
+
+            <div>
+
+                    <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+                    <div className="grid grid-rows-4">
+
+                      <div className='flex items-center'>
+                        <label className="font-bold w-1/3 mr-1">Name:</label>
+                        <input
+                          type="text"
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          placeholder="Enter Name"
+                          className="border border-gray-300 p-2 rounded-md w-2/3"
+                        />
+                      </div>
+
+
+                      
+              
+                      <div className="flex justify-between items-center">
+                        <label className="font-bold w-1/3">GTID:</label>
+                        <span className="w-2/3 text-right">{gtid}</span>
+                      </div>
+              
+                      <div className="flex justify-between items-center">
+                        <label className="font-bold w-1/3">Username:</label>
+                        <span className="w-2/3 text-right">{username}</span>
+                      </div>
+
+                      <div className='flex gap-5 justify-center font-bold'>
+
+                          <button
+                            onClick={() => setSettingsOpen(false)}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Close
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleSaveName();
+                              setSettingsOpen(false);
+                            }}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Save
+                          </button>
+                      </div>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <h2 className="text-xl font-bold mb-4">Admin Settings</h2>
+
+                    <div className='overflow-auto'>
+
+                    {Object.keys(allAdmin).length > 0 ? (
+                      Object.keys(allAdmin).map(([name]) => (
+                        <div key={name} className='text-[#003056] text-xl my-2 grid grid-cols-8'>
+
+                          <div>{name}</div>
+                          
+
+                        </div>
+                      ))
+                    ) : (
+                      <p>Loading Admin...</p>
+                    )}
+
+
+                    </div>
+
+                    
+                    <div className='flex gap-5 justify-center font-bold'>
+
+                          <button
+                            onClick={() => {
+                              handleSaveName();
+                              setSettingsOpen(false);
+                            }}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Add an Admin
+                          </button>
+                     </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            
+      )}
+
+
+      
+
+>>>>>>> Stashed changes
       {/* CSV Upload Section */}
       <div className="m-10">
         <input 
