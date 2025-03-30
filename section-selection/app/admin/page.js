@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { DropdownTwo } from "@/components/ui/dropdown2";
+
 
 export default function Home() {
   const [sections, setSections] = useState([]);
@@ -12,6 +12,7 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
+
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -21,10 +22,11 @@ export default function Home() {
   const [newName, setNewName] = useState("");
   const [username, setUsername] = useState("");
   const [gtid, setGTID] = useState(0);
-  const [addAdmin, setAllAdmin] = useState([]);
+
+  const [allAdmin, setAllAdmin] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
   const [allTeams, setAllTeams] = useState({});
-  const [isLeadAdmin, setIsLeadAdmin] = useState(false);
+  const [isLeadAdmin, setIsLeadAdmin] = useState(true);
 
   const [protocol, setProtocol] = useState("http://");
   
@@ -203,6 +205,11 @@ export default function Home() {
     }
   };
 
+
+  const startLogout = () => {
+    window.location.href = '/logout.php';
+  };
+
   const handleSaveName = async () => {
     if (!newName.trim()) {
       return; // Don't save empty names
@@ -272,7 +279,6 @@ export default function Home() {
     }
   };
   
-  
 
   // CSV Upload Handling
   const handleCSVUpload = (event) => {
@@ -309,6 +315,21 @@ export default function Home() {
 
   return (
 
+    <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
+      <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center'>
+        <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
+        <div></div>
+        <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+          
+          <div>Admin</div>
+          <button
+                onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+          ☰</button>
+      
+      </div>
+
+
       <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
@@ -321,13 +342,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <div>{name}</div>
                 
-                {/* Edit Name Button */}
-                <button 
-                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
-                  onClick={() => setNameEditOpen(true)}
-                >
-                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
-                </button>
+
               </div>
   
               <button
@@ -336,7 +351,7 @@ export default function Home() {
                 ☰</button>
 
             </div>
-        
+
       </div>
 
       {/* Body */}
@@ -436,6 +451,7 @@ export default function Home() {
             >
               Add Section
             </Button>
+
           </div>
 
           {/* Teams Panel */}
@@ -630,8 +646,11 @@ export default function Home() {
         </div>
       )}
 
+
+
       {hamburgerOptionsOpen && (
-            <div className="absolute right-0 mt-15 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+            <div className="absolute right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+
               <div
                 onClick={() => {
                   setSettingsOpen(true);
@@ -646,63 +665,55 @@ export default function Home() {
                   setLogoutOpen(true);
                   setHamburgerOptionsOpen(false);
                 }}
-                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
+
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-[#D01717]"
+
               >
                 Logout
               </div>
             </div>
       )}
 
-
-      {(settingsOpen && (isLeadAdmin == false)) && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      {logoutOpen && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
-            <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Name:</label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter Name"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
+            <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                  <button
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSettingsOpen(false);
+                      startLogout();
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                  >
+                    Logout
+                  </button>
               </div>
-      
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">GTID:</label>
-                <span className="w-2/3 text-right">{gtid}</span>
-              </div>
-      
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Username:</label>
-                <span className="w-2/3 text-right">{username}</span>
-              </div>
+
+
+
             </div>
-            <button
-              onClick={() => setHamburgerOptionsOpen(false)}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                handleSaveName();
-                setHamburgerOptionsOpen(false);
-              }}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Save
-            </button>
+            
         </div>
       )}
 
-      {/* {(settingsOpen && (isLeadAdmin == true)) && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+
+      {(settingsOpen && (isLeadAdmin == false)) && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4 text-[#003056]">Lead Admin Settings</h2>
-            <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Name:</label>
+            <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+            <div className="grid grid-rows-4">
+
+              <div className='flex items-center'>
+                <label className="font-bold w-1/3 mr-1">Name:</label>
                 <input
                   type="text"
                   value={newName}
@@ -711,7 +722,7 @@ export default function Home() {
                   className="border border-gray-300 p-2 rounded-md w-2/3"
                 />
               </div>
-      
+
               <div className="flex justify-between items-center">
                 <label className="font-bold w-1/3">GTID:</label>
                 <span className="w-2/3 text-right">{gtid}</span>
@@ -721,44 +732,156 @@ export default function Home() {
                 <label className="font-bold w-1/3">Username:</label>
                 <span className="w-2/3 text-right">{username}</span>
               </div>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                  <button
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleSaveName();
+                      setSettingsOpen(false);
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                  >
+                    Save
+                  </button>
+              </div>
+
             </div>
-            <button
-              onClick={() => setHamburgerOptionsOpen(false)}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                handleSaveName();
-                setHamburgerOptionsOpen(false);
-              }}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Save
-            </button>
+
+
+            </div>
+            
         </div>
-      )}    */}
+      )}
+
+      {(settingsOpen && (isLeadAdmin == true)) && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white grid grid-cols-2 gap-4 p-6 rounded-md shadow-lg w-max h-max text-center">
+
+            <div>
+
+                    <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+                    <div className="grid grid-rows-4">
+
+                      <div className='flex items-center'>
+                        <label className="font-bold w-1/3 mr-1">Name:</label>
+                        <input
+                          type="text"
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          placeholder="Enter Name"
+                          className="border border-gray-300 p-2 rounded-md w-2/3"
+                        />
+                      </div>
 
 
-      
+                      
+              
+                      <div className="flex justify-between items-center">
+                        <label className="font-bold w-1/3">GTID:</label>
+                        <span className="w-2/3 text-right">{gtid}</span>
+                      </div>
+              
+                      <div className="flex justify-between items-center">
+                        <label className="font-bold w-1/3">Username:</label>
+                        <span className="w-2/3 text-right">{username}</span>
+                      </div>
 
-      {/* CSV Upload Section */}
-      <div className="m-10">
-        <input 
-          type="file" 
-          id="csvFileInput" 
-          accept=".csv" 
-          style={{ display: "none" }} 
-          onChange={handleCSVUpload} 
-        />
-        <Button
-          className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
-          onClick={() => document.getElementById("csvFileInput").click()}
-        >
-          Upload CSV
-        </Button>
+                      <div className='flex gap-5 justify-center font-bold'>
+
+                          <button
+                            onClick={() => setSettingsOpen(false)}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Close
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleSaveName();
+                              setSettingsOpen(false);
+                            }}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Save
+                          </button>
+                      </div>
+
+                    </div>
+                </div>
+
+                <div>
+
+                    <h2 className="text-xl font-bold mb-4">Admin Settings</h2>
+
+                    <div className='overflow-auto'>
+
+                    {Object.keys(allAdmin).length > 0 ? (
+                      Object.keys(allAdmin).map(([name]) => (
+                        <div key={name} className='text-[#003056] text-xl my-2 grid grid-cols-8'>
+
+                          <div>{name}</div>
+                          
+
+                        </div>
+                      ))
+                    ) : (
+                      <p>Loading Admin...</p>
+                    )}
+
+
+                    </div>
+
+                    
+                    <div className='flex gap-5 justify-center font-bold'>
+
+                          <button
+                            onClick={() => {
+                              handleSaveName();
+                              setSettingsOpen(false);
+                            }}
+                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                          >
+                            Add an Admin
+                          </button>
+                     </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            
+      )}
+
+        {/* CSV Upload Section */}
+        <div className="m-10">
+          <input 
+            type="file" 
+            id="csvFileInput" 
+            accept=".csv" 
+            style={{ display: "none" }} 
+            onChange={handleCSVUpload} 
+          />
+          <Button
+            className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+            onClick={() => document.getElementById("csvFileInput").click()}
+          >
+            Upload CSV
+          </Button>
+        </div>
       </div>
+
     </div>
+
+    </div>
+
+  
   );
 }
