@@ -47,7 +47,8 @@ export default function Home() {
 
             console.log('true');
 
-            setUsername(sessionData.username);
+            username = sessionData.username;
+            setUsername(username);
             console.log(sessionData.username);
 
             const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
@@ -88,7 +89,8 @@ export default function Home() {
               if (matchedAdmin.isLead === '1') {
                 setIsLeadAdmin(true);
               }
-              setGTID(matchedAdmin.gtid);
+              gtid = matchedAdmin.gtid;
+              setGTID(gtid);
               
 
 
@@ -101,7 +103,8 @@ export default function Home() {
                   return;
               }
 
-              setAllTeams(teamData.teams);
+              allTeams = teamData.teams;
+              setAllTeams(allTeams);
 
 
               console.log("Admin Name: ", name);
