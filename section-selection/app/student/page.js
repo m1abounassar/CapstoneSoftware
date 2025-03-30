@@ -12,7 +12,6 @@ export default function Home() {
   const [allStudents, setAllStudents] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
-  const [selectedChoice, setSelectedChoice] = useState("3");
   const [teamNumber, setTeamNumber] = useState(0);
   const [teamMembers, setTeamMembers] = useState([]);
   // New state for the name edit popup
@@ -357,7 +356,7 @@ export default function Home() {
 
                             <Dropdown
                               sectionName={section.title} // Pass section name to the dropdown
-                              value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
+                              value={dropdownValues[section.title] || "2"} // Use stored value or default to "3"
                               onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
                             />
 
