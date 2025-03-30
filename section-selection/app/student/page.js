@@ -73,11 +73,11 @@ export default function Home() {
               thirdChoiceArray.forEach((section) => {
                 initialDropdownValues[section] = "3";
               });
-
           
-              setDropdownValues(initialDropdownValues);
+              dropdownValues = initialDropdownValues;
+              setDropdownValues(dropdownValues);
               console.log("inital:", initialDropdownValues);
-              console.log("inital:", dropdownValues);
+              console.log("actual:", dropdownValues);
               console.log(Object.keys(dropdownValues));
               console.log("im so sad: ", matchedStudent.team);
 
