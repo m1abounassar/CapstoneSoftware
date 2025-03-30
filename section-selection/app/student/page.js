@@ -77,7 +77,7 @@ export default function Home() {
           
               setDropdownValues(initialDropdownValues);
               console.log(initialDropdownValues);
-              console.log(dropdownValues["JIF"], dropdownValues["JIC"], dropdownValues["JIA"]);
+              console.log(dropdownValues[JIF], dropdownValues[JIC], dropdownValues[JIA]);
               console.log("im so sad: ", matchedStudent.team);
 
               teamNumber = matchedStudent.team;
