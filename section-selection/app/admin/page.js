@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { DropdownTwo } from "@/components/ui/dropdown2";
+
 
 export default function Home() {
   const [teams, setTeams] = useState([]);
@@ -13,9 +13,7 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
-<<<<<<< Updated upstream
-  const [user, setUser] = useState(null); // NEW: Store user info from CAS session
-=======
+
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -29,7 +27,7 @@ export default function Home() {
   const [allStudents, setAllStudents] = useState([]);
   const [allTeams, setAllTeams] = useState({});
   const [isLeadAdmin, setIsLeadAdmin] = useState(true);
->>>>>>> Stashed changes
+
 
   const [protocol, setProtocol] = useState("http://");
 
@@ -135,8 +133,7 @@ export default function Home() {
     }
   };
 
-<<<<<<< Updated upstream
-=======
+
   const startLogout = () => {
     window.location.href = '/logout.php';
   };
@@ -212,7 +209,7 @@ export default function Home() {
   
   
 
->>>>>>> Stashed changes
+
   // CSV Upload Handling
   const handleCSVUpload = (event) => {
     const file = event.target.files[0];
@@ -246,11 +243,13 @@ export default function Home() {
         <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
           
           <div>Admin</div>
-          <DropdownTwo/>
+          <button
+                onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+          ☰</button>
+      
+      </div>
 
-<<<<<<< Updated upstream
-        </div>
-=======
       <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
@@ -271,8 +270,7 @@ export default function Home() {
                 ☰</button>
 
             </div>
-        
->>>>>>> Stashed changes
+      
       </div>
 
       {/* Body */}
@@ -372,6 +370,7 @@ export default function Home() {
             >
               Add Section
             </Button>
+
           </div>
 
           {/* Teams Panel */}
@@ -609,8 +608,7 @@ export default function Home() {
         </div>
       )}
 
-<<<<<<< Updated upstream
-=======
+
       {hamburgerOptionsOpen && (
             <div className="absolute right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
@@ -823,26 +821,29 @@ export default function Home() {
             
       )}
 
+        {/* CSV Upload Section */}
+        <div className="m-10">
+          <input 
+            type="file" 
+            id="csvFileInput" 
+            accept=".csv" 
+            style={{ display: "none" }} 
+            onChange={handleCSVUpload} 
+          />
+          <Button
+            className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+            onClick={() => document.getElementById("csvFileInput").click()}
+          >
+            Upload CSV
+          </Button>
+        </div>
 
-      
-
->>>>>>> Stashed changes
-      {/* CSV Upload Section */}
-      <div className="m-10">
-        <input 
-          type="file" 
-          id="csvFileInput" 
-          accept=".csv" 
-          style={{ display: "none" }} 
-          onChange={handleCSVUpload} 
-        />
-        <Button
-          className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
-          onClick={() => document.getElementById("csvFileInput").click()}
-        >
-          Upload CSV
-        </Button>
       </div>
+
     </div>
+
+    </div>
+
+  
   );
 }
