@@ -630,7 +630,7 @@ export default function Home() {
         </div>
       )}
 
-      {hamburgerOptionsOpen (
+      {hamburgerOptionsOpen && (
             <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
                 onClick={() => {
