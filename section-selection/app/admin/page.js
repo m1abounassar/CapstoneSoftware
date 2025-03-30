@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { DropdownTwo } from "@/components/ui/dropdown2";
 
 export default function Home() {
-  const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
@@ -13,13 +12,17 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
-  const [user, setUser] = useState(null); // NEW: Store user info from CAS session
   const [nameEditOpen, setNameEditOpen] = useState(false);
-  const [name, setName] = useState(false);
+
+  const [name, setName] = useState("");
   const [newName, setNewName] = useState("");
   const [username, setUsername] = useState("");
-  const [gtid, setGTID] = useState("");
-
+  const [gtid, setGTID] = useState(0);
+  const [addAdmin, setAllAdmin] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
+  const [allTeams, setAllTeams] = useState([]);
+  const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [isLeadAdmin, setIsLeadAdmin] = useState(false);
 
   const [protocol, setProtocol] = useState("http://");
   
@@ -56,6 +59,19 @@ export default function Home() {
               console.error("Unexpected data format:", adminData);
               return;
             }
+
+            setAllAdmin(adminData.adm);
+
+            const studentRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+            if (!studentRes.ok) throw new Error("Students fetch failed");
+        
+            const studentData = await studentRes.json();
+            if (!Array.isArray(studentData.students)) {
+              console.error("Unexpected data format:", studentData);
+              return;
+            }
+
+            setAllStudents(studentsData.students);
         
               // Find the student with the matching username
             const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
@@ -65,13 +81,33 @@ export default function Home() {
             if (matchedAdmin) {
               console.log(matchedAdmin.name);
               setName(matchedAdmin.name);
-              setNewName(matchedAdmin.name); 
-              setGTID(matchedAdmin.gtid); 
-              setUsername(matchedAdmin.username);
+              setNewName(matchedAdmin.name); // Initialize newName with current name
+              if (matchedAdmin.isLead === '1') {
+                setIsLeadAdmin(true);
+              }
+              setGTID(matchedAdmin.gtid);
+              
 
+
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+                  
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamData.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+
+              setAllTeams(teamData.teams);
+
+
+              console.log("Admin Name: ", name);
+              console.log("Admin is Lead: ", isLeadAdmin);
+              console.log("Admin Username: ", username);
+              console.log("Admin GTID: ", gtid);
               
             } else {
-              console.error("Admin not found in the list.");
+              console.error("Student not found in the list.");
               window.location.href = '/notFound';
             }
           
