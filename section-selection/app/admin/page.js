@@ -331,7 +331,7 @@ export default function Home() {
               </div>
   
               <button
-                onClick={() => setHamburgerOptionsOpen(true)}
+                onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
                 className="flex items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
                 ☰</button>
 
@@ -631,7 +631,7 @@ export default function Home() {
       )}
 
       {hamburgerOptionsOpen && (
-            <div className="absolute m-20 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+            <div className="absolute right-0 mt-15 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
                 onClick={() => {
                   setSettingsOpen(true);
@@ -654,7 +654,7 @@ export default function Home() {
       )}
 
 
-      {/* {(settingsOpen && (isLeadAdmin == false)) && (
+      {(settingsOpen && (isLeadAdmin == false)) && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
@@ -697,7 +697,7 @@ export default function Home() {
         </div>
       )}
 
-      {(settingsOpen && (isLeadAdmin == true)) && (
+      {/* {(settingsOpen && (isLeadAdmin == true)) && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4 text-[#003056]">Lead Admin Settings</h2>
