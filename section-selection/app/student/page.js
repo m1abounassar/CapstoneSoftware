@@ -1,154 +1,198 @@
 'use client'
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-
-
+import { Dropdown } from "@/components/ui/dropdown";
+import { DropdownTwo } from "@/components/ui/dropdown2";
 export default function Home() {
-  const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
-  const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
-  const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
-  const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
-  const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
-  const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
-  const [rotatedTeams, setRotatedTeams] = useState(new Set());
-
-  const [nameEditOpen, setNameEditOpen] = useState(false);
-  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [logoutOpen, setLogoutOpen] = useState(false);
-
-  const [name, setName] = useState("");
-  const [newName, setNewName] = useState("");
+  const [priorities, setPriorities] = useState({});
+  const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
-  const [gtid, setGTID] = useState(0);
-  const [allAdmin, setAllAdmin] = useState([]);
+  const [name, setName] = useState("");
   const [allStudents, setAllStudents] = useState([]);
-  const [allTeams, setAllTeams] = useState({});
-  const [isLeadAdmin, setIsLeadAdmin] = useState(true);
-
-
-  const [protocol, setProtocol] = useState("http://");
-
+  const [dropdownValues, setDropdownValues] = useState({});
+  const [savePrefOpen, setSavePrefOpen] = useState(false);
+  const [teamNumber, setTeamNumber] = useState(0);
+  const [teamMembers, setTeamMembers] = useState([]);
+  // New state for the name edit popup
+  const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  
   useEffect(() => {
-    setProtocol(window.location.protocol === "https:" ? "https://" : "http://");
+    async function fetchData() {
+        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        if (!sessionRes.ok) {
+            window.location.href = '/error';
+        }
+  
+        const sessionData = await sessionRes.json();
+        console.log('Session:', sessionData);
+  
+        if (sessionData.loggedIn === 'true') {
+            console.log('true');
+            setUsername(sessionData.username);
+            console.log(sessionData.username);
+            const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+            if (!studentsRes.ok) throw new Error("Students fetch failed");
+        
+            const studentsData = await studentsRes.json();
+            if (!Array.isArray(studentsData.students)) {
+              console.error("Unexpected data format:", studentsData);
+              return;
+            }
+            setAllStudents(studentsData.students);
+        
+              // Find the student with the matching username
+            const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+            console.log('info: ');
+            console.log(matchedStudent);
+        
+            if (matchedStudent) {
+              console.log(matchedStudent.name);
+              setName(matchedStudent.name);
+              setNewName(matchedStudent.name); // Initialize newName with current name
+              const initialDropdownValues = {};
+              
+              const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
+              const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
+              const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
+              // Assign priorities from student's choices
+              firstChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "1";
+              });
+              secondChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "2";
+              });
+              thirdChoiceArray.forEach((section) => {
+                initialDropdownValues[section] = "3";
+              });
+          
+              dropdownValues = initialDropdownValues;
+              setDropdownValues(dropdownValues);
+              console.log("inital:", initialDropdownValues);
+              console.log("actual:", dropdownValues);
+              console.log(Object.keys(dropdownValues));
+              console.log(Object.values(dropdownValues));
+              console.log(dropdownValues['JIF']);
+              console.log("im so sad: ", matchedStudent.team);
+              teamNumber = matchedStudent.team;
+              setTeamNumber(teamNumber);
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+                  
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamData.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+                  
+              // Find the student with the matching username
+              console.log("Team Number: ", teamNumber);
+              const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
+              console.log(matchedTeam);
+              
+               if (matchedTeam) {
+                  teams = matchedTeam; // Store the entire matched team in state
+                  setTeams(teams);
+              
+                  const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
+                  console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
+                  console.log(typeof rawTeamMembers);
+                  console.log(typeof allStudents);
+                  rawTeamMembers.forEach((person) => {
+                    const currStudent = studentsData.students.find(student => student.gtID === person);
+                    console.log("Person", person, "Curr Student: ", currStudent);
+              
+                    setTeamMembers(prev => ({
+                      ...prev, 
+                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+                      }));
+                      console.log(teamMembers);
+                    });
+                    console.log(teamMembers);
+              } else {
+                  console.log("naur!");
+              }
+              
+            } else {
+              console.error("Student not found in the list.");
+              window.location.href = '/notFound';
+            }
+          
+        } else {
+          window.location.href = '/cas-student.php';
+        }
+  
+    
+    }
+  
+    fetchData();
   }, []);
   
-  const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
-  // comment out function below to use local hosting
-  useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-      if (res.ok) {
-        const session = await res.json();
-        console.log('Session:', session);
-        setUser(session);  // Save session data to state
-      } else {
-        console.log('Not logged in');
-        window.location.href = '/cas-admin.php';  // Redirect to CAS login
-      }
-    }
-
-    fetchSession();
-  }, []);
-
-  // Fetch teams data (If we also move teams to a PHP API, update this)
-  useEffect(() => {
-    fetch('/teams.json')
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error loading teams:', error));
-  }, []);
-
-  // Fetch sections data from PHP API
+  
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
-      .then(data => setSections(data.sections))
-      .catch(error => console.error("Error loading sections:", error));
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewSection(prev => ({ ...prev, [name]: value }));
+      .then(data => {
+        sections = data.sections;
+        setSections(sections);
+        console.log(sections);
+        console.log(typeof sections);
+        
+        // Log dropdownValues for each section
+        data.sections.forEach(section => {
+          console.log(`Dropdown value for ${section.title}:`, dropdownValues[section.title]);
+        });
+      })
+      .catch(error => console.error('Error fetching sections:', error));
+  }, [dropdownValues]);
+  
+  const handlePriorityChange = (sectionName, newValue) => {
+    setPriorities((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Set priority based on section title
+    }));
+  
+    setDropdownValues((prev) => ({
+      ...prev,
+      [sectionName]: newValue, // Update the dropdown value
+    }));
   };
-
-  const addOrUpdateSection = () => {
-    if (!newSection.title.trim()) return;
-
-    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newSection)
-    })
-    .then(response => response.json())
-    .then(() => {
-      setSections([...sections, { id: Date.now(), ...newSection }]);
-      setNewSection({ title: '', time: '', capacity: '' });
-      setIsAddSectionPopupOpen(false);
-    })
-    .catch(error => console.error('Error updating sections:', error));
-  };
-
-  const addStudent = () => {
-    if (!newStudent.name.trim()) return;
-
-    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newStudent)
-    })
-    .then(response => response.json())
-    .then(() => {
-      setSections([...users, { id: Date.now(), ...newStudent }]);
-      setNewSection({ name: '', gtid: '', gtusername: '', team:'' });
-      setIsAddStudentPopupOpen(false);
-    })
-    .catch(error => console.error('Error updating sections:', error));
-  };
-
-
-  const toggleRotation = (teamId) => {
-    setRotatedTeams((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(teamId)) {
-        newSet.delete(teamId);
-      } else {
-        newSet.add(teamId);
-      }
-      return newSet;
-    });
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "1":
-        return '#66D575';
-      case "2":
-        return '#FFC943';
-      case "3":
-        return '#FF7556';
-    }
-  };
-
-
-  const startLogout = () => {
-    window.location.href = '/logout.php';
-  };
-
-  const handleSaveName = async () => {
-    if (!newName.trim()) {
-      return; // Don't save empty names
-    }
+  const handleSavePreferences = async () => {
+    setSavePrefOpen(!savePrefOpen);
     
-    try {
-      const postData = {
-        username,
-        name: newName
-      };
+    // Create arrays for each priority (first, second, third)
+    const preferences = {
+      firstChoice: [],
+      secondChoice: [],
+      thirdChoice: []
+    };
+  
+    sections.forEach((section) => {
+      const priority = priorities[section.title] || "3";  // Default to "3" if not selected
+  
+      if (priority === "1") {
+        preferences.firstChoice.push(section.title); // Add to firstChoice array
+      } else if (priority === "2") {
+        preferences.secondChoice.push(section.title); // Add to secondChoice array
+      } else {
+        preferences.thirdChoice.push(section.title); // Add to thirdChoice array
+      }
+    });
+  
+    console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
+  
+    const postData = {
+      username,
+      firstChoice: preferences.firstChoice,
+      secondChoice: preferences.secondChoice,
+      thirdChoice: preferences.thirdChoice,
+    };
       
+    console.log(postData);
+  
+  
+    try {
       const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
         method: "POST",
         headers: {
@@ -156,83 +200,81 @@ export default function Home() {
         },
         body: JSON.stringify(postData),
       });
-      
-      const textResponse = await response.text();
-      
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status} - ${textResponse}`);
-      }
-      
-      // Update the name in the UI
-      setName(newName);
-      // Close the popup
-      setHamburgerOptionsOpen(false);
-    } catch (error) {
-      console.error("Error updating name:", error);
-    }
-  };
-
-  const handleSaveAdminInfo = async () => {
-    if (!newName.trim() || !gtid.trim() || !username.trim()) {
-      return; // prevent empty fields
-    }
   
-    try {
-      const postData = {
-        name: newName,
-        gtid,
-        username
-      };
-  
-      const response = await fetch("https://jdregistration.sci.gatech.edu/admin.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(postData)
-      });
-  
-      const textResponse = await response.text();
+      const textResponse = await response.text();  // Get the raw response as text
+      console.log("Raw response from server:", textResponse);  // Log the response text
   
       if (!response.ok) {
         throw new Error(`Server error: ${response.status} - ${textResponse}`);
       }
   
-      setName(newName); // update locally
-      setNameEditOpen(false); // close popup
-      alert("Admin info updated successfully!");
+      const result = JSON.parse(textResponse);  // Try to parse it as JSON
+      console.log(result);  // Log the parsed result
     } catch (error) {
-      console.error("Error updating admin info:", error);
-      alert("Failed to update admin info.");
+      console.error("Error saving preferences:", error);
     }
   };
+  // New function to save the updated name
+  const handleSaveName = async () => {
+  if (!newName.trim()) {
+    return; // Don't save empty names
+  }
   
-  
-
-
-  // CSV Upload Handling
-  const handleCSVUpload = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("csvFile", file);
-
-    fetch("/admin/upload.php", {
+  try {
+    const postData = {
+      username,
+      name: newName
+    };
+    
+    const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
       method: "POST",
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert("CSV uploaded and processed successfully!");
-          // Refresh data if necessary
-        } else {
-          alert("Error: " + data.error);
-        }
-      })
-      .catch(error => console.error("Upload failed", error));
-  };
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+    
+    const textResponse = await response.text();
+    
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status} - ${textResponse}`);
+    }
+    
+    // Update the name in the UI
+    setName(newName);
+    // Close the popup
+    setNameEditOpen(false);
+  } catch (error) {
+    console.error("Error updating name:", error);
+  }
+};
+
+  
+  // useEffect(() => {
+  //   const fetchStudentData = async () => {
+  //     try {
+  //       const response = await fetch("/students.php");
+  //       const data = await response.json();
+  //       const student = data.find((s) => s.username === username);
+  //       if (student) {
+  //         setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching student data:", error);
+  //     }
+  //   };
+  //   fetchStudentData();
+  // }, [username]);
+
+  
+  useEffect(() => {
+    console.log("Updated Team Members:", teamMembers);
+    console.log(typeof teamMembers);
+    console.log(Object.keys(teamMembers).length);
+  }, [teamMembers]);
+  useEffect(() => {
+    console.log("Updated Dropdown Values:", dropdownValues);
+  }, [dropdownValues]);
   
 
   return (
