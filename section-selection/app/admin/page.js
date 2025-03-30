@@ -622,115 +622,115 @@ export default function Home() {
         </div>
       )}
 
-      {hamburgerOptionsOpen (
-            <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
-              <div
-                onClick={() => {
-                  setSettingsOpen(true);
-                  setHamburgerOptionsOpen(false);
-                }}
-                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
-              >
-                Settings
-              </div>
-              <div
-                onClick={() => {
-                  setLogoutOpen(true);
-                  setHamburgerOptionsOpen(false);
-                }}
-                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
-              >
-                Logout
-              </div>
-            </div>
-      )}
+      // {hamburgerOptionsOpen (
+      //       <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+      //         <div
+      //           onClick={() => {
+      //             setSettingsOpen(true);
+      //             setHamburgerOptionsOpen(false);
+      //           }}
+      //           className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+      //         >
+      //           Settings
+      //         </div>
+      //         <div
+      //           onClick={() => {
+      //             setLogoutOpen(true);
+      //             setHamburgerOptionsOpen(false);
+      //           }}
+      //           className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
+      //         >
+      //           Logout
+      //         </div>
+      //       </div>
+      // )}
 
 
-      {settingsOpen && (isLeadAdmin == false) (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
-            <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Name:</label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter Name"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
-              </div>
+      // {settingsOpen && (isLeadAdmin == false) (
+      //   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      //     <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+      //       <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
+      //       <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">Name:</label>
+      //           <input
+      //             type="text"
+      //             value={newName}
+      //             onChange={(e) => setNewName(e.target.value)}
+      //             placeholder="Enter Name"
+      //             className="border border-gray-300 p-2 rounded-md w-2/3"
+      //           />
+      //         </div>
       
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">GTID:</label>
-                <span className="w-2/3 text-right">{gtid}</span>
-              </div>
+      //         <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">GTID:</label>
+      //           <span className="w-2/3 text-right">{gtid}</span>
+      //         </div>
       
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Username:</label>
-                <span className="w-2/3 text-right">{username}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setHamburgerOptionsOpen(false)}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                handleSaveName();
-                setHamburgerOptionsOpen(false);
-              }}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Save
-            </button>
-        </div>
-      )}
+      //         <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">Username:</label>
+      //           <span className="w-2/3 text-right">{username}</span>
+      //         </div>
+      //       </div>
+      //       <button
+      //         onClick={() => setHamburgerOptionsOpen(false)}
+      //         className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+      //       >
+      //         Close
+      //       </button>
+      //       <button
+      //         onClick={() => {
+      //           handleSaveName();
+      //           setHamburgerOptionsOpen(false);
+      //         }}
+      //         className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+      //       >
+      //         Save
+      //       </button>
+      //   </div>
+      // )}
 
-      {settingsOpen && (isLeadAdmin == true) (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4 text-[#003056]">Lead Admin Settings</h2>
-            <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Name:</label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter Name"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
-              </div>
+      // {settingsOpen && (isLeadAdmin == true) (
+      //   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      //     <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+      //       <h2 className="text-xl font-bold mb-4 text-[#003056]">Lead Admin Settings</h2>
+      //       <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">Name:</label>
+      //           <input
+      //             type="text"
+      //             value={newName}
+      //             onChange={(e) => setNewName(e.target.value)}
+      //             placeholder="Enter Name"
+      //             className="border border-gray-300 p-2 rounded-md w-2/3"
+      //           />
+      //         </div>
       
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">GTID:</label>
-                <span className="w-2/3 text-right">{gtid}</span>
-              </div>
+      //         <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">GTID:</label>
+      //           <span className="w-2/3 text-right">{gtid}</span>
+      //         </div>
       
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Username:</label>
-                <span className="w-2/3 text-right">{username}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => setHamburgerOptionsOpen(false)}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Close
-            </button>
-            <button
-              onClick={() => {
-                handleSaveName();
-                setHamburgerOptionsOpen(false);
-              }}
-              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
-            >
-              Save
-            </button>
-        </div>
-      )}
+      //         <div className="flex justify-between items-center">
+      //           <label className="font-bold w-1/3">Username:</label>
+      //           <span className="w-2/3 text-right">{username}</span>
+      //         </div>
+      //       </div>
+      //       <button
+      //         onClick={() => setHamburgerOptionsOpen(false)}
+      //         className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+      //       >
+      //         Close
+      //       </button>
+      //       <button
+      //         onClick={() => {
+      //           handleSaveName();
+      //           setHamburgerOptionsOpen(false);
+      //         }}
+      //         className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+      //       >
+      //         Save
+      //       </button>
+      //   </div>
+      // )}
 
 
       
