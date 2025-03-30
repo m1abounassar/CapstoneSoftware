@@ -156,12 +156,28 @@ export default function Home() {
 
 
 
+  // useEffect(() => {
+  //   fetch("https://jdregistration.sci.gatech.edu/sections.php")
+  //     .then(response => response.json())
+  //     .then(data => setSections(data.sections))
+  //     .catch(error => console.error('Error fetching sections:', error));
+
+    
+  // }, []);
+
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
-      .then(data => setSections(data.sections))
+      .then(data => {
+        setSections(data.sections);
+        
+        // Log dropdownValues for each section
+        data.sections.forEach(section => {
+          console.log(`Dropdown value for ${section.name}:`, dropdownValues[section.name]);
+        });
+      })
       .catch(error => console.error('Error fetching sections:', error));
-  }, []);
+  }, [dropdownValues]);
   
 
   const handlePriorityChange = (sectionName, newValue) => {
