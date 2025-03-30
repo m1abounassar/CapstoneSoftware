@@ -7,6 +7,8 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
+  const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
+  const [sectionToEdit, setSectionToEdit] = useState(null);
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
   const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
@@ -30,60 +32,60 @@ export default function Home() {
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
-  useEffect(() => {
-    async function fetchData() {
-        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-        if (!sessionRes.ok) {
-            window.location.href = '/error';
-        }
+  // useEffect(() => {
+  //   async function fetchData() {
+  //       const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+  //       if (!sessionRes.ok) {
+  //           window.location.href = '/error';
+  //       }
   
-        const sessionData = await sessionRes.json();
-        console.log('Session:', sessionData);
+  //       const sessionData = await sessionRes.json();
+  //       console.log('Session:', sessionData);
   
-        if (sessionData.loggedIn === 'true') {
+  //       if (sessionData.loggedIn === 'true') {
 
-            console.log('true');
+  //           console.log('true');
 
-            setUsername(sessionData.username);
-            console.log(sessionData.username);
+  //           setUsername(sessionData.username);
+  //           console.log(sessionData.username);
 
-            const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
-            if (!adminRes.ok) throw new Error("Admin fetch failed");
+  //           const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+  //           if (!adminRes.ok) throw new Error("Admin fetch failed");
         
-            const adminData = await adminRes.json();
-            if (!Array.isArray(adminData.adm)) {
-              console.error("Unexpected data format:", adminData);
-              return;
-            }
+  //           const adminData = await adminRes.json();
+  //           if (!Array.isArray(adminData.adm)) {
+  //             console.error("Unexpected data format:", adminData);
+  //             return;
+  //           }
         
-              // Find the student with the matching username
-            const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
-            console.log('info: ');
-            console.log(matchedAdmin);
+  //             // Find the student with the matching username
+  //           const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+  //           console.log('info: ');
+  //           console.log(matchedAdmin);
         
-            if (matchedAdmin) {
-              console.log(matchedAdmin.name);
-              setName(matchedAdmin.name);
-              setNewName(matchedAdmin.name); 
-              setGTID(matchedAdmin.gtid); 
-              setUsername(matchedAdmin.username);
+  //           if (matchedAdmin) {
+  //             console.log(matchedAdmin.name);
+  //             setName(matchedAdmin.name);
+  //             setNewName(matchedAdmin.name); 
+  //             setGTID(matchedAdmin.gtid); 
+  //             setUsername(matchedAdmin.username);
 
               
-            } else {
-              console.error("Admin not found in the list.");
-              window.location.href = '/notFound';
-            }
+  //           } else {
+  //             console.error("Admin not found in the list.");
+  //             window.location.href = '/notFound';
+  //           }
           
-        } else {
+  //       } else {
 
-          window.location.href = '/cas-admin.php';
-        }
+  //         window.location.href = '/cas-admin.php';
+  //       }
   
     
-    }
+  //   }
   
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
 
 
@@ -140,6 +142,18 @@ export default function Home() {
       setIsAddStudentPopupOpen(false);
     })
     .catch(error => console.error('Error updating sections:', error));
+  };
+
+  const updateSection = (updatedSection) => {
+    const updatedSections = sections.map((section) =>
+      section.id === updatedSection.id ? updatedSection : section
+    );
+    setSections(updatedSections);
+  };
+
+  const deleteSection = (sectionId) => {
+    // Remove the section with the given sectionId
+    setSections(prevSections => prevSections.filter(section => section.id !== sectionId));
   };
 
 
@@ -267,7 +281,7 @@ export default function Home() {
       <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
-            <div className='p-4 text-lg lg:text-2xl w-max text-[#232323] font-bold'>
+            <div className='p-4 text-lg lg:text-4xl w-max text-[#232323] font-bold'>
               Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
             </div>
             <div></div>
@@ -351,27 +365,43 @@ export default function Home() {
               <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3 border-5 border-[#003056]'>
                 {sections.length > 0 ? (
                   sections.map((section) => (
-                    <div key={section.id} className='p-3 pl-5 bg-[#E5E2D3] flex rounded-md my-2 shadow-sm text-lg items-center'>
+                    <div key={section.id} className='p-3 pl-5 bg-[#E5E2D3] flex rounded-md my-2 shadow-sm text-lg items-center justify-between'>
+                      {/* Section info */}
                       <div className='flex flex-col'>
-
-                          <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                            <div className='font-bold w-auto'>{section.title}</div>
-                            <div className='mr-10'>- {section.time}</div>
-
-                          </div>
-                          <div className='flex'>
-                            
-                            <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
-                          </div>
+                        <div className='flex gap-2 items-center text-[#003056]'> {/* row 1 */}
+                          <div className='font-bold w-auto'>{section.title}</div>
+                          <div className='mr-10'>- {section.time}</div>
+                        </div>
+                        <div className='flex'>
+                          <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                        </div>
                       </div>
 
-                      <div className='flex justify-items-end'>
-                        <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></button>
+                      {/* Buttons: Edit and Delete */}
+                      <div className='flex gap-2'>
+                        {/* Edit button */}
+                        <Button 
+                          className='bg-[#FFFFFF] hover:bg-[#D8CFA6] h-8 w-9 p-0.5'
+                          onClick={() => {
+                            setSectionToEdit(section);
+                            setIsEditSectionPopupOpen(true);
+                          }}
+                        >
+                          <div 
+                            className='bg-[url("/pencil.png")] bg-contain bg-no-repeat h-full w-full hover:bg-[url("/pencilHover.png")]'
+                          />
+                        </Button>
+
+                        {/* Delete button */}
+                        <Button 
+                          className='bg-[#FFFFFF] hover:bg-[#D8CFA6] text-white h-8 w-9 p-1'
+                          onClick={() => deleteSection(section.id)}
+                        >
+                          <div 
+                            className='bg-[url("/trash.png")] bg-contain bg-no-repeat h-full w-full hover:bg-[url("/trash.png")]'
+                          />
+                        </Button>
                       </div>
-
-      
-
-
                     </div>
                   ))
                 ) : (
@@ -527,7 +557,56 @@ export default function Home() {
               </Button>
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addSection}
+                onClick={addOrUpdateSection}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {/* Pop-up Modal for Editing Section */}
+      {isEditSectionPopupOpen && sectionToEdit && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Edit Section</h2>
+            <input
+              name="title"
+              placeholder="Section Title"
+              value={sectionToEdit.title}
+              onChange={(e) => setSectionToEdit({ ...sectionToEdit, title: e.target.value })}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="time"
+              placeholder="Times"
+              value={sectionToEdit.time}
+              onChange={(e) => setSectionToEdit({ ...sectionToEdit, time: e.target.value })}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="capacity"
+              placeholder="Capacity"
+              value={sectionToEdit.capacity}
+              onChange={(e) => setSectionToEdit({ ...sectionToEdit, capacity: e.target.value })}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsEditSectionPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={() => {
+                  // Update the section info and close the popup
+                  updateSection(sectionToEdit); // Create a function to handle the update
+                  setIsEditSectionPopupOpen(false);
+                }}
               >
                 Save
               </Button>
@@ -587,7 +666,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Pop-up Modal for Adding Section */}
+      {/* Pop-up Modal for Edit Student */}
       {isEditStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
@@ -631,7 +710,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Pop-up Modal for Adding Section */}
+      {/* Pop-up Modal for Refreshing Dashboard */}
       {isRefreshSemesterPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
