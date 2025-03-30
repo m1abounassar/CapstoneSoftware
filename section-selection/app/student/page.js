@@ -402,10 +402,10 @@ export default function Home() {
 
                                     {Object.keys(teamMembers).length > 0 ? (
                                       Object.entries(teamMembers).map(([name, choices]) => (
-                                        <div key={name} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
+                                        <div key={name} className='p-3 pl-4 rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
                                           <div>
                                               <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                                                <div className='font-bold w-auto'>{name}</div>
+                                                <div className='w-auto'>{name}</div>
               
                                               </div>
                                               <div className='flex'>
