@@ -172,6 +172,8 @@ export default function Home() {
 
         sections = data.sections;
         setSections(sections);
+        console.log(sections);
+        console.log(typeof sections);
         
         // Log dropdownValues for each section
         data.sections.forEach(section => {
