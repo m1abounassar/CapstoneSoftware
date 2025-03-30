@@ -70,7 +70,7 @@ export default function Home() {
               return;
             }
 
-            setAllStudents(studentsData.students);
+            setAllStudents(studentData.students);
         
               // Find the student with the matching username
             const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
