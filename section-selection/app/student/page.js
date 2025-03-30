@@ -290,7 +290,9 @@ export default function Home() {
     console.log(Object.keys(teamMembers).length);
   }, [teamMembers]);
 
-
+  useEffect(() => {
+    console.log("Updated Dropdown Values:", dropdownValues);
+  }, [dropdownValues]);
 
 
   return (
