@@ -13,6 +13,9 @@ export default function Home() {
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [nameEditOpen, setNameEditOpen] = useState(false);
+  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const [name, setName] = useState("");
   const [newName, setNewName] = useState("");
@@ -228,7 +231,7 @@ export default function Home() {
       // Update the name in the UI
       setName(newName);
       // Close the popup
-      setNameEditOpen(false);
+      setHamburgerOpen(false);
     } catch (error) {
       console.error("Error updating name:", error);
     }
@@ -319,7 +322,10 @@ export default function Home() {
                 </button>
               </div>
   
-              <DropdownTwo/>
+              <button
+                onClick={() => setHamburgerOpen(true)}
+                className="flex items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+                ☰</button>
 
             </div>
         
@@ -476,55 +482,6 @@ export default function Home() {
       
       </div>
 
-      {nameEditOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white p-6 rounded-md shadow-lg w-96">
-      <h3 className="text-lg font-bold text-[#003056] mb-6 text-center">Edit Admin Info</h3>
-
-      <div className="space-y-4 text-[#003056]">
-        <div className="flex justify-between items-center">
-          <label className="font-bold w-1/3">Name:</label>
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            placeholder="Enter Name"
-            className="border border-gray-300 p-2 rounded-md w-2/3"
-          />
-        </div>
-
-        <div className="flex justify-between items-center">
-          <label className="font-bold w-1/3">GTID:</label>
-          <span className="w-2/3 text-right">{gtid}</span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <label className="font-bold w-1/3">Username:</label>
-          <span className="w-2/3 text-right">{username}</span>
-        </div>
-      </div>
-
-      <div className="flex justify-end mt-6 gap-2">
-        <button
-          onClick={() => setNameEditOpen(false)}
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSaveAdminInfo}
-          className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
-        >
-          Save
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
 
       {/* Pop-up Modal for Adding Student */}
       {isAddStudentPopupOpen && (
@@ -664,6 +621,93 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {hamburgerOptionsOpen (
+            <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+              <div
+                onClick={() => {
+                  setSettingsOpen(true);
+                  setHamburgerOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+              >
+                Settings
+              </div>
+              <div
+                onClick={() => {
+                  setLogoutOpen(true);
+                  setHamburgerOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
+              >
+                Logout
+              </div>
+            </div>
+      )}
+
+
+      {settingsOpen && (isLeadAdmin == false) (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+            <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
+            <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">Name:</label>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Enter Name"
+                  className="border border-gray-300 p-2 rounded-md w-2/3"
+                />
+              </div>
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">GTID:</label>
+                <span className="w-2/3 text-right">{gtid}</span>
+              </div>
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">Username:</label>
+                <span className="w-2/3 text-right">{username}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setHamburgerOpen(false)}
+              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+            >
+              Close
+            </button>
+            <button
+              onClick={() => {
+                handleSaveName();
+                setHamburgerOpen(false);
+              }}
+              className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      )}
+
+      {settingsOpen && (
+            <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+              <div
+                onClick={() => handleSelect("profile")}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+              >
+                Settings
+              </div>
+              <div
+                onClick={() => handleSelect("logout")}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-red-500"
+              >
+                Logout
+              </div>
+            </div>
+      )}
+
+      
 
       {/* CSV Upload Section */}
       <div className="m-10">
