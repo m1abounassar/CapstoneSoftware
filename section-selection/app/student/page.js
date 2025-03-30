@@ -405,7 +405,7 @@ export default function Home() {
                                         <div key={name} className='text-lg grid grid-cols-2 items-center'>
                                           <div>
                                               <div className='flex items-center text-[#003056]'>  {/* row 1 */}
-                                                <div className='w-auto'>{name}</div>
+                                                <div className='w-auto border-l-2 border-[#003056]'>{name}</div>
               
                                               </div>
                                               <div className='flex'>
