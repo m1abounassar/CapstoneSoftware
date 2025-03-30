@@ -20,7 +20,7 @@ export default function Home() {
   const [gtid, setGTID] = useState(0);
   const [addAdmin, setAllAdmin] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
-  const [allTeams, setAllTeams] = useState([]);
+  const [allTeams, setAllTeams] = useState({});
   const [isLeadAdmin, setIsLeadAdmin] = useState(false);
 
   const [protocol, setProtocol] = useState("http://");
@@ -121,15 +121,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-
-
-  // Fetch teams data (If we also move teams to a PHP API, update this)
-  useEffect(() => {
-    fetch('/teams.json')
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error loading teams:', error));
-  }, []);
 
   // Fetch sections data from PHP API
   useEffect(() => {
@@ -448,8 +439,8 @@ export default function Home() {
 
 
               </div>
-              {teams.length > 0 ? (
-                teams.map((team) => (
+              {Object.keys(allTeams).length > 0 ? (
+                Object.keys(allTeams).map(([name, members, section, status, clientName, projectName]) => (
                   <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
                     <div
                       className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
