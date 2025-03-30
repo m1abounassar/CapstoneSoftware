@@ -298,10 +298,10 @@ export default function Home() {
           <div className='pt-5 pb-5 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
             
             <div>Admin</div>
-            <button
+            <Button
                   onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
                   className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
-            ☰</button>
+            ☰</Button>
         
           </div>
         </div>
@@ -387,7 +387,7 @@ export default function Home() {
                                     </div>
 
                                     <div className='flex justify-items-end'>
-                                      <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></button>
+                                      <Button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></Button>
                                     </div>
 
                     
@@ -694,13 +694,13 @@ export default function Home() {
 
               <div className='flex gap-5 justify-center font-bold'>
 
-                  <button
+                  <Button
                     onClick={() => setSettingsOpen(false)}
                     className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                   >
                     Go Back
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => {
                       setSettingsOpen(false);
                       startLogout();
@@ -708,7 +708,7 @@ export default function Home() {
                     className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
                   >
                     Logout
-                  </button>
+                  </Button>
               </div>
 
 
@@ -751,13 +751,13 @@ export default function Home() {
 
               <div className='flex gap-5 justify-center font-bold'>
 
-                  <button
+                  <Button
                     onClick={() => setSettingsOpen(false)}
                     className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                   >
                     Close
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => {
                       handleSaveName();
                       setSettingsOpen(false);
@@ -765,7 +765,7 @@ export default function Home() {
                     className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                   >
                     Save
-                  </button>
+                  </Button>
               </div>
 
             </div>
@@ -811,13 +811,13 @@ export default function Home() {
 
                       <div className='flex gap-5 justify-center font-bold'>
 
-                          <button
+                          <Button
                             onClick={() => setSettingsOpen(false)}
                             className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                           >
                             Close
-                          </button>
-                          <button
+                          </Button>
+                          <Button
                             onClick={() => {
                               handleSaveName();
                               setSettingsOpen(false);
@@ -825,7 +825,7 @@ export default function Home() {
                             className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                           >
                             Save
-                          </button>
+                          </Button>
                       </div>
 
                     </div>
@@ -856,7 +856,7 @@ export default function Home() {
                     
                     <div className='flex gap-5 justify-center font-bold'>
 
-                          <button
+                          <Button
                             onClick={() => {
                               handleSaveName();
                               setSettingsOpen(false);
@@ -864,7 +864,7 @@ export default function Home() {
                             className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                           >
                             Add an Admin
-                          </button>
+                          </Button>
                      </div>
 
                     </div>
