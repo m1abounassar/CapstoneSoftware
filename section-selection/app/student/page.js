@@ -404,7 +404,7 @@ export default function Home() {
                                       Object.entries(teamMembers).map(([name, choices]) => (
                                         <div key={name} className='text-lg grid grid-cols-2 items-center'>
                                           <div>
-                                              <div className='flex items-center text-[#003056] border-r-2 border-[#003056]'>  {/* row 1 */}
+                                              <div className='flex w-min items-center text-[#003056] border-r-2 border-[#003056]'>  {/* row 1 */}
                                                 <div className='w-auto'>{name}</div>
               
                                               </div>
