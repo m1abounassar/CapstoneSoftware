@@ -169,7 +169,9 @@ export default function Home() {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
       .then(data => {
-        setSections(data.sections);
+
+        sections = data.sections;
+        setSections(sections);
         
         // Log dropdownValues for each section
         data.sections.forEach(section => {
