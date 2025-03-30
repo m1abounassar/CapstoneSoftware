@@ -78,9 +78,11 @@ export default function Home() {
               setDropdownValues(dropdownValues);
               console.log("inital:", initialDropdownValues);
               console.log("actual:", dropdownValues);
-              console.log(typeof dropdownValues);
+
               console.log(Object.keys(dropdownValues));
               console.log(Object.values(dropdownValues));
+              console.log(dropdownValues['JIF']);
+
               console.log("im so sad: ", matchedStudent.team);
 
               teamNumber = matchedStudent.team;
@@ -360,7 +362,7 @@ export default function Home() {
 
                             <Dropdown
                               sectionName={section.title} // Pass section name to the dropdown
-                              value={dropdownValues[{section.title}] || "2"} // Use stored value or default to "3"
+                              value={dropdownValues[section.title] || "2"} // Use stored value or default to "3"
                               onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
                             />
 
