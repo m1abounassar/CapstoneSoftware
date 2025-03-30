@@ -66,7 +66,7 @@ export default function Home() {
               console.log(matchedAdmin.name);
               setName(matchedAdmin.name);
               setNewName(matchedAdmin.name); 
-              setGTID(matchedAdmin.gtid); 
+              setGTID(matchedAdmin.gtID); 
               setUsername(matchedAdmin.username);
 
               
