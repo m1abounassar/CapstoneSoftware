@@ -297,6 +297,14 @@ export default function Home() {
       })
       .catch(error => console.error("Upload failed", error));
   };
+
+  useEffect(() => {
+    console.log("Value of settingsOpen: ", settingsOpen);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    console.log("Value of logoutOpen :", logoutOpen);
+  }, [logoutOpen]);
   
 
   return (
@@ -622,7 +630,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* {hamburgerOptionsOpen (
+      {hamburgerOptionsOpen (
             <div className="absolute left-1/2 -translate-x-1/2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
                 onClick={() => {
@@ -646,7 +654,7 @@ export default function Home() {
       )}
 
 
-      {settingsOpen && (isLeadAdmin == false) (
+      {/* {settingsOpen && (isLeadAdmin == false) (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4 text-[#003056]">Admin Settings</h2>
