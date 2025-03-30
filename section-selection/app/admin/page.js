@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 
 
 export default function Home() {
-  const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
@@ -23,13 +22,14 @@ export default function Home() {
   const [newName, setNewName] = useState("");
   const [username, setUsername] = useState("");
   const [gtid, setGTID] = useState(0);
+
   const [allAdmin, setAllAdmin] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
   const [allTeams, setAllTeams] = useState({});
   const [isLeadAdmin, setIsLeadAdmin] = useState(true);
 
-
   const [protocol, setProtocol] = useState("http://");
+  
 
   useEffect(() => {
     setProtocol(window.location.protocol === "https:" ? "https://" : "http://");
@@ -39,28 +39,100 @@ export default function Home() {
 
   // comment out function below to use local hosting
   useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch('/api/auth/session.php');  // Adjust path if needed
-      if (res.ok) {
-        const session = await res.json();
-        console.log('Session:', session);
-        setUser(session);  // Save session data to state
-      } else {
-        console.log('Not logged in');
-        window.location.href = '/cas-admin.php';  // Redirect to CAS login
-      }
+    async function fetchData() {
+        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        if (!sessionRes.ok) {
+            window.location.href = '/error';
+        }
+  
+        const sessionData = await sessionRes.json();
+        console.log('Session:', sessionData);
+  
+        if (sessionData.loggedIn === 'true') {
+
+            console.log('true');
+
+            username = sessionData.username;
+            setUsername(username);
+            console.log(sessionData.username);
+
+            const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+            if (!adminRes.ok) throw new Error("Admin fetch failed");
+        
+            const adminData = await adminRes.json();
+            if (!Array.isArray(adminData.adm)) {
+              console.error("Unexpected data format:", adminData);
+              return;
+            }
+
+            setAllAdmin(adminData.adm);
+
+            const studentRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+            if (!studentRes.ok) throw new Error("Students fetch failed");
+        
+            const studentData = await studentRes.json();
+            if (!Array.isArray(studentData.students)) {
+              console.error("Unexpected data format:", studentData);
+              return;
+            }
+
+            setAllStudents(studentData.students);
+        
+              // Find the student with the matching username
+            const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+            console.log('info: ');
+            console.log(matchedAdmin);
+        
+            if (matchedAdmin) {
+              console.log(matchedAdmin.name);
+              name = matchedAdmin.name;
+              setName(name);
+
+              newName = matchedAdmin.name;
+              setNewName(name);
+
+              if (matchedAdmin.isLead === '1') {
+                setIsLeadAdmin(true);
+              }
+              gtid = matchedAdmin.gtid;
+              setGTID(gtid);
+              
+
+
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+                  
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamData.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+
+              allTeams = teamData.teams;
+              setAllTeams(allTeams);
+
+
+              console.log("Admin Name: ", name);
+              console.log("Admin is Lead: ", isLeadAdmin);
+              console.log("Admin Username: ", username);
+              console.log("Admin GTID: ", gtid);
+              
+            } else {
+              console.error("Student not found in the list.");
+              window.location.href = '/notFound';
+            }
+          
+        } else {
+
+          window.location.href = '/cas-admin.php';
+        }
+  
+    
     }
-
-    fetchSession();
+  
+    fetchData();
   }, []);
 
-  // Fetch teams data (If we also move teams to a PHP API, update this)
-  useEffect(() => {
-    fetch('/teams.json')
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error loading teams:', error));
-  }, []);
 
   // Fetch sections data from PHP API
   useEffect(() => {
@@ -207,8 +279,6 @@ export default function Home() {
     }
   };
   
-  
-
 
   // CSV Upload Handling
   const handleCSVUpload = (event) => {
@@ -233,9 +303,18 @@ export default function Home() {
       })
       .catch(error => console.error("Upload failed", error));
   };
+
+  useEffect(() => {
+    console.log("Value of settingsOpen: ", settingsOpen);
+  }, [settingsOpen]);
+
+  useEffect(() => {
+    console.log("Value of logoutOpen :", logoutOpen);
+  }, [logoutOpen]);
   
 
   return (
+
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
       <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center'>
         <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design Team Sync</div>
@@ -250,6 +329,7 @@ export default function Home() {
       
       </div>
 
+
       <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
@@ -262,6 +342,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <div>{name}</div>
                 
+
               </div>
   
               <button
@@ -270,7 +351,7 @@ export default function Home() {
                 ☰</button>
 
             </div>
-      
+
       </div>
 
       {/* Body */}
@@ -395,22 +476,22 @@ export default function Home() {
 
 
               </div>
-              {teams.length > 0 ? (
-                teams.map((team) => (
-                  <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
+              {Object.keys(allTeams).length > 0 ? (
+                Object.keys(allTeams).map(([name, members, section, status, clientName, projectName]) => (
+                  <div key={name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
                     <div
                       className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
                       style={{
-                        transform: rotatedTeams.has(team.id) ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transform: rotatedTeams.has(name) ? 'rotate(90deg)' : 'rotate(0deg)',
                         transition: 'transform 0.3s ease'
                       }}
-                      onClick={() => toggleRotation(team.id)}>▶
+                      onClick={() => toggleRotation(name)}>▶
                     </div>     
-                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.id}</div>
+                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{name}</div>
                     <div 
                       className='bg-[#A5925A] rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
                       style={{
-                        color: getStatusColor(team.status)
+                        color: getStatusColor(status)
                       }}
                       >●</div>
                   </div>
@@ -425,49 +506,6 @@ export default function Home() {
       
       </div>
 
-      {/* Pop-up Modal for Adding Section */}
-      {isAddSectionPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Add a New Section</h2>
-            <input 
-              name="title" 
-              placeholder="Section Title" 
-              value={newSection.title}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="time"
-              placeholder="Times"
-              value={newSection.time}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="capacity"
-              placeholder="Capacity"
-              value={newSection.capacity}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <div className="flex justify-end mt-5">
-              <Button 
-                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsAddSectionPopupOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addSection}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Pop-up Modal for Adding Student */}
       {isAddStudentPopupOpen && (
@@ -591,26 +629,28 @@ export default function Home() {
               className="border p-2 rounded-md w-full mt-3"
             />
             <div className="flex justify-end mt-5">
-              <Button 
+              <button 
                 className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
                 onClick={() => setIsRefreshSemesterPopupOpen(false)}
               >
                 Cancel
-              </Button>
-              <Button 
+              </button>
+              <button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
                 onClick={addOrUpdateSection}
               >
                 Save
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       )}
 
 
+
       {hamburgerOptionsOpen && (
             <div className="absolute right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+
               <div
                 onClick={() => {
                   setSettingsOpen(true);
@@ -625,7 +665,9 @@ export default function Home() {
                   setLogoutOpen(true);
                   setHamburgerOptionsOpen(false);
                 }}
+
                 className="p-2 cursor-pointer hover:bg-gray-100 text-center text-[#D01717]"
+
               >
                 Logout
               </div>
@@ -681,9 +723,6 @@ export default function Home() {
                 />
               </div>
 
-
-              
-      
               <div className="flex justify-between items-center">
                 <label className="font-bold w-1/3">GTID:</label>
                 <span className="w-2/3 text-right">{gtid}</span>
@@ -837,7 +876,6 @@ export default function Home() {
             Upload CSV
           </Button>
         </div>
-
       </div>
 
     </div>

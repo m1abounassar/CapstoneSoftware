@@ -34,8 +34,8 @@ export default function Home() {
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)] font-figtree'>
       <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='pt-4 pb-0 pr-1 text-2xl font-normal text-[#003056] justify-self-center'>Junior Design</div>
-        <span className='pt-2 pb-4 pl-1 text-5xl font-bold text-[#232323] justify-self-center'> Team Sync</span>
+        <div className='pt-4 pb-0 pr-1 text-5xl font-bold text-[#232323] justify-self-center'> Team Sync</div>
+        <span className='pt-2 pb-4 pl-1 text-2xl font-normal text-[#003056] justify-self-center'>for Junior Design</span>
       </div>
 
       <div className="flex place-content-center mt-20">
