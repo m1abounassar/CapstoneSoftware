@@ -75,8 +75,9 @@ export default function Home() {
                 initialDropdownValues[section] = "3";
               });
 
-              setDropdownValues(initialDropdownValues);
+              
               dropdownValues = initialDropdownValues;
+              setDropdownValues(dropdownValues);
               console.log(initialDropdownValues);
               console.log("im so sad: ", matchedStudent.team);
 
