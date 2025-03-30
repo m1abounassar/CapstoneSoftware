@@ -401,7 +401,7 @@ export default function Home() {
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
                                     {Object.keys(teamMembers).length > 0 ? (
-                                      Object.keys(teamMembers).map(([name, choices]) => (
+                                      Object.entries(teamMembers).map(([name, choices]) => (
                                         <div key={name} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
                                           <div>
                                               <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
