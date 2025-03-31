@@ -48,85 +48,85 @@ export default function Home() {
 
   // comment out function below to use local hosting
 
-   useEffect(() => {
-      async function fetchData() {
-          const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-          if (!sessionRes.ok) {
-              window.location.href = '/error';
-          }
+  //  useEffect(() => {
+  //     async function fetchData() {
+  //         const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+  //         if (!sessionRes.ok) {
+  //             window.location.href = '/error';
+  //         }
     
-          const sessionData = await sessionRes.json();
-          console.log('Session:', sessionData);
+  //         const sessionData = await sessionRes.json();
+  //         console.log('Session:', sessionData);
     
-          if (sessionData.loggedIn === 'true') {
-              console.log('true');
-              username = sessionData.username;
-              setUsername(username);
-              console.log(sessionData.username);
+  //         if (sessionData.loggedIn === 'true') {
+  //             console.log('true');
+  //             username = sessionData.username;
+  //             setUsername(username);
+  //             console.log(sessionData.username);
 
             
-              const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
-              if (!adminRes.ok) throw new Error("Admin fetch failed");
+  //             const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+  //             if (!adminRes.ok) throw new Error("Admin fetch failed");
           
-              const adminData = await adminRes.json();
-              if (!Array.isArray(adminData.adm)) {
-                console.error("Unexpected data format:", adminData);
-                return;
-              }
+  //             const adminData = await adminRes.json();
+  //             if (!Array.isArray(adminData.adm)) {
+  //               console.error("Unexpected data format:", adminData);
+  //               return;
+  //             }
 
-              allAdmin = adminData.adm;
-              setAllAdmin(allAdmin);
+  //             allAdmin = adminData.adm;
+  //             setAllAdmin(allAdmin);
           
-              // Find the admin info
-              const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
-              console.log('info: ');
-              console.log(matchedAdmin);
+  //             // Find the admin info
+  //             const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+  //             console.log('info: ');
+  //             console.log(matchedAdmin);
           
-              if (matchedAdmin) {
-                console.log(matchedAdmin.name);
+  //             if (matchedAdmin) {
+  //               console.log(matchedAdmin.name);
                 
-                name = matchedAdmin.name
-                setName(name);
+  //               name = matchedAdmin.name
+  //               setName(name);
                 
-                newName = matchedAdmin.name
-                setNewName(newName);
+  //               newName = matchedAdmin.name
+  //               setNewName(newName);
 
-                gtid = matchedAdmin.gtid
-                setGTID(gtid);
+  //               gtid = matchedAdmin.gtid
+  //               setGTID(gtid);
 
-                if (matchedAdmin.isLead == '1') {
-                  isLeadAdmin = true;
-                  setIsLeadAdmin(true);
-                }
+  //               if (matchedAdmin.isLead == '1') {
+  //                 isLeadAdmin = true;
+  //                 setIsLeadAdmin(true);
+  //               }
 
-                const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
-                if (!teamsRes.ok) throw new Error("Team fetch failed");
+  //               const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+  //               if (!teamsRes.ok) throw new Error("Team fetch failed");
                     
-                const teamData = await teamsRes.json();
-                if (!Array.isArray(teamData.teams)) {
-                    console.error("Unexpected data format:", teamData);
-                    return;
-                }
+  //               const teamData = await teamsRes.json();
+  //               if (!Array.isArray(teamData.teams)) {
+  //                   console.error("Unexpected data format:", teamData);
+  //                   return;
+  //               }
 
-                allTeams = teamData.teams;
-                setAllTeams(teamData.teams);
-                console.log(allTeams);
+  //               allTeams = teamData.teams;
+  //               setAllTeams(teamData.teams);
+  //               console.log(allTeams);
 
                 
-              } else {
-                console.error("Student not found in the list.");
-                window.location.href = '/notFound';
-              }
+  //             } else {
+  //               console.error("Student not found in the list.");
+  //               window.location.href = '/notFound';
+  //             }
             
-          } else {
-            window.location.href = '/cas-admin.php';
-          }
+  //         } else {
+  //           window.location.href = '/cas-admin.php';
+  //         }
     
       
-      }
+  //     }
     
-      fetchData();
-    }, []);
+  //     fetchData();
+  //   }, []);
   
 
   // Fetch sections data from PHP API
@@ -449,9 +449,37 @@ const newLead = (theirGTID, yourGTID) => {
   return (
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
 
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-'>
+              {/* Left-aligned logo and title */}
+              <div className='p-5 text-lg lg:text-4xl w-max text-[#232323] font-bold flex items-center pl-10'>
+                {/* Website Logo */}
+                <img src="/logo.png" alt="Website Logo" className="w-16 h-16" /> {/* Adjust size as needed */}
+                <div className= 'p-2'>
+                  Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
+                </div>
+              </div>
+            <div></div>
+            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+              
+              <div className="flex items-center gap-2">
+                <div>{name}</div>
+                
+                {/* Edit Name Button */}
+                <button 
+                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
+                  onClick={() => setNameEditOpen(true)}
+                >
+                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
+                </button>
+              </div>
+  
+              {/* <DropdownTwo/> */}
+
+            </div>
+        </div>
 
         {/* Start Nav Bar */}
-        <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
+        {/* <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
           <div className='flex'>
                 <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design</div>
                 <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>Team Sync</div>
@@ -466,7 +494,7 @@ const newLead = (theirGTID, yourGTID) => {
             ☰</Button>
         
           </div>
-        </div>
+        </div> */}
         {/* End Nav Bar */}
 
       
