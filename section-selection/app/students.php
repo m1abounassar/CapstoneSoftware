@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Validate team (must be 4 digits)
-        if (!preg_match('/^\d{4}$/', $gtid)) {
+        if (!preg_match('/^\d{4}$/', $team)) {
             echo json_encode(["error" => "Team Name must be exactly 4 digits."]);
             exit;
         }
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Check if GTID already exists
-        $checkSQL = "SELECT * FROM admin WHERE gtid = '$gtid'";
+        $checkSQL = "SELECT * FROM students WHERE gtID = '$gtid'";
         $checkResult = $conn->query($checkSQL);
         if ($checkResult->num_rows > 0) {
             echo json_encode(["error" => "A student with this GTID already exists."]);
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Check if username already exists
-        $checkSQL = "SELECT * FROM admin WHERE username = '$username'";
+        $checkSQL = "SELECT * FROM students WHERE username = '$username'";
         $checkResult = $conn->query($checkSQL);
         if ($checkResult->num_rows > 0) {
             echo json_encode(["error" => "A student with this username already exists."]);
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         // Insert new admin with default isLead = 0
-        $sql = "INSERT INTO students (name, username, gtid, team) VALUES ('$name', '$username', '$gtid', '$team')";
+        $sql = "INSERT INTO students (name, username, gtID, team) VALUES ('$name', '$username', '$gtid', '$team')";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["message" => "Student added successfully"]);
