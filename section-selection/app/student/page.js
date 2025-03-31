@@ -514,12 +514,11 @@ export default function Home() {
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
                                     {Object.keys(teamMembers).length > 0 ? (
-                                      Object.entries(teamMembers).map(([name, choices]) => (
-                                        <div key={name} className='text-lg grid grid-cols-2 items-center'>
-                                          <div>
+                                        Object.entries(teamMembers).map(([name, choices]) => (
+                                          <div key={name} className='text-lg flex items-center'>
                                             <div className='flex w-max items-center text-[#003056]'>
-                                              <div className='w-auto'>{name}: </div>
-                                    
+                                              <div className='w-auto'>{name}:</div>
+                                      
                                               {/* First Choice */}
                                               {choices.firstChoice === null ? (
                                                 <span className="ml-2 italic">Undefined</span>
@@ -528,20 +527,23 @@ export default function Home() {
                                                   <span key={index} className="ml-2 font-bold">{section}</span>
                                                 ))
                                               )}
-                                            </div>
-                                    
-                                            {/* Second Choice */}
-                                            <div className='flex'>
-                                              {choices.secondChoice !== null && JSON.parse(choices.secondChoice).map((section, index) => (
-                                                <span key={index} className="ml-2">{section}</span>
-                                              ))}
+                                      
+                                              {/* Second Choice */}
+                                              {choices.secondChoice !== null && JSON.parse(choices.secondChoice).length > 0 && (
+                                                <>
+                                                  <span className="ml-2">|</span>
+                                                  {JSON.parse(choices.secondChoice).map((section, index) => (
+                                                    <span key={index} className="ml-2">{section}</span>
+                                                  ))}
+                                                </>
+                                              )}
                                             </div>
                                           </div>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <p>Loading information...</p>
-                                    )}
+                                        ))
+                                      ) : (
+                                        <p>Loading information...</p>
+                                      )}
+
 
 
                                   </div>
