@@ -188,12 +188,12 @@ const addStudent = (student) => {
             console.log("Members: ", members);
 
             // Update the team in actualTeams.php with the new members array
-            return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+            fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 team: student.team,
-                members: JSON.stringify(members) // Convert array back to string
+                members: JSON.stringify(members) 
               })
             });
           } else {
@@ -203,6 +203,7 @@ const addStudent = (student) => {
         })
         .then(response => response.json())
         .then(data => {
+          console.log(data);
           if (data.error) {
             console.error('Error updating team:', data.error);
           } else {
