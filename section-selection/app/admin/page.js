@@ -289,6 +289,14 @@ export default function Home() {
     console.log("Value of hamburgerOptionsOpen: ", hamburgerOptionsOpen);
   }, [hamburgerOptionsOpen]);
 
+  useEffect(() => {
+    console.log("Value of settingsOpen: ", settingsOpen);
+  }, [settingsOpen]);
+
+    useEffect(() => {
+    console.log("Value of logoutOpen: ", logoutOpen);
+  }, [logoutOpen]);
+
 
   return (
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
@@ -307,7 +315,7 @@ export default function Home() {
             <div>{name}</div>
             <Button
                   onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
-                  className="flex bg-transparent hover:bg-transparent shadow-none hover:text[#054171] items-center justify-center text-2xl text-[#003056] hover:text-[#054171] font-bold px-3 pb-1 transition-all focus:outline-none">
+                  className="flex bg-transparent hover:bg-transparent shadow-none hover:text[#054171] items-center justify-center text-2xl text-[#003056] hover:text-[#054171] font-bold px-3 pb-2 transition-all focus:outline-none">
             ☰</Button>
         
           </div>
@@ -668,7 +676,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
 
       {hamburgerOptionsOpen && (
@@ -694,7 +702,7 @@ export default function Home() {
             </div>
       )}
 
-      {logoutOpen && (
+{/* {logoutOpen && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
