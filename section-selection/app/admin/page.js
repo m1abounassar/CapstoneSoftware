@@ -552,7 +552,7 @@ const newLead = (theirGTID, yourGTID) => {
                                     <div className='flex justify-self-end'>
                                         <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9' 
                                             onClick={() => {
-                                              setSelectedSection({name: section.title, time: section.time, capacity: section.capacity});
+                                              setSelectedSection({title: section.title, time: section.time, capacity: section.capacity});
                                               setIsEditSectionPopupOpen(true);
                                             }}
                                         ></button>
