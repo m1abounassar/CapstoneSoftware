@@ -517,20 +517,32 @@ export default function Home() {
                                       Object.entries(teamMembers).map(([name, choices]) => (
                                         <div key={name} className='text-lg grid grid-cols-2 items-center'>
                                           <div>
-                                              <div className='flex w-max items-center text-[#003056] border-r-2 border-[#003056]'>  {/* row 1 */}
-                                                <div className='w-auto'>{name}</div>
-
-                                              </div>
-                                              <div className='flex'>
-
-                                              </div>
+                                            <div className='flex w-max items-center text-[#003056]'>
+                                              <div className='w-auto'>{name}: </div>
+                                    
+                                              {/* First Choice */}
+                                              {choices.firstChoice === null ? (
+                                                <span className="ml-2 italic">Undefined</span>
+                                              ) : (
+                                                JSON.parse(choices.firstChoice).map((section, index) => (
+                                                  <span key={index} className="ml-2 font-bold">{section}</span>
+                                                ))
+                                              )}
+                                            </div>
+                                    
+                                            {/* Second Choice */}
+                                            <div className='flex'>
+                                              {choices.secondChoice !== null && JSON.parse(choices.secondChoice).map((section, index) => (
+                                                <span key={index} className="ml-2">{section}</span>
+                                              ))}
+                                            </div>
                                           </div>
-
                                         </div>
                                       ))
                                     ) : (
                                       <p>Loading information...</p>
                                     )}
+
 
                                   </div>
 
