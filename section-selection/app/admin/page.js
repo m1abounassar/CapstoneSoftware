@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [selectedSection, setSelectionSection] = useState([]);
+  const [selectedSection, setSelectedSection] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
   const [addAdminPopup, setAddAdminPopup] = useState(false);
