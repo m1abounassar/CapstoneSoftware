@@ -294,9 +294,13 @@ export default function Home() {
     console.log("Value of settingsOpen: ", settingsOpen);
   }, [settingsOpen]);
 
-    useEffect(() => {
+  useEffect(() => {
     console.log("Value of logoutOpen: ", logoutOpen);
   }, [logoutOpen]);
+
+  useEffect(() => {
+    console.log("Admin List: ", allAdmin);
+  }, [allAdmin]);
 
 
   return (
@@ -454,7 +458,7 @@ export default function Home() {
 
                       </div>
                       {Object.keys(allTeams).length > 0 ? (
-                        Object.entries(allTeams).map(([name, members, section, status, clientName, projectName]) => (
+                        Object.values(allTeams).map(([name, members, section, status, clientName, projectName]) => (
                           <div key={name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
                             <div className='font-bold pt-3.5 col-start-2 col-end-12'>{name}</div>
                             <div 
