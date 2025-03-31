@@ -96,6 +96,8 @@ export default function Home() {
 
               dropdownValues = initialDropdownValues;
               setDropdownValues(dropdownValues);
+              priorities = dropdownValues;
+              setPriorities(priorities);
               console.log("inital:", initialDropdownValues);
               console.log("actual:", dropdownValues);
 
@@ -208,7 +210,7 @@ export default function Home() {
 
   const handleSavePreferences = async () => {
 
-    setSavePrefOpen(!savePrefOpen);
+  setSavePrefOpen(!savePrefOpen);
 
     // Create arrays for each priority (first, second, third)
     const preferences = {
