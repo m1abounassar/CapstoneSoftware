@@ -195,37 +195,31 @@ const addStudent = (student) => {
                 members: JSON.stringify(members) 
               })
             })
-            .then(response => response.text())  // Get raw text response first
-            .then(responseText => {
-              console.log('Raw Response:', responseText);  // Log the raw response
-            
-              try {
-                const data = JSON.parse(responseText);  // Try parsing it as JSON
-                console.log(data);
-            
-                if (data.error) {
-                  console.error('Error updating team:', data.error);
-                } else {
-                  console.log('Success updating team:', data.message);
-                }
-              } catch (error) {
-                console.error('Error parsing JSON:', error);  // This will catch any JSON parsing issues
+            .then(response => response.json())  // Parse the response as JSON
+            .then(data => {
+              console.log(data);
+
+              if (data.error) {
+                console.error('Error updating team:', data.error);
+              } else {
+                console.log('Success updating team:', data.message);
               }
             })
             .catch(error => {
-              console.error('Error:', error);  // Any other errors (network, etc.)
+              console.error('Error updating team:', error);  // Handle errors for updating the team
             });
           }
         })
         .catch(error => {
-          console.error('Error fetching teams:', error);
+          console.error('Error fetching teams:', error);  // Handle errors for fetching teams
         });
+
     } catch (error) {
-      console.error('Error parsing response:', error);
+      console.error('Error parsing response:', error);  // Handle errors when parsing the response
     }
   })
   .catch(error => {
-    console.error('Error adding student 2:', error);
+    console.error('Error adding student:', error);  // Handle errors for adding student
   });
 };
 
