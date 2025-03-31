@@ -169,12 +169,6 @@ const addStudent = (student) => {
 
     console.log('Success:', data.message);
 
-    // After the student is added, send a request to add their GTID to the team
-    const teamData = {
-      gtid: student.gtid,
-      team: student.team,  // Assuming student.team exists
-    };
-
     // Fetch all teams
     fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
       .then(response => response.json())
