@@ -12,7 +12,7 @@ export default function Home() {
   const [addAdminPopup, setAddAdminPopup] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
-  const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
+  const [newStudent, setNewStudent] = useState({ name: '', gtid: '', username: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [newAdmin, setNewAdmin] = useState({ name: '', username: '', gtid: '' });
 
@@ -151,22 +151,16 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
   };
 
-  const addStudent = () => {
-    if (!newStudent.name.trim()) return;
-
-    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newStudent)
-    })
-    .then(response => response.json())
-    .then(() => {
-      setSections([...users, { id: Date.now(), ...newStudent }]);
-      setNewSection({ name: '', gtid: '', gtusername: '', team:'' });
-      setIsAddStudentPopupOpen(false);
-    })
-    .catch(error => console.error('Error updating sections:', error));
-  };
+const addStudent = (student) => {
+  fetch("https://jdregistration.sci.gatech.edu/students.php", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(student)
+  })
+  .then(response => response.json())
+  .then(data => console.log('Success:', data))
+  .catch(error => console.error('Error:', error));
+};
 
 const addAdmin = (admin) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
@@ -279,7 +273,7 @@ const newLead = (theirGTID, yourGTID) => {
         name: newName,
         gtid,
         username
-      };
+  };
   
       const response = await fetch("https://jdregistration.sci.gatech.edu/admin.php", {
         method: "POST",
@@ -778,10 +772,10 @@ const newLead = (theirGTID, yourGTID) => {
 
     {addAdminPopup && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+          <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
             <h2 className="text-xl font-bold mb-4">Add Admin</h2>
 
-              <div className='flex gap-5 justify-center font-bold'>
+              <div className='flex flex-col gap-5 justify-center font-bold'>
 
                     <div className='flex'>
 
