@@ -9,7 +9,13 @@ export default function Home() {
   const [selectedSection, setSelectedSection] = useState({});
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
+
+  const [sectionToEdit, setSectionToEdit] = useState(null);
+  const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
+  const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+
   const [addAdminPopup, setAddAdminPopup] = useState(false);
+
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', username: '', team:'' });
@@ -41,6 +47,7 @@ export default function Home() {
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
+
    useEffect(() => {
       async function fetchData() {
           const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
@@ -294,7 +301,6 @@ const newLead = (theirGTID, yourGTID) => {
 };
 
 
-
   const toggleRotation = (teamId) => {
     setRotatedTeams((prev) => {
       const newSet = new Set(prev);
@@ -444,7 +450,6 @@ const newLead = (theirGTID, yourGTID) => {
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
 
 
-
         {/* Start Nav Bar */}
         <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
           <div className='flex'>
@@ -515,6 +520,7 @@ const newLead = (theirGTID, yourGTID) => {
 
 
 
+
             {/* Start Panels */}
             <div className="grid grid-cols-2 m-10 mt-5 gap-10">
               
@@ -575,6 +581,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                 {/* Start Right Side / Teams Panel */}
                 <div className='bg-[#003056] w-xs h-2/3 rounded-3xl grid-rows-2'>
+
 
                     <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
                     <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3'>
@@ -664,6 +671,7 @@ const newLead = (theirGTID, yourGTID) => {
               </Button>
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+
                 onClick={() => {
                   setIsAddSectionPopupOpen(false);
                   addOrUpdateSection(newSection);
@@ -677,7 +685,9 @@ const newLead = (theirGTID, yourGTID) => {
       )}
 
 
-      {isEditSectionPopupOpen && (
+
+      {/* Pop-up Modal for Edit Student */}
+      {isEditStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
             <h2 className="text-lg font-bold">Edit Section</h2>
@@ -731,6 +741,7 @@ const newLead = (theirGTID, yourGTID) => {
           </div>
         </div>
       )}
+
 
       {/* 
       {isRefreshSemesterPopupOpen && (

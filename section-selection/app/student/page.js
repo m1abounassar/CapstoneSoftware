@@ -451,6 +451,7 @@ export default function Home() {
       .catch(error => {
         console.error("Error fetching teams:", error); // Handle errors for fetching teams
       });
+
   
     fetch("https://jdregistration.sci.gatech.edu/students.php", {
       method: "POST",
