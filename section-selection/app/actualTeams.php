@@ -26,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode(["teams" => $teams]);
 }
 
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -42,16 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["error" => "Error updating team: " . $conn->error]);
         }
 
-    } else {
-        echo json_encode(["error" => "Team and members data are required"]);
-    }
-}
-
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    if (isset($data['name'], $data['members'])) {
+    } else if (isset($data['name'], $data['members'])) {
         $name = $conn->real_escape_string($data['name']);
         $members = $conn->real_escape_string($data['members']);
         
