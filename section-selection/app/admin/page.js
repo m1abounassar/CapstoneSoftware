@@ -474,7 +474,7 @@ const newLead = (theirGTID, yourGTID) => {
       
 
       {/* Start Body */}
-      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default grid grid-flow-row auto-rows-max gap-5''>
+      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default grid grid-flow-row auto-rows-max gap-5'>
 
           {/* Start Header */}
           <div className="grid grid-cols-2 mt-5 mx-10 w-9/10 h-min">
