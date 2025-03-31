@@ -515,7 +515,7 @@ export default function Home() {
 
                                     {Object.keys(teamMembers).length > 0 ? (
                                         Object.entries(teamMembers).map(([name, choices]) => (
-                                          <div key={name} className='text-lg flex items-center'>
+                                          <div key={name} className='text-lg mt-3 flex items-center'>
                                             <div className='flex w-max items-center text-[#003056]'>
                                               <div className='w-auto'>{name}:</div>
                                       
