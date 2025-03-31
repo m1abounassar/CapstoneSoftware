@@ -155,16 +155,20 @@ export default function Home() {
 const addStudent = (student) => {
   // First, add the student
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(student)
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(student)
   })
-  .then(response => response.json())
-  .then(data => {
-    if (data.error) {
-      console.error('Error adding student 1:', data.error);
-      return;
-    }
+  .then(response => response.text())  // Read response as text
+  .then(responseText => {
+    console.log('Raw response text:', responseText); // Log raw response
+    try {
+      const data = JSON.parse(responseText); // Parse the response manually
+      if (data.error) {
+        console.error('Error adding student 1:', data.error);
+        return;
+      }
+
 
     console.log('Success:', data.message);
 
