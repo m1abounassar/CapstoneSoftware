@@ -162,7 +162,7 @@ const addStudent = (student) => {
   .then(response => response.json())
   .then(data => {
     if (data.error) {
-      console.error('Error adding student:', data.error);
+      console.error('Error adding student 1:', data.error);
       return;
     }
 
@@ -211,7 +211,7 @@ const addStudent = (student) => {
       });
   })
   .catch(error => {
-    console.error('Error adding student:', error);
+    console.error('Error adding student 2:', error);
   });
 };
 
