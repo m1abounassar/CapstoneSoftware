@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
+  const [selectedSection, setSelectionSection] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
-  const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+  const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
   const [addAdminPopup, setAddAdminPopup] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
@@ -511,7 +512,12 @@ const newLead = (theirGTID, yourGTID) => {
                                     </div>
 
                                     <div className='flex justify-items-end'>
-                                      <Button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
+                                      <Button 
+                                         onClick={() => {
+                                          setIsEditSectionPopupOpen(true);
+                                          setSelectedSection({ title: section.title, time: section.time, capacity: section.capacity });
+                                        }}
+                                        className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
                                     </div>
 
                     
@@ -630,8 +636,55 @@ const newLead = (theirGTID, yourGTID) => {
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
                 onClick={() => {
-                  addSection(newSection);
                   setIsAddSectionPopupOpen(false);
+                  addOrUpdateSection(newSection);
+                }}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {isEditSectionPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Add a New Section</h2>
+            <input 
+              name="title" 
+              placeholder="Section Title" 
+              value={selectedSection.title}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="time"
+              placeholder="Times"
+              value={selectedSection.time}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="capacity"
+              placeholder="Capacity"
+              value={selectedSection.capacity}
+              onChange={handleInputChange}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsEditSectionPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={() => {
+                  setIsEditSectionPopupOpen(false);
+                  addOrUpdateSection(newSection);
                 }}
               >
                 Save
@@ -642,50 +695,6 @@ const newLead = (theirGTID, yourGTID) => {
       )}
 
       {/* 
-      {isEditStudentPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Add a New Section</h2>
-            <input 
-              name="title" 
-              placeholder="Section Title" 
-              value={newSection.title}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="time"
-              placeholder="Times"
-              value={newSection.time}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="capacity"
-              placeholder="Capacity"
-              value={newSection.capacity}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <div className="flex justify-end mt-5">
-              <Button 
-                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsEditStudentPopupOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addSection}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-     
       {isRefreshSemesterPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
