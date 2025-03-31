@@ -408,75 +408,80 @@ export default function Home() {
   const startLogout = () => {
     window.location.href = '/logout.php';
   };
-
-   const startLeaveTeam = () => {
-      fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
-        .then(response => response.json())
-        .then(data => {
-          const allTeamInfo = data.teams;
-          const teamToUpdate = allTeamInfo.find(team => team.name === teamNumber);
-      
-          if (teamToUpdate) {
-            let members = JSON.parse(teamToUpdate.members);
-      
-            // Remove the student's GTID from the members array
-            members = members.filter(gtID => gtID !== gtid);
-      
-            console.log("Updated Members:", members);
-      
-            // Update the team in actualTeams.php with the modified members array
-            fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                team: teamNumber,
-                members: JSON.stringify(members)
-              })
-            })
-            .then(response => response.json())  // Parse the response as JSON
+  
+  const startLeaveTeam = () => {
+    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
+      .then(response => response.json())
+      .then(data => {
+        const allTeamInfo = data.teams;
+        const teamToUpdate = allTeamInfo.find(team => team.name === teamNumber);
+  
+        if (teamToUpdate) {
+          let members = JSON.parse(teamToUpdate.members);
+  
+          // Remove the student's GTID from the members array
+          members = members.filter(gtID => gtID !== gtid);
+  
+          console.log("Updated Members:", members);
+  
+          // Update the team in actualTeams.php with the modified members array
+          fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              team: teamNumber,
+              members: JSON.stringify(members),
+            }),
+          })
+            .then(response => response.json()) // Parse the response as JSON
             .then(data => {
               console.log(data);
-      
+  
               if (data.error) {
-                console.error('Error updating team:', data.error);
+                console.error("Error updating team:", data.error);
               } else {
-                console.log('Success updating team:', data.message);
+                console.log("Success updating team:", data.message);
               }
             })
             .catch(error => {
-              console.error('Error updating team:', error);  // Handle errors for updating the team
+              console.error("Error updating team:", error); // Handle errors for updating the team
             });
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching teams:", error); // Handle errors for fetching teams
+      });
+  
+    fetch("https://jdregistration.sci.gatech.edu/students.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        team: 0000,
+      }),
+    })
+      .then(response => response.text()) // Read response as text
+      .then(responseText => {
+        console.log("Raw response text:", responseText); // Log raw response
+        try {
+          console.log(responseText);
+          const data = JSON.parse(responseText); // Parse the response manually
+          if (data.error) {
+            console.error("Error adding student 1:", data.error);
+            return;
           }
-        })
-        .catch(error => {
-          console.error('Error fetching teams:', error);  // Handle errors for fetching teams
-        });
+  
+          console.log("Success:", data.message);
+          window.location.href = "/"; // Redirect after successful update
+        } catch (error) {
+          console.error("Error parsing response:", error);
+        }
+      })
+      .catch(error => {
+        console.error("Error updating student:", error);
+      });
+  }; 
 
-    
-        fetch("https://jdregistration.sci.gatech.edu/students.php", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: username,
-              team: 0000
-            })
-          })
-          .then(response => response.text())  // Read response as text
-          .then(responseText => {
-            console.log('Raw response text:', responseText); // Log raw response
-            try {
-              console.log(responseText);
-              const data = JSON.parse(responseText); // Parse the response manually
-              if (data.error) {
-                console.error('Error adding student 1:', data.error);
-                return;
-              }
-        
-              console.log('Success:', data.message);
-
-     
-    window.location.href = '/';
-  };
   
 
 
