@@ -28,7 +28,7 @@ export default function Home() {
   const [allAdmin, setAllAdmin] = useState([]);
   const [allStudents, setAllStudents] = useState([]);
   const [allTeams, setAllTeams] = useState({});
-  const [isLeadAdmin, setIsLeadAdmin] = useState(true);
+  const [isLeadAdmin, setIsLeadAdmin] = useState(false);
 
 
   const [protocol, setProtocol] = useState("http://");
@@ -85,6 +85,11 @@ export default function Home() {
 
                 gtid = matchedAdmin.gtid
                 setGTID(gtid);
+
+                if (matchedAdmin.isLead == '1') {
+                  isLeadAdmin = true;
+                  setIsLeadAdmin(true);
+                }
 
                 const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
                 if (!teamsRes.ok) throw new Error("Team fetch failed");
