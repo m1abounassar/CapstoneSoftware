@@ -13,27 +13,34 @@ export default function Home() {
   const [leadAdminUsername, setLeadAdminUsername] = useState("");
 
     useEffect(() => {
+      const fetchAdminInfo = async () => {
+        try {
+          const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+          if (!adminRes.ok) throw new Error("Admin fetch failed");
+    
+          const adminData = await adminRes.json();
+          if (!Array.isArray(adminData.adm)) {
+            console.error("Unexpected data format:", adminData);
+            return;
+          }
+    
+          // Find the admin info
+          const matchedAdmin = adminData.adm.find(admin => admin.isLead === '1');
+          console.log('info: ');
+          console.log(matchedAdmin);
+    
+          const leadAdminName = matchedAdmin.name;
+          setLeadAdminName(leadAdminName);
+          const leadAdminUsername = matchedAdmin.username;
+          setLeadAdminUsername(leadAdminUsername);
+        } catch (error) {
+          console.error("Error fetching admin data:", error);
+        }
+      };
+    
+      fetchAdminInfo();
+    }, []);
 
-      const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
-      if (!adminRes.ok) throw new Error("Admin fetch failed");
-          
-      const adminData = await adminRes.json();
-      if (!Array.isArray(adminData.adm)) {
-        console.error("Unexpected data format:", adminData);
-      return;
-      }
-          
-      // Find the admin info
-      const matchedAdmin = adminData.adm.find(admin => admin.isLead === '1');
-      console.log('info: ');
-      console.log(matchedAdmin);
-
-      leadAdminName = matchedAdmin.name;
-      setLeadAdminName(leadAdminName);
-      leadAdminUsername = matchedAdmin.username;
-      setLeadAdminUsername(leadAdminUsername);
-      
-  }, []);
               
 
   return (
