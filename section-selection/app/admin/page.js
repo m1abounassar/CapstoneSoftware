@@ -175,7 +175,7 @@ const addStudent = (student) => {
       fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
         .then(response => response.json())
         .then(allTeams => {
-          console.log(allTeams);
+          console.log(typeof allTeams);
           // Find the 
           const teamToUpdate = allTeams.find(team => team.name === student.team);
 
