@@ -151,6 +151,8 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
   };
 
+
+
 const addStudent = (student) => {
   // First, add the student
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
@@ -167,31 +169,60 @@ const addStudent = (student) => {
 
     console.log('Success:', data.message);
 
-    // Now, add the student's GTID to the actual team
+    // After the student is added, send a request to add their GTID to the team
     const teamData = {
       gtid: student.gtid,
       team: student.team,  // Assuming student.team exists
     };
 
-    // Send the GTID to actualTeams.php to add to the team members
-    return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(teamData)
-    });
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.error) {
-      console.error('Error adding to team:', data.error);
-    } else {
-      console.log('Success adding to team:', data.message);
-    }
+    // Fetch all teams
+    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
+      .then(response => response.json())
+      .then(allTeams => {
+        // Find the team to update
+        const teamToUpdate = allTeams.find(team => team.name === student.team);
+
+        if (teamToUpdate) {
+          // Parse the 'members' string into an array
+          const members = JSON.parse(teamToUpdate.members);
+
+          // Add the new student's GTID to the members array
+          members.push(student.gtid);
+
+          console.log(members);
+
+          // Update the team in actualTeams.php with the new members array
+          return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              team: student.team,
+              members: JSON.stringify(members) // Convert array back to string
+            })
+          });
+        } else {
+          console.error('Team not found');
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          console.error('Error updating team:', data.error);
+        } else {
+          console.log('Success updating team:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   })
   .catch(error => {
-    console.error('Error:', error);
+    console.error('Error adding student:', error);
   });
 };
+
+
+
 
 const addAdmin = (admin) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
@@ -605,58 +636,6 @@ const newLead = (theirGTID, yourGTID) => {
           </div>
         </div>
       )}
-
-     
-      {isAddStudentPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Add a New Student</h2>
-            <input 
-              name="name" 
-              placeholder="George Burdell" 
-              value={newSection.name}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="gtid"
-              placeholder="903XXXXXX"
-              value={newSection.gtid}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="username"
-              placeholder="gburdell3"
-              value={newSection.gtusername}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="team"
-              placeholder="1234"
-              value={newSection.team}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <div className="flex justify-end mt-5">
-              <Button 
-                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsAddStudentPopupOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addStudent}
-              >
-                Add
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
     
       {isEditStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -769,7 +748,7 @@ const newLead = (theirGTID, yourGTID) => {
             </div>
       )}
 
-{logoutOpen && (
+    {logoutOpen && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
@@ -799,6 +778,7 @@ const newLead = (theirGTID, yourGTID) => {
             
         </div>
       )}
+
 
       {addStudentPopup && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
