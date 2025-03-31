@@ -28,6 +28,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode(["adm" => $admins]);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Read the input data from the DELETE request
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($data['gtid'])) {
+        $gtid = $conn->real_escape_string($data['gtid']);
+        
+        // Prepare the SQL to delete the admin with the provided GTID
+        $sql = "DELETE FROM admin WHERE gtid='$gtid'";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Admin removed successfully"]);
+        } else {
+            echo json_encode(["error" => "Error removing admin: " . $conn->error]);
+        }
+    } else {
+        echo json_encode(["error" => "Admin GTID is required"]);
+    }
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
