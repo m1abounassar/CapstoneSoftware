@@ -703,7 +703,7 @@ export default function Home() {
             </div>
       )}
 
-{/* {logoutOpen && (
+{logoutOpen && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
@@ -893,7 +893,7 @@ export default function Home() {
       )}
 
         
-        <div className="m-10">
+       {/*  <div className="m-10">
           <input 
             type="file" 
             id="csvFileInput" 
