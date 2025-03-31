@@ -458,14 +458,13 @@ export default function Home() {
 
                       </div>
                       {Object.keys(allTeams).length > 0 ? (
-                        Object.entries(allTeams).map((team) => (
-                          console.log(team);
-                          <div key={team.name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
-                            <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.name}</div>
+                        Object.entries(allTeams).map(([key, value]) => (
+                          <div key={value.name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
+                            <div className='font-bold pt-3.5 col-start-2 col-end-12'>{value.name}</div>
                             <div 
                               className='rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
                               style={{
-                                color: getStatusColor(team.status)
+                                color: getStatusColor(value.status)
                               }}
                               >●</div>
                           </div>
