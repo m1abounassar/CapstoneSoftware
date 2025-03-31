@@ -28,6 +28,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($data['gtid'], $data['team'])) {
+        $gtid = $conn->real_escape_string($data['gtid']);
+        $team = $conn->real_escape_string($data['team']);
+
+        // Check if the team exists
+        $checkSQL = "SELECT * FROM teams WHERE name = '$team'";
+        $checkResult = $conn->query($checkSQL);
+
+        if ($checkResult->num_rows > 0) {
+            // Get the current members array for the team
+            $teamData = $checkResult->fetch_assoc();
+            $members = json_decode($teamData['members'], true); // Assuming 'members' is stored as a JSON array
+
+            // Add the new GTID to the array of members
+            if (!in_array($gtid, $members)) {
+                $members[] = $gtid;
+
+                // Update the team with the new members array
+                $membersJSON = json_encode($members);
+                $updateSQL = "UPDATE teams SET members = '$membersJSON' WHERE team = '$team'";
+
+                if ($conn->query($updateSQL) === TRUE) {
+                    echo json_encode(["message" => "GTID added to team successfully"]);
+                } else {
+                    echo json_encode(["error" => "Error updating team: " . $conn->error]);
+                }
+            } else {
+                echo json_encode(["error" => "GTID already exists in the team"]);
+            }
+        } else {
+            echo json_encode(["error" => "Team does not exist"]);
+        }
+    } else {
+        echo json_encode(["error" => "GTID and team are required"]);
+    }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
     if (isset($data['name'], $data['members'])) {
         $name = $conn->real_escape_string($data['name']);
         $members = $conn->real_escape_string($data['members']);
