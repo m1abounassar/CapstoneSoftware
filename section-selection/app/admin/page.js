@@ -153,7 +153,7 @@ export default function Home() {
 
 
 const addStudent = (student) => {
-  // First, add the student
+
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -163,6 +163,7 @@ const addStudent = (student) => {
   .then(responseText => {
     console.log('Raw response text:', responseText); // Log raw response
     try {
+      console.log(responseText);
       const data = JSON.parse(responseText); // Parse the response manually
       if (data.error) {
         console.error('Error adding student 1:', data.error);
