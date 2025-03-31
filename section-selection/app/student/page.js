@@ -66,7 +66,7 @@ export default function Home() {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
               setNewName(matchedStudent.name); // Initialize newName with current name
-              gtid = matchedStudent.gtid;
+              gtid = matchedStudent.gtID;
               setGTID(gtid);
               console.log("GTID: ", gtid);
 
@@ -605,7 +605,7 @@ export default function Home() {
               <label className="font-bold w-1/3 mr-1">Client Name:</label>
               <input
                 type="text"
-                value={clientName}
+                value={newClientName}
                 onChange={(e) => setNewClientName(e.target.value)}
                 placeholder="Enter Client Name"
                 className="border border-gray-300 p-2 rounded-md w-2/3"
@@ -616,7 +616,7 @@ export default function Home() {
               <label className="font-bold w-1/3 mr-1">Project Name:</label>
               <input
                 type="text"
-                value={projectName}
+                value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
                 placeholder="Enter Project Name"
                 className="border border-gray-300 p-2 rounded-md w-2/3"
