@@ -570,81 +570,78 @@ export default function Home() {
             </div>
           )}
 
-      {(settingsOpen && (
-        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
-            <h2 className="text-xl font-bold mb-4">Account Settings</h2>
-            <div className="grid grid-rows-4">
-
-              <div className='flex items-center'>
-                <label className="font-bold w-1/3 mr-1">Name:</label>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter Name"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
-              </div>
-      
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">GTID:</label>
-                <span className="w-2/3 text-right">{gtid}</span>
-              </div>
-      
-              <div className="flex justify-between items-center">
-                <label className="font-bold w-1/3">Username:</label>
-                <span className="w-2/3 text-right">{username}</span>
-              </div>
-
-              <div className='flex items-center'>
-                <label className="font-bold w-1/3 mr-1">Name:</label>
-                <input
-                  type="text"
-                  value={clientName}
-                  onChange={(e) => setNewClientName(e.target.value)}
-                  placeholder="Enter Client Name"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
-              </div>
-
-              <div className='flex items-center'>
-                <label className="font-bold w-1/3 mr-1">Name:</label>
-                <input
-                  type="text"
-                  value={projectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  placeholder="Enter ProjectName"
-                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                />
-              </div>
-
-              <div className='flex gap-5 justify-center font-bold'>
-
-                  <Button
-                    onClick={() => setSettingsOpen(false)}
-                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
-                  >
-                    Close
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleSavedSettings();
-                      setSettingsOpen(false);
-                    }}
-                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
-                  >
-                    Save
-                  </Button>
-              </div>
-
+    {settingsOpen && (
+      <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+          <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+          <div className="grid grid-rows-4">
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Name:</label>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Enter Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
             </div>
-
-
+    
+            <div className="flex justify-between items-center">
+              <label className="font-bold w-1/3">GTID:</label>
+              <span className="w-2/3 text-right">{gtid}</span>
             </div>
-            
+    
+            <div className="flex justify-between items-center">
+              <label className="font-bold w-1/3">Username:</label>
+              <span className="w-2/3 text-right">{username}</span>
+            </div>
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Client Name:</label>
+              <input
+                type="text"
+                value={clientName}
+                onChange={(e) => setNewClientName(e.target.value)}
+                placeholder="Enter Client Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
+            </div>
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Project Name:</label>
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                placeholder="Enter Project Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
+            </div>
+    
+            <div className='flex gap-5 justify-center font-bold'>
+              <Button
+                onClick={() => setSettingsOpen(false)}
+                className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+              >
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  handleSavedSettings();
+                  setSettingsOpen(false);
+                }}
+                className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+              >
+                Save
+              </Button>
+            </div>
+    
+          </div>
         </div>
-      )}
+      </div>
+    )}
+
 
           {hamburgerOptionsOpen && (
             <div className="absolute top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
