@@ -13,6 +13,7 @@ export default function Home() {
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
+  const [newAdmin, setNewAdmin] = useState({ name: '', gtid: '', gtusername: '' });
 
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
@@ -160,6 +161,17 @@ export default function Home() {
     })
     .catch(error => console.error('Error updating sections:', error));
   };
+
+const addAdmin = (admin) => {
+  fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(admin)
+  })
+  .then(response => response.json())
+  .then(data => console.log('Success:', data))
+  .catch(error => console.error('Error:', error));
+};
 
 const removeAdmin = (gtid) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
@@ -746,6 +758,84 @@ const removeAdmin = (gtid) => {
       )}
 
 
+    {addAdminPopup && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Add Admin</h2>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                    <div className='flex'>
+
+                              <div>Name: </div>
+              
+                            <input
+                              type="text"
+                              value={newAdmin.name}
+                              onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })}
+                              placeholder="George Burdell"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
+              
+                    </div>
+
+                    <div className='flex'>
+
+                              <div>GT Username: </div>
+              
+                         <input
+                          type="text"
+                          value={newAdmin.gtusername}
+                          onChange={(e) => setNewAdmin({ ...newAdmin, gtusername: e.target.value })}
+                          placeholder="gburdell3"
+                          className="border border-gray-300 p-2 rounded-md w-2/3"
+                        />
+              
+                    </div>
+
+                    <div className='flex'>
+
+                              <div>GTID: </div>
+              
+                                <input
+                                    type="text"
+                                    value={newAdmin.gtid}
+                                    onChange={(e) => setNewAdmin({ ...newAdmin, gtid: e.target.value })}
+                                    placeholder="903XXXXXX"
+                                    className="border border-gray-300 p-2 rounded-md w-2/3"
+                                  />
+
+                                  
+              
+                    </div>
+                                  
+                    <div>
+                        <Button
+                          onClick={() => {
+                            setAddAdminPopup(false);
+                          }}
+                          className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white font-bold rounded-md"> Cancel
+                        </Button>
+    
+                        <Button
+                          onClick={() => {
+                            addAdmin(newAdmin);
+                            setAddAdminPopup(false);
+                          }}
+                          className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] text-[#003056] rounded-md"> Add
+                        </Button>
+                    </div>
+      
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
+
       {(settingsOpen && (isLeadAdmin == false)) && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
@@ -894,7 +984,7 @@ const removeAdmin = (gtid) => {
 
                           <Button
                             onClick={() => {
-                              handleSaveName();
+                              setAddAdminPopup(true);
                               setSettingsOpen(false);
                             }}
                             className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
