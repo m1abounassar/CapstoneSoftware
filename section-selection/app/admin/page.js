@@ -195,18 +195,8 @@ const addStudent = (student) => {
                 team: student.team,
                 members: JSON.stringify(members) 
               })
-            });
-          } else {
-            console.error('Team not found');
-            throw new Error('Team not found');
-          }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
-          }
-          return response.json();  // Continue parsing only if the response is valid
-        })
+            })
+        .then(response => response.json())
         .then(data => {
           console.log(data);
           if (data.error) {
