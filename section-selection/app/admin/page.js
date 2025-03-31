@@ -161,11 +161,11 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
   };
 
-const removeAdmin = (adminGTID) => {
+const removeAdmin = (gtid) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ adminGTID }) // Wrap adminGTID in an object
+    body: JSON.stringify({ gtid }) // Wrap gtid in an object
   })
   .then(response => response.json()) // Assuming the server responds with JSON
   .then(data => {
