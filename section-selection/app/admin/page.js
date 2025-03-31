@@ -155,9 +155,9 @@ export default function Home() {
 const addStudent = (student) => {
   // First, add the student
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(student)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(student)
   })
   .then(response => response.text())  // Read response as text
   .then(responseText => {
@@ -169,50 +169,50 @@ const addStudent = (student) => {
         return;
       }
 
+      console.log('Success:', data.message);
 
-    console.log('Success:', data.message);
+      fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
+        .then(response => response.json())
+        .then(allTeams => {
+          // Find the 
+          const teamToUpdate = allTeams.find(team => team.name === student.team);
 
-    // Fetch all teams
-    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
-      .then(response => response.json())
-      .then(allTeams => {
-        // Find the team to update
-        const teamToUpdate = allTeams.find(team => team.name === student.team);
+          if (teamToUpdate) {
+            const members = JSON.parse(teamToUpdate.members);
 
-        if (teamToUpdate) {
-          // Parse the 'members' string into an array
-          const members = JSON.parse(teamToUpdate.members);
+            // Add the new student's GTID to the members array
+            members.push(student.gtid);
 
-          // Add the new student's GTID to the members array
-          members.push(student.gtid);
+            console.log("Members: ", members);
 
-          console.log("Members: ", members);
-
-          // Update the team in actualTeams.php with the new members array
-          return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              team: student.team,
-              members: JSON.stringify(members) // Convert array back to string
-            })
-          });
-        } else {
-          console.error('Team not found');
-          throw new Error('Team not found');
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          console.error('Error updating team:', data.error);
-        } else {
-          console.log('Success updating team:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+            // Update the team in actualTeams.php with the new members array
+            return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                team: student.team,
+                members: JSON.stringify(members) // Convert array back to string
+              })
+            });
+          } else {
+            console.error('Team not found');
+            throw new Error('Team not found');
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            console.error('Error updating team:', data.error);
+          } else {
+            console.log('Success updating team:', data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Error parsing response:', error);
+    }
   })
   .catch(error => {
     console.error('Error adding student 2:', error);
