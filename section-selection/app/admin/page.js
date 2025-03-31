@@ -854,7 +854,12 @@ export default function Home() {
                         <div key={values.name} className='text-[#003056] text-lg mx-5 my-2 grid grid-cols-3 items-center'>
 
                           <div className='col-span-1 text-nowrap'>{values.name}</div>
-                          <div className='col-span-1 col-start-3 text-nowrap flex '></div>
+                          <div className='col-span-1 col-start-3 text-nowrap flex'>
+
+                              <Button className='bg-[url("/crown.png")] hover:bg-[url("/crownHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
+                              <Button className='bg-[url("/remove.png")] hover:bg-[url("/removeHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>        
+          
+                          </div>
                           
 
                         </div>
