@@ -10,6 +10,10 @@ export default function Home() {
   const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [newClientName, setNewClientName] = useState("");
+  const [newProjectName, setNewProjectName] = useState("");
   const [allStudents, setAllStudents] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
@@ -18,6 +22,10 @@ export default function Home() {
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [newName, setNewName] = useState("");
+
+  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
 
   useEffect(() => {
@@ -130,6 +138,17 @@ export default function Home() {
                if (matchedTeam) {
                   teams = matchedTeam; // Store the entire matched team in state
                   setTeams(teams);
+
+                  clientName = teams.clientName;
+                  setClientName(clientName);
+                  newClientName = teams.clientName;
+                  setNewClientName(newClientName);
+
+                  projectName = teams.projectName;
+                  setProjectName(projectName);
+                  newProjectName = teams.projectName;
+                  setNewProjectName(newProjectName);
+
 
                   const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
@@ -267,38 +286,108 @@ export default function Home() {
   };
 
   // New function to save the updated name
+
+  
   const handleSaveName = async () => {
-  if (!newName.trim()) {
-    return; // Don't save empty names
-  }
+      if (!newName.trim()) {
+        return; // Don't save empty names
+      }
 
-  try {
-    const postData = {
-      username,
-      name: newName
-    };
+      if (newName !== name && (newName)) {
 
-    const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+            try {
+            const postData = {
+              username,
+              name: newName
+            };
+        
+            const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(postData),
+            });
+        
+            const textResponse = await response.text();
+        
+            if (!response.ok) {
+              throw new Error(`Server error: ${response.status} - ${textResponse}`);
+            }
+        
+            // Update the name in the UI
+            setName(newName);
+            
+          } catch (error) {
+            console.error("Error updating name:", error);
+          }
+        
+      }
 
-    const textResponse = await response.text();
+      if (clientName != newClientName && (clientName)) {
 
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status} - ${textResponse}`);
-    }
+            try {
+                const postData = {
+                  number: teamNumber,
+                  clientName: newClientName
+                };
+            
+                const response = await fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(postData),
+                });
+            
+                const textResponse = await response.text();
+            
+                if (!response.ok) {
+                  throw new Error(`Server error: ${response.status} - ${textResponse}`);
+                }
+            
+                // Update the name in the UI
+                setClientName(newClientName);
 
-    // Update the name in the UI
-    setName(newName);
-    // Close the popup
-    setNameEditOpen(false);
-  } catch (error) {
-    console.error("Error updating name:", error);
-  }
+          } catch (error) {
+            console.error("Error updating client name:", error);
+          }
+        
+      }
+
+      if (projectName != newProjectName && (projectName)) {
+
+            try {
+                const postData = {
+                  number: teamNumber,
+                  projectName: projectName
+                };
+            
+                const response = await fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(postData),
+                });
+            
+                const textResponse = await response.text();
+            
+                if (!response.ok) {
+                  throw new Error(`Server error: ${response.status} - ${textResponse}`);
+                }
+            
+                // Update the name in the UI
+                setProjectName(newProjectName);
+
+          } catch (error) {
+            console.error("Error updating project name:", error);
+          }
+        
+      }
+
+    setSettingsOpen(false);
+
 };
 
   useEffect(() => {
@@ -310,6 +399,10 @@ export default function Home() {
   useEffect(() => {
     console.log("Updated Dropdown Values:", dropdownValues);
   }, [dropdownValues]);
+
+  const startLogout = () => {
+    window.location.href = '/logout.php';
+  };
 
 
   return (
@@ -477,35 +570,135 @@ export default function Home() {
             </div>
           )}
 
-          {/* Name Edit PopUp */}
-          {nameEditOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md shadow-lg w-96">
-                <h3 className="text-lg font-bold text-[#003056] mb-4">Edit Display Name</h3>
+      {(settingsOpen && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+            <div className="grid grid-rows-4">
+
+              <div className='flex items-center'>
+                <label className="font-bold w-1/3 mr-1">Name:</label>
                 <input
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                  placeholder="Enter your name"
+                  placeholder="Enter Name"
+                  className="border border-gray-300 p-2 rounded-md w-2/3"
                 />
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => setNameEditOpen(false)}
-                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+              </div>
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">GTID:</label>
+                <span className="w-2/3 text-right">{gtid}</span>
+              </div>
+      
+              <div className="flex justify-between items-center">
+                <label className="font-bold w-1/3">Username:</label>
+                <span className="w-2/3 text-right">{username}</span>
+              </div>
+
+              <div className='flex items-center'>
+                <label className="font-bold w-1/3 mr-1">Name:</label>
+                <input
+                  type="text"
+                  value={clientName}
+                  onChange={(e) => setNewClientName(e.target.value)}
+                  placeholder="Enter Client Name"
+                  className="border border-gray-300 p-2 rounded-md w-2/3"
+                />
+              </div>
+
+              <div className='flex items-center'>
+                <label className="font-bold w-1/3 mr-1">Name:</label>
+                <input
+                  type="text"
+                  value={projectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  placeholder="Enter ProjectName"
+                  className="border border-gray-300 p-2 rounded-md w-2/3"
+                />
+              </div>
+
+              <div className='flex gap-5 justify-center font-bold'>
+
+                  <Button
+                    onClick={() => setSettingsOpen(false)}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveName}
-                    className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
+                    Close
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleSavedSettings();
+                      setSettingsOpen(false);
+                    }}
+                    className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                   >
                     Save
-                  </button>
-                </div>
+                  </Button>
+              </div>
+
+            </div>
+
+
+            </div>
+            
+        </div>
+      )}
+
+          {hamburgerOptionsOpen && (
+            <div className="absolute top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+              <div
+                onClick={() => {
+                  setSettingsOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+              >
+                Settings
+              </div>
+              <div
+                onClick={() => {
+                  setLogoutOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-[#D01717]"
+              >
+                Logout
               </div>
             </div>
-          )}
+      )}
+
+        {logoutOpen && (
+            <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
+    
+                  <div className='flex gap-5 justify-center font-bold'>
+    
+                      <Button
+                        onClick={() => setSettingsOpen(false)}
+                        className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                      >
+                        Go Back
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSettingsOpen(false);
+                          startLogout();
+                        }}
+                        className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                      >
+                        Logout
+                      </Button>
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
 
       </div>
 
