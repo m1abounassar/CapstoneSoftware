@@ -27,6 +27,7 @@ export default function Home() {
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [leaveTeamOpen, setLeaveTeamOpen] = useState(false);
 
 
   useEffect(() => {
@@ -408,6 +409,76 @@ export default function Home() {
     window.location.href = '/logout.php';
   };
 
+   const startLeaveTeam = () => {
+      fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
+        .then(response => response.json())
+        .then(data => {
+          const allTeamInfo = data.teams;
+          const teamToUpdate = allTeamInfo.find(team => team.name === teamNumber);
+      
+          if (teamToUpdate) {
+            let members = JSON.parse(teamToUpdate.members);
+      
+            // Remove the student's GTID from the members array
+            members = members.filter(gtID => gtID !== gtid);
+      
+            console.log("Updated Members:", members);
+      
+            // Update the team in actualTeams.php with the modified members array
+            fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                team: teamNumber,
+                members: JSON.stringify(members)
+              })
+            })
+            .then(response => response.json())  // Parse the response as JSON
+            .then(data => {
+              console.log(data);
+      
+              if (data.error) {
+                console.error('Error updating team:', data.error);
+              } else {
+                console.log('Success updating team:', data.message);
+              }
+            })
+            .catch(error => {
+              console.error('Error updating team:', error);  // Handle errors for updating the team
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching teams:', error);  // Handle errors for fetching teams
+        });
+
+    
+        fetch("https://jdregistration.sci.gatech.edu/students.php", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: username,
+              team: 0000
+            })
+          })
+          .then(response => response.text())  // Read response as text
+          .then(responseText => {
+            console.log('Raw response text:', responseText); // Log raw response
+            try {
+              console.log(responseText);
+              const data = JSON.parse(responseText); // Parse the response manually
+              if (data.error) {
+                console.error('Error adding student 1:', data.error);
+                return;
+              }
+        
+              console.log('Success:', data.message);
+
+     
+    window.location.href = '/';
+  };
+  
+
 
   return (
     <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
@@ -568,7 +639,9 @@ export default function Home() {
 
               <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</button>
 
-              <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
+              <button 
+                  onClick={() => setLeaveTeamOpen(true)}
+                  className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
 
 
           </div>
@@ -578,7 +651,7 @@ export default function Home() {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
                 <p>Saved!</p>
-                <button
+                <button 
                   onClick={() => setSavePrefOpen(!savePrefOpen)}
                   className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
                 >
@@ -705,6 +778,37 @@ export default function Home() {
                         className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
                       >
                         Logout
+                      </Button>
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
+      {leaveTeamOpen && (
+            <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                <h2 className="text-xl font-bold mb-4">Are You Sure You Want to Leave Your Team?</h2>
+    
+                  <div className='flex gap-5 justify-center font-bold'>
+    
+                      <Button
+                        onClick={() => setLeaveTeamOpen(false)}
+                        className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                      >
+                        No
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setLeaveTeamOpen(false);
+                          startLeaveTeam();
+                        }}
+                        className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                      >
+                        Yes
                       </Button>
               </div>
 
