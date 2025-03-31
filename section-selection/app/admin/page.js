@@ -7,7 +7,6 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
-  const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
   const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
   const [addAdminPopup, setAddAdminPopup] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
@@ -15,7 +14,8 @@ export default function Home() {
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', username: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
   const [newAdmin, setNewAdmin] = useState({ name: '', username: '', gtid: '' });
-
+  const [addStudentPopup, setAddStudentPopup] = useState(false);
+  
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -769,17 +769,114 @@ const newLead = (theirGTID, yourGTID) => {
         </div>
       )}
 
+      {addStudentPopup && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
+            <h2 className="text-xl font-bold mb-4">Add Admin</h2>
+
+              <div className='flex flex-col gap-5'>
+
+                    <div className='flex'>
+
+                            <div>Name: </div>
+              
+                            <input
+                              type="text"
+                              value={newStudent.name}
+                              onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
+                              placeholder="George Burdell"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
+              
+                    </div>
+
+                    <div className='flex'>
+
+                            <div>GT Username: </div>
+              
+                            <input
+                              type="text"
+                              value={newStudent.username}
+                              onChange={(e) => setNewStudent({ ...newStudent, username: e.target.value })}
+                              placeholder="gburdell3"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
+              
+                    </div>
+
+                    <div className='flex'>
+
+                            <div>GTID: </div>
+              
+                            <input
+                              type="text"
+                              value={newStudent.gtid}
+                              onChange={(e) => setNewStudent({ ...newStudent, gtid: e.target.value })}
+                              placeholder="903XXXXXX"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
+
+                                  
+              
+                    </div>
+
+                    <div className='flex flex-col'>
+
+                            <div className='flex flex-row'>
+                                
+                                <div>GTID: </div>
+                  
+                                <input
+                                  type="text"
+                                  value={newStudent.gtid}
+                                  onChange={(e) => setNewStudent({ ...newStudent, gtid: e.target.value })}
+                                  placeholder="903XXXXXX"
+                                  className="border border-gray-300 p-2 rounded-md w-2/3"
+                                />       
+                                
+                            </div>
+
+                            <div className='text-sm'>Put 0000 for solo students </div>
+
+                    </div>
+                                  
+                    <div>
+                        <Button
+                          onClick={() => {
+                            setAddStudentPopup(false);
+                          }}
+                          className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white font-bold rounded-md"> Cancel
+                        </Button>
+    
+                        <Button
+                          onClick={() => {
+                            addStudent(newStudent);
+                            setAddStudentPopup(false);
+                          }}
+                          className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] text-[#003056] rounded-md"> Add
+                        </Button>
+                    </div>
+      
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
 
     {addAdminPopup && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
             <h2 className="text-xl font-bold mb-4">Add Admin</h2>
 
-              <div className='flex flex-col gap-5 justify-center font-bold'>
+              <div className='flex flex-col gap-5'>
 
                     <div className='flex'>
 
-                              <div>Name: </div>
+                            <div>Name: </div>
               
                             <input
                               type="text"
@@ -793,29 +890,29 @@ const newLead = (theirGTID, yourGTID) => {
 
                     <div className='flex'>
 
-                              <div>GT Username: </div>
+                            <div>GT Username: </div>
               
-                         <input
-                          type="text"
-                          value={newAdmin.username}
-                          onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })}
-                          placeholder="gburdell3"
-                          className="border border-gray-300 p-2 rounded-md w-2/3"
-                        />
+                            <input
+                              type="text"
+                              value={newAdmin.username}
+                              onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })}
+                              placeholder="gburdell3"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
               
                     </div>
 
                     <div className='flex'>
 
-                              <div>GTID: </div>
+                            <div>GTID: </div>
               
-                                <input
-                                    type="text"
-                                    value={newAdmin.gtid}
-                                    onChange={(e) => setNewAdmin({ ...newAdmin, gtid: e.target.value })}
-                                    placeholder="903XXXXXX"
-                                    className="border border-gray-300 p-2 rounded-md w-2/3"
-                                  />
+                            <input
+                              type="text"
+                              value={newAdmin.gtid}
+                              onChange={(e) => setNewAdmin({ ...newAdmin, gtid: e.target.value })}
+                              placeholder="903XXXXXX"
+                              className="border border-gray-300 p-2 rounded-md w-2/3"
+                            />
 
                                   
               
