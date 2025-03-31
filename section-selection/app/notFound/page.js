@@ -9,9 +9,32 @@ import { Label } from '@/components/ui/label';
 import { CheckBox } from '@/components/ui/checkbox';
 
 export default function Home() {
+  const [leadAdminName, setLeadAdminName] = useState("");
+  const [leadAdminUsername, setLeadAdminUsername] = useState("");
 
+    useEffect(() => {
 
+      const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+      if (!adminRes.ok) throw new Error("Admin fetch failed");
+          
+      const adminData = await adminRes.json();
+      if (!Array.isArray(adminData.adm)) {
+        console.error("Unexpected data format:", adminData);
+      return;
+      }
+          
+      // Find the admin info
+      const matchedAdmin = adminData.adm.find(admin => admin.isLead === '1');
+      console.log('info: ');
+      console.log(matchedAdmin);
 
+      leadAdminName = matchedAdmin.name;
+      setLeadAdminName(leadAdminName);
+      leadAdminUsername = matchedAdmin.username;
+      setLeadAdminUsername(leadAdminUsername);
+      
+  }, []);
+              
 
   return (
     <div className='min-h-screen bg-[url(../public/logBack.jpg)] font-figtree'>
@@ -35,7 +58,7 @@ export default function Home() {
 
             <div className='space-y-2 opacity-100 flex flex-col m-0'>
               <div className="text-lg text-center"> Please contact </div>
-              <div className="text-lg text-center font-bold"> Ronnie Howard (rhoward46@gatech.edu) </div>
+              <div className="text-lg text-center font-bold"> {leadAdminName} ({leadAdminUsername}@gatech.edu) </div>
               <div className="text-lg text-center">to be added to Team Sync. </div>
             </div>
           </div>
