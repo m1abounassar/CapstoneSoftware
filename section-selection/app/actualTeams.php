@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Update the team with the new members array
                 $membersJSON = json_encode($members);
-                $updateSQL = "UPDATE teams SET members = '$membersJSON' WHERE team = '$team'";
+                $updateSQL = "UPDATE teams SET members = '$membersJSON' WHERE name = '$team'";
 
                 if ($conn->query($updateSQL) === TRUE) {
                     echo json_encode(["message" => "GTID added to team successfully"]);
