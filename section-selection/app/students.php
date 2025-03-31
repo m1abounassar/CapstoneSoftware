@@ -105,9 +105,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["error" => "error updating preferences: " . $conn->error]);
         }
-    } 
-    // Handle name update
-    else if (isset($data['username'], $data['name']) && !isset($data['gtid'], $data['team'])) {
+    } else if (isset($data['username'], $data['team'])) {
+        $username = $conn->real_escape_string($data['username']);
+        $team = $conn->real_escape_string($data['team']);
+        
+        // Corrected SQL query
+        $sql = "UPDATE students SET team='$team' WHERE username='$username'";
+        
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Team updated saved successfully"]);
+        } else {
+            echo json_encode(["error" => "error updating team: " . $conn->error]);
+        }
+    } else if (isset($data['username'], $data['name']) && !isset($data['gtid'], $data['team'])) {
         $username = $conn->real_escape_string($data['username']);
         $name = $conn->real_escape_string($data['name']);
         
