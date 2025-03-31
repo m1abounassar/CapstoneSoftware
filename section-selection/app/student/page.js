@@ -457,7 +457,7 @@ export default function Home() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         username: username,
-        team: 0000,
+        team: '0000',
       }),
     })
       .then(response => response.text()) // Read response as text
