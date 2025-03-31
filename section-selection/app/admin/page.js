@@ -135,6 +135,11 @@ export default function Home() {
     setNewSection(prev => ({ ...prev, [name]: value }));
   };
 
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setSelectedSection(prev => ({ ...prev, [name]: value }));
+  };
+
   const addOrUpdateSection = () => {
     if (!newSection.title.trim()) return;
 
@@ -148,11 +153,30 @@ export default function Home() {
       setSections([...sections, { id: Date.now(), ...newSection }]);
       setNewSection({ title: '', time: '', capacity: '' });
       setIsAddSectionPopupOpen(false);
+      setIsEditSectionPopupOpen(false);
     })
     .catch(error => console.error('Error updating sections:', error));
 
   };
 
+
+  const addOrUpdateSection = () => {
+    if (!newSection.title.trim()) return;
+
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(selectedSection)
+    })
+    .then(response => response.json())
+    .then(() => {
+      setSections([...sections, { id: Date.now(), ...newSection }]);
+      setIsAddSectionPopupOpen(false);
+      setIsEditSectionPopupOpen(false);
+    })
+    .catch(error => console.error('Error updating sections:', error));
+
+  };
 
 const addStudent = (student) => {
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
@@ -651,26 +675,26 @@ const newLead = (theirGTID, yourGTID) => {
       {isEditSectionPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Add a New Section</h2>
+            <h2 className="text-lg font-bold">Edit Section</h2>
             <input 
               name="title" 
               placeholder="Section Title" 
               value={selectedSection.title}
-              onChange={handleInputChange}
+              onChange={handleEditInputChange}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="time"
               placeholder="Times"
               value={selectedSection.time}
-              onChange={handleInputChange}
+              onChange={handleEditInputChange}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="capacity"
               placeholder="Capacity"
               value={selectedSection.capacity}
-              onChange={handleInputChange}
+              onChange={handleEditInputChange}
               className="border p-2 rounded-md w-full mt-3"
             />
             <div className="flex justify-end mt-5">
@@ -679,6 +703,15 @@ const newLead = (theirGTID, yourGTID) => {
                 onClick={() => setIsEditSectionPopupOpen(false)}
               >
                 Cancel
+              </Button>
+              <Button 
+                className="bg-[#D01717] hover:bg-[#EA2020] text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => {
+                  setIsEditSectionPopupOpen(false);
+                  removeSection(selectedSection);
+                }}
+              >
+                Remove
               </Button>
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
