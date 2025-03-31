@@ -772,7 +772,7 @@ const newLead = (theirGTID, yourGTID) => {
       {addStudentPopup && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
-            <h2 className="text-xl font-bold mb-4">Add Admin</h2>
+            <h2 className="text-xl font-bold mb-4">Add Student</h2>
 
               <div className='flex flex-col gap-5'>
 
@@ -792,7 +792,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                     <div className='flex'>
 
-                            <div>GT Username: </div>
+                            <div className='text-nowrap'>GT Username: </div>
               
                             <input
                               type="text"
@@ -824,13 +824,13 @@ const newLead = (theirGTID, yourGTID) => {
 
                             <div className='flex flex-row'>
                                 
-                                <div>GTID: </div>
+                                <div>Team: </div>
                   
                                 <input
                                   type="text"
-                                  value={newStudent.gtid}
-                                  onChange={(e) => setNewStudent({ ...newStudent, gtid: e.target.value })}
-                                  placeholder="903XXXXXX"
+                                  value={newStudent.team}
+                                  onChange={(e) => setNewStudent({ ...newStudent, team: e.target.value })}
+                                  placeholder="1234"
                                   className="border border-gray-300 p-2 rounded-md w-2/3"
                                 />       
                                 
