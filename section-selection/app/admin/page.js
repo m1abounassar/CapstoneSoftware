@@ -195,17 +195,25 @@ const addStudent = (student) => {
                 members: JSON.stringify(members) 
               })
             })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-              if (data.error) {
-                console.error('Error updating team:', data.error);
-              } else {
-                console.log('Success updating team:', data.message);
+            .then(response => response.text())  // Get raw text response first
+            .then(responseText => {
+              console.log('Raw Response:', responseText);  // Log the raw response
+            
+              try {
+                const data = JSON.parse(responseText);  // Try parsing it as JSON
+                console.log(data);
+            
+                if (data.error) {
+                  console.error('Error updating team:', data.error);
+                } else {
+                  console.log('Success updating team:', data.message);
+                }
+              } catch (error) {
+                console.error('Error parsing JSON:', error);  // This will catch any JSON parsing issues
               }
             })
             .catch(error => {
-              console.error('Error:', error);
+              console.error('Error:', error);  // Any other errors (network, etc.)
             });
           }
         })
