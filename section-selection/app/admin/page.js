@@ -135,7 +135,7 @@ export default function Home() {
     setNewSection(prev => ({ ...prev, [name]: value }));
   };
 
-    const handleInputChange = (e) => {
+    const handleEditInputChange = (e) => {
       const { name, value } = e.target;
       setSelectedSection(prev => ({ ...prev, [name]: value }));
   };
