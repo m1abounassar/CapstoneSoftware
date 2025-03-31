@@ -379,10 +379,10 @@ export default function Home() {
               
 
                 {/* Start Left Side */}
-                <div className='grid grid-rows-6 gap-5'>
+                <div className='grid grid-rows-6'>
 
                       {/* Start Sections Panel */}
-                      <div className='bg-[#003056] w-xs row-span-5 rounded-3xl grid-rows-2'>
+                      <div className='bg-[#003056] w-xs h-[80%] row-span-5 rounded-3xl grid-rows-2'>
                 
                           <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
                           <div className='bg-[#FFFFFF] overflow-auto h-full w-50 rounded-b-3xl px-5 py-3'>
@@ -681,7 +681,7 @@ export default function Home() {
 
 
       {hamburgerOptionsOpen && (
-            <div className="absoluteabsolute top-0 right-0 top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+            <div className="absolute top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
                 onClick={() => {
                   setSettingsOpen(true);
