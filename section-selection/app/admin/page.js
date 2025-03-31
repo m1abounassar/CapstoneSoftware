@@ -160,8 +160,8 @@ export default function Home() {
   };
 
 
-  const addOrUpdateSection = () => {
-    if (!newSection.title.trim()) return;
+  const removeSection = () => {
+    if (!selectedSection.title.trim()) return;
 
     fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'DELETE',
