@@ -1,7 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
-import { DropdownTwo } from "@/components/ui/dropdown2";
+import { Button } from '@/components/ui/button';
+
 
 export default function Home() {
   const [sections, setSections] = useState([]);
@@ -9,16 +10,25 @@ export default function Home() {
   const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [allStudents, setAllStudents] = useState("");
+  const [gtid, setGTID] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [newClientName, setNewClientName] = useState("");
+  const [newProjectName, setNewProjectName] = useState("");
+  const [allStudents, setAllStudents] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
-  const [selectedChoice, setSelectedChoice] = useState("3");
   const [teamNumber, setTeamNumber] = useState(0);
   const [teamMembers, setTeamMembers] = useState([]);
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  
+
+  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
+  const [leaveTeamOpen, setLeaveTeamOpen] = useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -26,10 +36,10 @@ export default function Home() {
         if (!sessionRes.ok) {
             window.location.href = '/error';
         }
-  
+
         const sessionData = await sessionRes.json();
         console.log('Session:', sessionData);
-  
+
         if (sessionData.loggedIn === 'true') {
 
             console.log('true');
@@ -39,7 +49,7 @@ export default function Home() {
 
             const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
             if (!studentsRes.ok) throw new Error("Students fetch failed");
-        
+
             const studentsData = await studentsRes.json();
             if (!Array.isArray(studentsData.students)) {
               console.error("Unexpected data format:", studentsData);
@@ -47,49 +57,81 @@ export default function Home() {
             }
 
             setAllStudents(studentsData.students);
-        
+
               // Find the student with the matching username
             const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
             console.log('info: ');
             console.log(matchedStudent);
-        
+
             if (matchedStudent) {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
               setNewName(matchedStudent.name); // Initialize newName with current name
+              gtid = matchedStudent.gtID;
+              setGTID(gtid);
+              console.log("GTID: ", gtid);
 
               const initialDropdownValues = {};
-              
+
               const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
               const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
               const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
 
-              // Assign priorities from student's choices
-              firstChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "1";
-              });
-              secondChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "2";
-              });
-              thirdChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "3";
-              });
+              if (!firstChoiceArray) {
+                const sectionsRes = await fetch('https://jdregistration.sci.gatech.edu/sections.php');
+                if (!sectionsRes.ok) throw new Error("Sections fetch failed");
+    
+                const sectionsData = await sectionsRes.json();
+                if (!Array.isArray(sectionsData.sections)) {
+                  console.error("Unexpected data format:", sectionsData);
+                  return;
+                }
 
-              setDropdownValues(initialDropdownValues);
-              console.log(initialDropdownValues);
+                (sectionsData.sections).forEach((section) => {
+                  initialDropdownValues[section.title] = "3";
+                });
+                
+              } else {
+
+
+                // Assign priorities from student's choices
+                firstChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "1";
+                });
+                secondChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "2";
+                });
+                thirdChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "3";
+                });
+                
+              }
+
+              dropdownValues = initialDropdownValues;
+              setDropdownValues(dropdownValues);
+              priorities = dropdownValues;
+              setPriorities(priorities);
+              console.log("inital:", initialDropdownValues);
+              console.log("actual:", dropdownValues);
+
+              console.log(Object.keys(dropdownValues));
+              console.log(Object.values(dropdownValues));
+              console.log(dropdownValues['JIF']);
+
               console.log("im so sad: ", matchedStudent.team);
 
               teamNumber = matchedStudent.team;
+              setTeamNumber(teamNumber);
 
               const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
               if (!teamsRes.ok) throw new Error("Team fetch failed");
-                  
+
               const teamData = await teamsRes.json();
               if (!Array.isArray(teamData.teams)) {
                   console.error("Unexpected data format:", teamData);
                   return;
               }
-                  
+
               // Find the student with the matching username
 
               console.log("Team Number: ", teamNumber);
@@ -97,67 +139,92 @@ export default function Home() {
               const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
 
               console.log(matchedTeam);
-              
-              if (matchedTeam) {
+
+               if (matchedTeam) {
                   teams = matchedTeam; // Store the entire matched team in state
-              
+                  setTeams(teams);
+
+                  clientName = teams.clientName;
+                  setClientName(clientName);
+                  newClientName = teams.clientName;
+                  setNewClientName(newClientName);
+
+                  projectName = teams.projectName;
+                  setProjectName(projectName);
+                  newProjectName = teams.projectName;
+                  setNewProjectName(newProjectName);
+
+
                   const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
                   console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
                   console.log(typeof rawTeamMembers);
-
+                  console.log(typeof allStudents);
                   rawTeamMembers.forEach((person) => {
-                  const currStudent = allStudents.find(student => student.gtID === person);
-            
-                  setTeamMembers(prev => ({
-                    ...prev, 
-                    [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
-                    
-                    }));
-              
-                    
+                    const currStudent = studentsData.students.find(student => student.gtID === person);
+                    console.log("Person", person, "Curr Student: ", currStudent);
+
+                    setTeamMembers(prev => ({
+                      ...prev, 
+                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+
+                      }));
+                      console.log(teamMembers);
+
+
                     });
-              
-                    console.log(setTeamMembers);
+
+                    console.log(teamMembers);
+
+
 
 
               } else {
                   console.log("naur!");
               }
 
-              
+
             } else {
               console.error("Student not found in the list.");
               window.location.href = '/notFound';
             }
-          
+
         } else {
 
           window.location.href = '/cas-student.php';
         }
-  
-    
+
+
     }
-  
+
     fetchData();
   }, []);
-  
-
 
 
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
-      .then(data => setSections(data.sections))
+      .then(data => {
+
+        sections = data.sections;
+        setSections(sections);
+        console.log(sections);
+        console.log(typeof sections);
+
+        // Log dropdownValues for each section
+        data.sections.forEach(section => {
+          console.log(`Dropdown value for ${section.title}:`, dropdownValues[section.title]);
+        });
+      })
       .catch(error => console.error('Error fetching sections:', error));
-  }, []);
-  
+  }, [dropdownValues]);
+
 
   const handlePriorityChange = (sectionName, newValue) => {
     setPriorities((prev) => ({
       ...prev,
       [sectionName]: newValue, // Set priority based on section title
     }));
-  
+
     setDropdownValues((prev) => ({
       ...prev,
       [sectionName]: newValue, // Update the dropdown value
@@ -167,18 +234,18 @@ export default function Home() {
 
   const handleSavePreferences = async () => {
 
-    setSavePrefOpen(!savePrefOpen);
-    
+  setSavePrefOpen(!savePrefOpen);
+
     // Create arrays for each priority (first, second, third)
     const preferences = {
       firstChoice: [],
       secondChoice: [],
       thirdChoice: []
     };
-  
+
     sections.forEach((section) => {
       const priority = priorities[section.title] || "3";  // Default to "3" if not selected
-  
+
       if (priority === "1") {
         preferences.firstChoice.push(section.title); // Add to firstChoice array
       } else if (priority === "2") {
@@ -187,19 +254,19 @@ export default function Home() {
         preferences.thirdChoice.push(section.title); // Add to thirdChoice array
       }
     });
-  
+
     console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
-  
+
     const postData = {
       username,
       firstChoice: preferences.firstChoice,
       secondChoice: preferences.secondChoice,
       thirdChoice: preferences.thirdChoice,
     };
-      
+
     console.log(postData);
-  
-  
+
+
     try {
       const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
         method: "POST",
@@ -208,14 +275,14 @@ export default function Home() {
         },
         body: JSON.stringify(postData),
       });
-  
+
       const textResponse = await response.text();  // Get the raw response as text
       console.log("Raw response from server:", textResponse);  // Log the response text
-  
+
       if (!response.ok) {
         throw new Error(`Server error: ${response.status} - ${textResponse}`);
       }
-  
+
       const result = JSON.parse(textResponse);  // Try to parse it as JSON
       console.log(result);  // Log the parsed result
     } catch (error) {
@@ -224,59 +291,199 @@ export default function Home() {
   };
 
   // New function to save the updated name
-  const handleSaveName = async () => {
-  if (!newName.trim()) {
-    return; // Don't save empty names
-  }
+
   
-  try {
-    const postData = {
-      username,
-      name: newName
-    };
-    
-    const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
-    
-    const textResponse = await response.text();
-    
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status} - ${textResponse}`);
-    }
-    
-    // Update the name in the UI
-    setName(newName);
-    // Close the popup
-    setNameEditOpen(false);
-  } catch (error) {
-    console.error("Error updating name:", error);
-  }
+  const handleSavedSettings = async () => {
+      if (!newName.trim()) {
+        return; // Don't save empty names
+      }
+
+      if (newName !== name && (newName.trim())) {
+
+            try {
+            const postData = {
+              username,
+              name: newName
+            };
+        
+            const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(postData),
+            });
+        
+            const textResponse = await response.text();
+        
+            if (!response.ok) {
+              throw new Error(`Server error: ${response.status} - ${textResponse}`);
+            }
+        
+            // Update the name in the UI
+            setName(newName);
+            
+          } catch (error) {
+            console.error("Error updating name:", error);
+          }
+        
+      }
+
+      if (clientName != newClientName && (clientName.trim())) {
+
+            try {
+                const postData = {
+                  number: teamNumber,
+                  clientName: newClientName
+                };
+            
+                const response = await fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(postData),
+                });
+            
+                const textResponse = await response.text();
+            
+                if (!response.ok) {
+                  throw new Error(`Server error: ${response.status} - ${textResponse}`);
+                }
+            
+                // Update the name in the UI
+                setClientName(newClientName);
+
+          } catch (error) {
+            console.error("Error updating client name:", error);
+          }
+        
+      }
+
+      if (projectName != newProjectName && (projectName.trim())) {
+
+            try {
+                const postData = {
+                  number: teamNumber,
+                  projectName: projectName
+                };
+            
+                const response = await fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(postData),
+                });
+            
+                const textResponse = await response.text();
+            
+                if (!response.ok) {
+                  throw new Error(`Server error: ${response.status} - ${textResponse}`);
+                }
+            
+                // Update the name in the UI
+                setProjectName(newProjectName);
+
+          } catch (error) {
+            console.error("Error updating project name:", error);
+          }
+        
+      }
+
+    setSettingsOpen(false);
+
 };
 
-  // useEffect(() => {
-  //   const fetchStudentData = async () => {
-  //     try {
-  //       const response = await fetch("/students.php");
-  //       const data = await response.json();
+  useEffect(() => {
+    console.log("Updated Team Members:", teamMembers);
+    console.log(typeof teamMembers);
+    console.log(Object.keys(teamMembers).length);
+  }, [teamMembers]);
 
-  //       const student = data.find((s) => s.username === username);
-  //       if (student) {
-  //         setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching student data:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    console.log("Updated Dropdown Values:", dropdownValues);
+  }, [dropdownValues]);
 
-  //   fetchStudentData();
-  // }, [username]);
+  const startLogout = () => {
+    window.location.href = '/logout.php';
+  };
+  
+  const startLeaveTeam = () => {
+    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
+      .then(response => response.json())
+      .then(data => {
+        const allTeamInfo = data.teams;
+        const teamToUpdate = allTeamInfo.find(team => team.name === teamNumber);
+  
+        if (teamToUpdate) {
+          let members = JSON.parse(teamToUpdate.members);
+  
+          // Remove the student's GTID from the members array
+          members = members.filter(gtID => gtID !== gtid);
+  
+          console.log("Updated Members:", members);
+  
+          // Update the team in actualTeams.php with the modified members array
+          fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              team: teamNumber,
+              members: JSON.stringify(members),
+            }),
+          })
+            .then(response => response.json()) // Parse the response as JSON
+            .then(data => {
+              console.log(data);
+  
+              if (data.error) {
+                console.error("Error updating team:", data.error);
+              } else {
+                console.log("Success updating team:", data.message);
+              }
+            })
+            .catch(error => {
+              console.error("Error updating team:", error); // Handle errors for updating the team
+            });
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching teams:", error); // Handle errors for fetching teams
+      });
 
+  
+    fetch("https://jdregistration.sci.gatech.edu/students.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        team: '0000',
+      }),
+    })
+      .then(response => response.text()) // Read response as text
+      .then(responseText => {
+        console.log("Raw response text:", responseText); // Log raw response
+        try {
+          console.log(responseText);
+          const data = JSON.parse(responseText); // Parse the response manually
+          if (data.error) {
+            console.error("Error adding student 1:", data.error);
+            return;
+          }
+  
+          console.log("Success:", data.message);
+          window.location.href = "/"; // Redirect after successful update
+        } catch (error) {
+          console.error("Error parsing response:", error);
+        }
+      })
+      .catch(error => {
+        console.error("Error updating student:", error);
+      });
+  }; 
 
+  
 
 
   return (
@@ -306,10 +513,9 @@ export default function Home() {
                 </button>
               </div>
   
-              <DropdownTwo/>
+              {/* <DropdownTwo/> */}
 
             </div>
-        
       </div>
 
 
@@ -329,8 +535,9 @@ export default function Home() {
 
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {sections.length > 0 ? (
+                      {sections.length > 0 && Object.keys(dropdownValues).length > 0 ? (
                         sections.map((section) => (
+                          console.log(`Rendering dropdown for ${section.title}:`, dropdownValues[section.title], ". Type: ", typeof dropdownValues[section.title]),
                           <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
                             <div>
                                 <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
@@ -339,7 +546,7 @@ export default function Home() {
 
                                 </div>
                                 <div className='flex'>
-                                  
+
                                   <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
                                 </div>
                             </div>
@@ -347,11 +554,11 @@ export default function Home() {
 
                             <Dropdown
                               sectionName={section.title} // Pass section name to the dropdown
-                              value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
+                              value={dropdownValues[section.title] || "2"} // Use stored value or default to "3"
                               onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
                             />
 
-                  
+
 
 
                           </div>
@@ -372,19 +579,17 @@ export default function Home() {
                   <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {teams.length > 0 ? (
-                            teams.map((team) => (
-                              <div key={team.name}>
+                              <div>
 
                                   <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
 
-                                    <div className='font-bold text-nowrap'>Team {team.name} - </div>
+                                    <div className='font-bold text-nowrap'>Team {teamNumber} - </div>
 
-                                    <div className=' ml-1 text-nowrap'>{team.projectName}</div>
+                                    <div className=' ml-1 text-nowrap'>{teams.projectName}</div>
 
                                     <div className='flex w-full justify-end'>
                                       <div className='font-bold'>Client:</div>
-                                      <div className='ml-1'>{team.clientName}</div>
+                                      <div className='ml-1'>{teams.clientName}</div>
                                     </div>
 
 
@@ -395,10 +600,31 @@ export default function Home() {
 
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
-                                    {teamMembers.length > 0 ? (
-                                        teamMembers.map((member, index) => (
-                                          <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member.name}
+                                    {Object.keys(teamMembers).length > 0 ? (
+                                        Object.entries(teamMembers).map(([name, choices]) => (
+                                          <div key={name} className='text-lg mt-3 flex items-center'>
+                                            <div className='flex w-max items-center text-[#003056]'>
+                                              <div className='w-auto'>{name}:</div>
+                                      
+                                              {/* First Choice */}
+                                              {choices.firstChoice === null ? (
+                                                <span className="ml-2 italic">Undefined</span>
+                                              ) : (
+                                                JSON.parse(choices.firstChoice).map((section, index) => (
+                                                  <span key={index} className="ml-2 font-bold">{section}</span>
+                                                ))
+                                              )}
+                                      
+                                              {/* Second Choice */}
+                                              {choices.secondChoice !== null && JSON.parse(choices.secondChoice).length > 0 && (
+                                                <>
+                                                  <span className="ml-2">|</span>
+                                                  {JSON.parse(choices.secondChoice).map((section, index) => (
+                                                    <span key={index} className="ml-2">{section}</span>
+                                                  ))}
+                                                </>
+                                              )}
+                                            </div>
                                           </div>
                                         ))
                                       ) : (
@@ -407,19 +633,11 @@ export default function Home() {
 
 
 
-                                    
                                   </div>
 
 
-
-                                  
-                                
                               </div>
-                            ))
-                          ) : (
-                            <p>Loading team...</p>
-                          )
-                      }
+
                   </div>
 
 
@@ -429,7 +647,7 @@ export default function Home() {
 
 
 
-    
+
 
           {/* Buttons */}
           <div className='row-span-1 grid grid-cols-10'>
@@ -437,7 +655,9 @@ export default function Home() {
 
               <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</button>
 
-              <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
+              <button 
+                  onClick={() => setLeaveTeamOpen(true)}
+                  className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
 
 
           </div>
@@ -447,7 +667,7 @@ export default function Home() {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
                 <p>Saved!</p>
-                <button
+                <button 
                   onClick={() => setSavePrefOpen(!savePrefOpen)}
                   className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
                 >
@@ -457,36 +677,164 @@ export default function Home() {
             </div>
           )}
 
-          {/* Name Edit PopUp */}
-          {nameEditOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-md shadow-lg w-96">
-                <h3 className="text-lg font-bold text-[#003056] mb-4">Edit Display Name</h3>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md mb-4"
-                  placeholder="Enter your name"
-                />
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => setNameEditOpen(false)}
-                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSaveName}
-                    className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
-                  >
-                    Save
-                  </button>
-                </div>
+    {settingsOpen && (
+      <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+          <h2 className="text-xl font-bold mb-4">Account Settings</h2>
+          <div className="grid grid-rows-4">
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Name:</label>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Enter Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
+            </div>
+    
+            <div className="flex justify-between items-center">
+              <label className="font-bold w-1/3">GTID:</label>
+              <span className="w-2/3 text-right">{gtid}</span>
+            </div>
+    
+            <div className="flex justify-between items-center">
+              <label className="font-bold w-1/3">Username:</label>
+              <span className="w-2/3 text-right">{username}</span>
+            </div>
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Client Name:</label>
+              <input
+                type="text"
+                value={newClientName}
+                onChange={(e) => setNewClientName(e.target.value)}
+                placeholder="Enter Client Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
+            </div>
+    
+            <div className='flex items-center'>
+              <label className="font-bold w-1/3 mr-1">Project Name:</label>
+              <input
+                type="text"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                placeholder="Enter Project Name"
+                className="border border-gray-300 p-2 rounded-md w-2/3"
+              />
+            </div>
+    
+            <div className='flex gap-5 justify-center font-bold'>
+              <Button
+                onClick={() => setSettingsOpen(false)}
+                className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+              >
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  handleSavedSettings();
+                  setSettingsOpen(false);
+                }}
+                className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+              >
+                Save
+              </Button>
+            </div>
+    
+          </div>
+        </div>
+      </div>
+    )}
+
+
+          {hamburgerOptionsOpen && (
+            <div className="absolute top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+              <div
+                onClick={() => {
+                  setSettingsOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center"
+              >
+                Settings
+              </div>
+              <div
+                onClick={() => {
+                  setLogoutOpen(true);
+                  setHamburgerOptionsOpen(false);
+                }}
+                className="p-2 cursor-pointer hover:bg-gray-100 text-center text-[#D01717]"
+              >
+                Logout
               </div>
             </div>
-          )}
-        
+      )}
+
+        {logoutOpen && (
+            <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
+    
+                  <div className='flex gap-5 justify-center font-bold'>
+    
+                      <Button
+                        onClick={() => setSettingsOpen(false)}
+                        className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                      >
+                        Go Back
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setSettingsOpen(false);
+                          startLogout();
+                        }}
+                        className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                      >
+                        Logout
+                      </Button>
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
+      {leaveTeamOpen && (
+            <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
+                <h2 className="text-xl font-bold mb-4">Are You Sure You Want to Leave Your Team?</h2>
+    
+                  <div className='flex gap-5 justify-center font-bold'>
+    
+                      <Button
+                        onClick={() => setLeaveTeamOpen(false)}
+                        className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                      >
+                        No
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setLeaveTeamOpen(false);
+                          startLeaveTeam();
+                        }}
+                        className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
+                      >
+                        Yes
+                      </Button>
+              </div>
+
+
+
+            </div>
+            
+        </div>
+      )}
+
       </div>
 
 
