@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [selectedSection, setSelectedSection] = useState([]);
+  const [selectedSection, setSelectedSection] = useState({});
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
   const [addAdminPopup, setAddAdminPopup] = useState(false);
@@ -431,6 +431,10 @@ const newLead = (theirGTID, yourGTID) => {
     console.log("Admin List: ", allAdmin);
   }, [allAdmin]);
 
+  useEffect(() => {
+    console.log("Selected Section: ", selectedSection);
+  }, [selectedSection]);
+
 
   return (
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
@@ -538,14 +542,11 @@ const newLead = (theirGTID, yourGTID) => {
                                     <div className='flex justify-items-end'>
                                       <Button 
                                          onClick={() => {
-                                          setIsEditSectionPopupOpen(true);
                                           setSelectedSection({ title: section.title, time: section.time, capacity: section.capacity });
+                                          setIsEditSectionPopupOpen(true);
                                         }}
                                         className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
                                     </div>
-
-                    
-
 
                                   </div>
                                 ))
