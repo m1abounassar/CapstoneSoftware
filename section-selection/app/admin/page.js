@@ -915,7 +915,7 @@ const newLead = (theirGTID, yourGTID) => {
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white grid grid-cols-2 gap-4 p-6 rounded-md shadow-lg w-3/4 h-max text-center">
 
-                <div className='border-r-2 border-[#003056]'>
+                <div className=''>
 
                     <h2 className="text-xl font-bold mb-4">Account Settings</h2>
                     <div className="grid grid-rows-4">
@@ -966,7 +966,7 @@ const newLead = (theirGTID, yourGTID) => {
                     </div>
                 </div>
 
-                <div className='border-l-2 border-[#003056]'>
+                <div className=''>
 
                     <h2 className="text-xl font-bold mb-4">Admin Settings</h2>
 
