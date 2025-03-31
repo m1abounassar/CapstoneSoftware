@@ -3,26 +3,22 @@ import { useState, useEffect } from 'react';
 import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from '@/components/ui/button';
 
+
 export default function Home() {
   const [sections, setSections] = useState([]);
   const [priorities, setPriorities] = useState({});
-  const [teams, setTeams] = useState([]);
+  const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [allStudents, setAllStudents] = useState("");
+  const [allStudents, setAllStudents] = useState([]);
   const [dropdownValues, setDropdownValues] = useState({});
   const [savePrefOpen, setSavePrefOpen] = useState(false);
-  const [selectedChoice, setSelectedChoice] = useState("3");
-  const [teamNumber, setTeamNumber] = useState("");
+  const [teamNumber, setTeamNumber] = useState(0);
   const [teamMembers, setTeamMembers] = useState([]);
   // New state for the name edit popup
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [newName, setNewName] = useState("");
-  const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [logoutOpen, setLogoutOpen] = useState(false);
 
-  
 
   useEffect(() => {
     async function fetchData() {
@@ -30,10 +26,10 @@ export default function Home() {
         if (!sessionRes.ok) {
             window.location.href = '/error';
         }
-  
+
         const sessionData = await sessionRes.json();
         console.log('Session:', sessionData);
-  
+
         if (sessionData.loggedIn === 'true') {
 
             console.log('true');
@@ -43,7 +39,7 @@ export default function Home() {
 
             const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
             if (!studentsRes.ok) throw new Error("Students fetch failed");
-        
+
             const studentsData = await studentsRes.json();
             if (!Array.isArray(studentsData.students)) {
               console.error("Unexpected data format:", studentsData);
@@ -51,19 +47,19 @@ export default function Home() {
             }
 
             setAllStudents(studentsData.students);
-        
+
               // Find the student with the matching username
             const matchedStudent = studentsData.students.find(student => student.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
             console.log('info: ');
             console.log(matchedStudent);
-        
+
             if (matchedStudent) {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
               setNewName(matchedStudent.name); // Initialize newName with current name
 
               const initialDropdownValues = {};
-              
+
               const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
               const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
               const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
@@ -81,72 +77,109 @@ export default function Home() {
 
               dropdownValues = initialDropdownValues;
               setDropdownValues(dropdownValues);
+              console.log("inital:", initialDropdownValues);
+              console.log("actual:", dropdownValues);
+
+              console.log(Object.keys(dropdownValues));
+              console.log(Object.values(dropdownValues));
+              console.log(dropdownValues['JIF']);
+
+              console.log("im so sad: ", matchedStudent.team);
 
               teamNumber = matchedStudent.team;
               setTeamNumber(teamNumber);
 
-              console.log('after team number');
-              
+              const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+              if (!teamsRes.ok) throw new Error("Team fetch failed");
+
+              const teamData = await teamsRes.json();
+              if (!Array.isArray(teamData.teams)) {
+                  console.error("Unexpected data format:", teamData);
+                  return;
+              }
+
+              // Find the student with the matching username
+
+              console.log("Team Number: ", teamNumber);
+
+              const matchedTeam = teamData.teams.find(team => team.name === teamNumber);
+
+              console.log(matchedTeam);
+
+               if (matchedTeam) {
+                  teams = matchedTeam; // Store the entire matched team in state
+                  setTeams(teams);
+
+                  const rawTeamMembers = JSON.parse(matchedTeam.members); // Now access members safely
+                  console.log("Team: ", teams, "Raw Team Members: ", rawTeamMembers);
+                  console.log(typeof rawTeamMembers);
+                  console.log(typeof allStudents);
+                  rawTeamMembers.forEach((person) => {
+                    const currStudent = studentsData.students.find(student => student.gtID === person);
+                    console.log("Person", person, "Curr Student: ", currStudent);
+
+                    setTeamMembers(prev => ({
+                      ...prev, 
+                      [currStudent.name]: { firstChoice: currStudent.firstChoice, secondChoice: currStudent.secondChoice, thirdChoice: currStudent.thirdChoice, }
+
+                      }));
+                      console.log(teamMembers);
+
+
+                    });
+
+                    console.log(teamMembers);
+
+
+
+
+              } else {
+                  console.log("naur!");
+              }
+
+
             } else {
               console.error("Student not found in the list.");
               window.location.href = '/notFound';
             }
-          
+
         } else {
 
           window.location.href = '/cas-student.php';
         }
-  
-    
+
+
     }
-  
+
     fetchData();
   }, []);
-  
+
 
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
       .then(response => response.json())
-      .then(data => setSections(data.sections))
+      .then(data => {
+
+        sections = data.sections;
+        setSections(sections);
+        console.log(sections);
+        console.log(typeof sections);
+
+        // Log dropdownValues for each section
+        data.sections.forEach(section => {
+          console.log(`Dropdown value for ${section.title}:`, dropdownValues[section.title]);
+        });
+      })
       .catch(error => console.error('Error fetching sections:', error));
-  }, []);
+  }, [dropdownValues]);
 
-  useEffect(() => {
-    fetch("https://jdregistration.sci.gatech.edu/actualTeams.php")
-      .then(response => response.json())
-      .then(data => setTeams(data.teams))
-      .catch(error => console.error('Error fetching sections:', error));
-
-
-    const currMembers = (teams.teams.find(team => team.name === teamNumber)).members;
-
-    currMembers.forEach((mem) => {
-      (allStudents.find(student => student.gtID === mem));
-
-      setTeamMembers(prev => ({
-        ...prev, 
-        [student.name]: { firstChoice: student.firstChoice, secondChoice: student.secondChoice, thirdChoice: student.thirdChoice, }
-        
-      }));
-
-      
-    });
-
-    setTeamMembers(teams.teams.find(team => team.name === teamNumber ));
-
-
-
-
-  }, [teamNumber, allStudents]);
-
-  
 
   const handlePriorityChange = (sectionName, newValue) => {
     setPriorities((prev) => ({
       ...prev,
       [sectionName]: newValue, // Set priority based on section title
     }));
-  
+
     setDropdownValues((prev) => ({
       ...prev,
       [sectionName]: newValue, // Update the dropdown value
@@ -157,17 +190,17 @@ export default function Home() {
   const handleSavePreferences = async () => {
 
     setSavePrefOpen(!savePrefOpen);
-    
+
     // Create arrays for each priority (first, second, third)
     const preferences = {
       firstChoice: [],
       secondChoice: [],
       thirdChoice: []
     };
-  
+
     sections.forEach((section) => {
       const priority = priorities[section.title] || "3";  // Default to "3" if not selected
-  
+
       if (priority === "1") {
         preferences.firstChoice.push(section.title); // Add to firstChoice array
       } else if (priority === "2") {
@@ -176,19 +209,19 @@ export default function Home() {
         preferences.thirdChoice.push(section.title); // Add to thirdChoice array
       }
     });
-  
+
     console.log(preferences.firstChoice, preferences.secondChoice, preferences.thirdChoice);
-  
+
     const postData = {
       username,
       firstChoice: preferences.firstChoice,
       secondChoice: preferences.secondChoice,
       thirdChoice: preferences.thirdChoice,
     };
-      
+
     console.log(postData);
-  
-  
+
+
     try {
       const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
         method: "POST",
@@ -197,14 +230,14 @@ export default function Home() {
         },
         body: JSON.stringify(postData),
       });
-  
+
       const textResponse = await response.text();  // Get the raw response as text
       console.log("Raw response from server:", textResponse);  // Log the response text
-  
+
       if (!response.ok) {
         throw new Error(`Server error: ${response.status} - ${textResponse}`);
       }
-  
+
       const result = JSON.parse(textResponse);  // Try to parse it as JSON
       console.log(result);  // Log the parsed result
     } catch (error) {
@@ -217,13 +250,13 @@ export default function Home() {
   if (!newName.trim()) {
     return; // Don't save empty names
   }
-  
+
   try {
     const postData = {
       username,
       name: newName
     };
-    
+
     const response = await fetch("https://jdregistration.sci.gatech.edu/students.php", {
       method: "POST",
       headers: {
@@ -231,13 +264,13 @@ export default function Home() {
       },
       body: JSON.stringify(postData),
     });
-    
+
     const textResponse = await response.text();
-    
+
     if (!response.ok) {
       throw new Error(`Server error: ${response.status} - ${textResponse}`);
     }
-    
+
     // Update the name in the UI
     setName(newName);
     // Close the popup
@@ -248,47 +281,31 @@ export default function Home() {
 };
 
   useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
-        const response = await fetch("/students.php");
-        const data = await response.json();
+    console.log("Updated Team Members:", teamMembers);
+    console.log(typeof teamMembers);
+    console.log(Object.keys(teamMembers).length);
+  }, [teamMembers]);
 
-        const student = data.find((s) => s.username === username);
-        if (student) {
-          setSelectedChoice(student.firstChoice || "3"); // Default to "3" if not found
-        }
-      } catch (error) {
-        console.error("Error fetching student data:", error);
-      }
-    };
-
-    fetchStudentData();
-  }, [username]);
-
-
+  useEffect(() => {
+    console.log("Updated Dropdown Values:", dropdownValues);
+  }, [dropdownValues]);
 
 
   return (
     <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
       <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
-            <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>
-              Junior Design <span className='pt-0 pb-4 pl-0 text-2xl font-bold text-[#232323]'> Team Sync</span>
-            </div>
-            <div></div>
-            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
-              
+            <div className='p-4 text-lg lg:text-2xl w-max text-[#232323] font-bold'>
               <div className="flex items-center gap-2">
                 <div>{name}</div>
-                
+                <Button
+                      onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                      className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+                ☰</Button>
 
               </div>
-  
-              <Button
-                  onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
-                  className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
-            ☰</Button>
 
+              
             </div>
         
       </div>
@@ -310,8 +327,9 @@ export default function Home() {
 
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {sections.length > 0 ? (
+                      {sections.length > 0 && Object.keys(dropdownValues).length > 0 ? (
                         sections.map((section) => (
+                          console.log(`Rendering dropdown for ${section.title}:`, dropdownValues[section.title], ". Type: ", typeof dropdownValues[section.title]),
                           <div key={section.id} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
                             <div>
                                 <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
@@ -320,7 +338,7 @@ export default function Home() {
 
                                 </div>
                                 <div className='flex'>
-                                  
+
                                   <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
                                 </div>
                             </div>
@@ -328,11 +346,11 @@ export default function Home() {
 
                             <Dropdown
                               sectionName={section.title} // Pass section name to the dropdown
-                              value={dropdownValues[section.title] || "3"} // Use stored value or default to "3"
+                              value={dropdownValues[section.title] || "2"} // Use stored value or default to "3"
                               onChange={(newValue) => handlePriorityChange(section.title, newValue)} // Pass sectionName and newValue
                             />
 
-                  
+
 
 
                           </div>
@@ -353,19 +371,17 @@ export default function Home() {
                   <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Team Info</div>
 
                   <div className='bg-[#FFFFFF] h-full w-full rounded-b-3xl px-6 py-4 border-5 border-[#003056] overflow-auto'>
-                      {teams.length > 0 ? (
-                            teams.map((team) => (
-                              <div key={team.name}>
+                              <div>
 
                                   <div className='flex pb-3 border-b-2 border-[#A5925A] text-xl text-[#003056]'>
 
-                                    <div className='font-bold text-nowrap'>Team {team.name} - </div>
+                                    <div className='font-bold text-nowrap'>Team {teamNumber} - </div>
 
-                                    <div className=' ml-1 text-nowrap'>{team.projectName}</div>
+                                    <div className=' ml-1 text-nowrap'>{teams.projectName}</div>
 
                                     <div className='flex w-full justify-end'>
                                       <div className='font-bold'>Client:</div>
-                                      <div className='ml-1'>{team.clientName}</div>
+                                      <div className='ml-1'>{teams.clientName}</div>
                                     </div>
 
 
@@ -376,31 +392,30 @@ export default function Home() {
 
                                     <div className='pt-3 text-xl text-[#003056] font-bold text-nowrap'>Team Section Preferences</div>
 
-                                    {teamMembers.length > 0 ? (
-                                        teamMembers.map((member, index) => (
-                                          <div key={index} className='p-3 pl-6 bg-[#E5E2D3] rounded-md my-2 shadow-sm text-lg grid grid-cols-2 items-center'>
-                                            {member.name}
+                                    {Object.keys(teamMembers).length > 0 ? (
+                                      Object.entries(teamMembers).map(([name, choices]) => (
+                                        <div key={name} className='text-lg grid grid-cols-2 items-center'>
+                                          <div>
+                                              <div className='flex w-max items-center text-[#003056] border-r-2 border-[#003056]'>  {/* row 1 */}
+                                                <div className='w-auto'>{name}</div>
+
+                                              </div>
+                                              <div className='flex'>
+
+                                              </div>
                                           </div>
-                                        ))
-                                      ) : (
-                                        <p>Loading information...</p>
-                                      )}
 
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <p>Loading information...</p>
+                                    )}
 
-
-                                    
                                   </div>
 
 
-
-                                  
-                                
                               </div>
-                            ))
-                          ) : (
-                            <p>Loading team...</p>
-                          )
-                      }
+
                   </div>
 
 
@@ -410,15 +425,15 @@ export default function Home() {
 
 
 
-    
+
 
           {/* Buttons */}
           <div className='row-span-1 grid grid-cols-10'>
 
 
-              <Button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</Button>
+              <button className='col-span-2 text-[#003056] font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white' onClick={handleSavePreferences}>Save Preferences</button>
 
-              <Button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</Button>
+              <button className='col-span-2 text-[#003056] col-start-9 font-bold text-2xl bg-[#A5925A] px-3 py-2 mt-0 rounded-3xl hover:bg-[#003056] hover:text-white'>Leave Team</button>
 
 
           </div>
@@ -428,12 +443,12 @@ export default function Home() {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
                 <p>Saved!</p>
-                <Button
+                <button
                   onClick={() => setSavePrefOpen(!savePrefOpen)}
                   className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
                 >
                   Close
-                </Button>
+                </button>
               </div>
             </div>
           )}
@@ -451,23 +466,23 @@ export default function Home() {
                   placeholder="Enter your name"
                 />
                 <div className="flex justify-end gap-2">
-                  <Button
+                  <button
                     onClick={() => setNameEditOpen(false)}
                     className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
                   >
                     Cancel
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={handleSaveName}
                     className="px-4 py-2 bg-[#003056] text-white rounded-md hover:bg-[#004b85]"
                   >
                     Save
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
           )}
-        
+
       </div>
 
 
