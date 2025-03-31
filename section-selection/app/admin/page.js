@@ -763,7 +763,7 @@ const newLead = (theirGTID, yourGTID) => {
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
-              name="gtusername"
+              name="username"
               placeholder="gburdell3"
               value={newAdmin.username}
               onChange={(e) => handleInputChange(e, setNewAdmin)}
