@@ -201,7 +201,12 @@ const addStudent = (student) => {
             throw new Error('Team not found');
           }
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+          }
+          return response.json();  // Continue parsing only if the response is valid
+        })
         .then(data => {
           console.log(data);
           if (data.error) {
