@@ -9,11 +9,12 @@ export default function Home() {
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
   const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+  const [addAdminPopup, setAddAdminPopup] = useState(false);
   const [isRefreshSemesterPopupOpen, setIsRefreshSemesterPopupOpen] = useState(false);
   const [newSection, setNewSection] = useState({ title: '', time: '', capacity: '' });
   const [newStudent, setNewStudent] = useState({ name: '', gtid: '', gtusername: '', team:'' });
   const [rotatedTeams, setRotatedTeams] = useState(new Set());
-  const [newAdmin, setNewAdmin] = useState({ name: '', gtid: '', gtusername: '' });
+  const [newAdmin, setNewAdmin] = useState({ name: '', username: '', gtid: '' });
 
   const [nameEditOpen, setNameEditOpen] = useState(false);
   const [hamburgerOptionsOpen, setHamburgerOptionsOpen] = useState(false);
@@ -583,7 +584,7 @@ const removeAdmin = (gtid) => {
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
-              name="gtusername"
+              name="username"
               placeholder="gburdell3"
               value={newSection.gtusername}
               onChange={handleInputChange}
@@ -785,8 +786,8 @@ const removeAdmin = (gtid) => {
               
                          <input
                           type="text"
-                          value={newAdmin.gtusername}
-                          onChange={(e) => setNewAdmin({ ...newAdmin, gtusername: e.target.value })}
+                          value={newAdmin.username}
+                          onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })}
                           placeholder="gburdell3"
                           className="border border-gray-300 p-2 rounded-md w-2/3"
                         />
