@@ -54,6 +54,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["error" => "Error: " . $conn->error]);
         }
+    }  else if (isset($data['clientName'], $data['number'])) {
+        $clientName = $conn->real_escape_string($data['clientName']);
+        $number = $conn->real_escape_string($data['number']);
+
+        // Update the team's members list
+        $sql = "UPDATE teams SET clientName='$clientName' WHERE name='$number'";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Client name updated successfully"]);
+        } else {
+            echo json_encode(["error" => "Error updating client name: " . $conn->error]);
+        }
+
+    } else if (isset($data['projectName'], $data['number'])) {
+        $projectName = $conn->real_escape_string($data['projectName']);
+        $number = $conn->real_escape_string($data['number']);
+
+        // Update the team's members list
+        $sql = "UPDATE teams SET projectName='$projectName' WHERE name='$number'";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Project name updated successfully"]);
+        } else {
+            echo json_encode(["error" => "Error updating project name: " . $conn->error]);
+        }
+
     } else {
         echo json_encode(["error" => "Invalid input"]);
     }
