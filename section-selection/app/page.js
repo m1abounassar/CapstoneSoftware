@@ -32,10 +32,22 @@ export default function Home() {
 
 
   return (
-    <div className='min-h-screen bg-[url(../public/logBack.jpg)] font-figtree'>
-      <div className='bg-[url(../public/logHead.jpg)] grid'>
-        <div className='pt-4 pb-0 pr-1 text-5xl font-bold text-[#232323] justify-self-center'> Team Sync</div>
-        <span className='pt-2 pb-4 pl-1 text-2xl font-normal text-[#003056] justify-self-center'>for Junior Design</span>
+    <div className='min-h-screen bg-[url(../public/logBack.jpg)] bg-no-repeat font-figtree'>
+      <div className='bg-[url(../public/logHead.jpg)] bg-no-repeat grid grid-cols-3'>
+
+        {/* Left */}
+        <div className='bg-[url("/gtLogo.png")] bg-transparent bg-no-repeat mt-5 ml-5'></div>
+
+        {/* Center */}
+        <div className='grid justify-items-center'>
+            <div className='pt-4 pb-0 pr-1 text-5xl font-bold text-[#232323]'> Team Sync</div>
+            <span className='pt-2 pb-4 pl-1 text-2xl font-normal text-[#003056]'>for Junior Design</span>
+        </div>
+
+        {/* Right */}
+        <div className='bg-[url("/hexes.png")] bg-transparent bg-no-repeat'></div>
+
+
       </div>
 
       <div className="flex place-content-center mt-20">

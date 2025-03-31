@@ -7,12 +7,14 @@ export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
   const [selectedSection, setSelectedSection] = useState({});
+  const [selectedStudent, setSelectedStudent] = useState({ name: '', username: '', gtid: '', team: '', });
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
 
-  const [sectionToEdit, setSectionToEdit] = useState(null);
   const [isAddStudentPopupOpen, setIsAddStudentPopupOpen] = useState(false);
   const [isEditStudentPopupOpen, setIsEditStudentPopupOpen] = useState(false);
+  const [seeAllstudents, setSeeAllStudents] = useState(false);
+
 
   const [addAdminPopup, setAddAdminPopup] = useState(false);
 
@@ -47,86 +49,80 @@ export default function Home() {
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
   // comment out function below to use local hosting
-
-  //  useEffect(() => {
-  //     async function fetchData() {
-  //         const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
-  //         if (!sessionRes.ok) {
-  //             window.location.href = '/error';
-  //         }
+   useEffect(() => {
+      async function fetchData() {
+          const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+          if (!sessionRes.ok) {
+              window.location.href = '/error';
+          }
     
-  //         const sessionData = await sessionRes.json();
-  //         console.log('Session:', sessionData);
+          const sessionData = await sessionRes.json();
+          console.log('Session:', sessionData);
     
-  //         if (sessionData.loggedIn === 'true') {
-  //             console.log('true');
-  //             username = sessionData.username;
-  //             setUsername(username);
-  //             console.log(sessionData.username);
+          if (sessionData.loggedIn === 'true') {
+              console.log('true');
+              username = sessionData.username;
+              setUsername(username);
+              console.log(sessionData.username);
 
             
-  //             const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
-  //             if (!adminRes.ok) throw new Error("Admin fetch failed");
+              const adminRes = await fetch('https://jdregistration.sci.gatech.edu/admin.php');
+              if (!adminRes.ok) throw new Error("Admin fetch failed");
           
-  //             const adminData = await adminRes.json();
-  //             if (!Array.isArray(adminData.adm)) {
-  //               console.error("Unexpected data format:", adminData);
-  //               return;
-  //             }
+              const adminData = await adminRes.json();
+              if (!Array.isArray(adminData.adm)) {
+                console.error("Unexpected data format:", adminData);
+                return;
+              }
 
-  //             allAdmin = adminData.adm;
-  //             setAllAdmin(allAdmin);
+              allAdmin = adminData.adm;
+              setAllAdmin(allAdmin);
           
-  //             // Find the admin info
-  //             const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
-  //             console.log('info: ');
-  //             console.log(matchedAdmin);
+              // Find the admin info
+              const matchedAdmin = adminData.adm.find(admin => admin.username.trim().toLowerCase() === sessionData.username.trim().toLowerCase() );
+              console.log('info: ');
+              console.log(matchedAdmin);
           
-  //             if (matchedAdmin) {
-  //               console.log(matchedAdmin.name);
+              if (matchedAdmin) {
+                console.log(matchedAdmin.name);
                 
-  //               name = matchedAdmin.name
-  //               setName(name);
+                name = matchedAdmin.name
+                setName(name);
                 
-  //               newName = matchedAdmin.name
-  //               setNewName(newName);
+                newName = matchedAdmin.name
+                setNewName(newName);
 
-  //               gtid = matchedAdmin.gtid
-  //               setGTID(gtid);
+                gtid = matchedAdmin.gtid
+                setGTID(gtid);
 
-  //               if (matchedAdmin.isLead == '1') {
-  //                 isLeadAdmin = true;
-  //                 setIsLeadAdmin(true);
-  //               }
-
-  //               const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
-  //               if (!teamsRes.ok) throw new Error("Team fetch failed");
+                const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
+                if (!teamsRes.ok) throw new Error("Team fetch failed");
                     
-  //               const teamData = await teamsRes.json();
-  //               if (!Array.isArray(teamData.teams)) {
-  //                   console.error("Unexpected data format:", teamData);
-  //                   return;
-  //               }
+                const teamData = await teamsRes.json();
+                if (!Array.isArray(teamData.teams)) {
+                    console.error("Unexpected data format:", teamData);
+                    return;
+                }
 
-  //               allTeams = teamData.teams;
-  //               setAllTeams(teamData.teams);
-  //               console.log(allTeams);
+                allTeams = teamData.teams;
+                setAllTeams(teamData.teams);
+                console.log(allTeams);
 
                 
-  //             } else {
-  //               console.error("Student not found in the list.");
-  //               window.location.href = '/notFound';
-  //             }
+              } else {
+                console.error("Student not found in the list.");
+                window.location.href = '/notFound';
+              }
             
-  //         } else {
-  //           window.location.href = '/cas-admin.php';
-  //         }
+          } else {
+            window.location.href = '/cas-admin.php';
+          }
     
       
-  //     }
+      }
     
-  //     fetchData();
-  //   }, []);
+      fetchData();
+    }, []);
   
 
   // Fetch sections data from PHP API
@@ -141,14 +137,9 @@ export default function Home() {
       .catch(error => console.error("Error loading sections:", error));
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e, setState) => {
     const { name, value } = e.target;
-    setNewSection(prev => ({ ...prev, [name]: value }));
-  };
-
-    const handleEditInputChange = (e) => {
-      const { name, value } = e.target;
-      setSelectedSection(prev => ({ ...prev, [name]: value }));
+    setState(prev => ({ ...prev, [name]: value }));
   };
 
   const addOrUpdateSection = () => {
@@ -449,42 +440,20 @@ const newLead = (theirGTID, yourGTID) => {
   return (
     <div className='min-h-screen bg-[#E5E2D3] font-figtree'>
 
-      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-'>
-              {/* Left-aligned logo and title */}
-              <div className='p-5 text-lg lg:text-4xl w-max text-[#232323] font-bold flex items-center pl-10'>
-                {/* Website Logo */}
-                <img src="/logo.png" alt="Website Logo" className="w-16 h-16" /> {/* Adjust size as needed */}
-                <div className= 'p-2'>
+      {/* Start Nav Bar */}
+      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10 py-2'>
+
+          {/* Left-aligned logo and title */}
+          <div className='text-lg lg:text-4xl w-max text-[#232323] font-bold flex items-center'>
+              {/* Website Logo */}
+              <img src="/logo.png" alt="Website Logo" className="w-12 h-12" /> {/* Adjust size as needed */}
+              <div className= 'text-md'>
                   Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
-                </div>
               </div>
-            <div></div>
-            <div className='pt-5 pb-5 pr-4 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
-              
-              <div className="flex items-center gap-2">
-                <div>{name}</div>
-                
-                {/* Edit Name Button */}
-                <button 
-                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
-                  onClick={() => setNameEditOpen(true)}
-                >
-                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
-                </button>
-              </div>
-  
-              {/* <DropdownTwo/> */}
-
-            </div>
-        </div>
-
-        {/* Start Nav Bar */}
-        {/* <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
-          <div className='flex'>
-                <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design</div>
-                <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>Team Sync</div>
           </div>
+
           <div></div>
+
           <div className='pt-5 pb-5 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
             
             <div>{name}</div>
@@ -494,126 +463,119 @@ const newLead = (theirGTID, yourGTID) => {
             ☰</Button>
         
           </div>
-        </div> */}
-        {/* End Nav Bar */}
+      </div> 
+      {/* End Nav Bar */}
 
       
 
-        {/* Start Body */}
-        <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col grid grid-rows-[fit_fit]'>
+      {/* Start Body */}
+      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default grid grid-rows'>
 
-            {/* Start Header */}
-            <div className="grid grid-cols-2 mt-5 mx-10 w-9/10 h-fit">
+          {/* Start Header */}
+          <div className="grid grid-cols-2 mt-5 mx-10 w-9/10 h-min">
 
 
-                {/* Start White Bar */}
-                <div className='flex justify-center rounded-xl bg-[#FFFFFF]'>
+              {/* Start White Bar */}
+              <div className='flex justify-center rounded-xl bg-[#FFFFFF]'>
 
                   <div className='py-3 font-bold'>ADMIN MODE | 104/250 </div>
 
                   <div className='py-3 pl-2'> Registered Students have been assigned a section</div>
 
-                </div>
-
-                {/* End White Bar */}
+              </div>
+              {/* End White Bar */}
 
 
                 <div className='flex justify-around rounded-lg self-center text-white text-md rounded-lg'>
 
-                  <Button 
-                    className="bg-[#A5925A] hover:bg-[#C1AC6F]"
-                    onClick={() => setAddStudentPopup(true)}
-                  >
-                    Add Student
-                  </Button>
+                    <Button 
+                      className="bg-[#A5925A] hover:bg-[#80724b]"
+                      onClick={() => setIsAddStudentPopupOpen(true)}
+                    >
+                      Add Student
+                    </Button>
 
-                  <Button 
-                    className="bg-[#A5925A] hover:bg-[#C1AC6F]"
-                    onClick={() => setIsEditStudentPopupOpen(true)}
-                  >
-                    Edit Student
-                  </Button>
+                    <Button 
+                      className="bg-[#A5925A] hover:bg-[#C1AC6F]"
+                      onClick={() => setSeeAllStudents(true)}
+                    >
+                      Edit Student
+                    </Button>
 
-                  <Button 
-                    className="bg-[#A5925A] hover:bg-[#C1AC6F] w-2xl"
-                    onClick={() => setIsRefreshSemesterPopupOpen(true)}
-                  >
-                    Refresh Semester
-                  </Button>
+                    <Button 
+                      className="bg-[#A5925A] hover:bg-[#C1AC6F] w-2xl"
+                      onClick={() => setIsRefreshSemesterPopupOpen(true)}
+                    >
+                      Refresh Semester
+                    </Button>
                 </div>
 
 
-            </div>
-            {/* End Header */}
+          </div>
+          {/* End Header */}
 
 
 
 
-            {/* Start Panels */}
-            <div className="grid grid-cols-2 m-10 mt-5 gap-10">
-              
 
-                {/* Start Left Side */}
-                <div className='grid grid-rows-6'>
-
-                      {/* Start Sections Panel */}
-                      <div className='bg-[#003056] w-xs h-[80%] row-span-5 rounded-3xl grid-rows-2'>
-                
-                          <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
-                          <div className='bg-[#FFFFFF] overflow-auto h-full w-50 rounded-b-3xl px-5 py-3'>
-                              {sections.length > 0 ? (
-                                sections.map((section) => (
-                                  <div key={section.id} className='p-3 pl-5 bg-[#E5E2D3] flex rounded-md my-2 shadow-sm text-lg items-center'>
+          {/* Start Panels */}
+         <div className="grid grid-cols-2 mx-10 gap-10">
+          
+              {/* Start Left */}
+              <div className=''>
+            
+            
+                {/* Start Sections Panel */}
+                <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2'>
+                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Sections</div>
+                    <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3 border-5 border-[#003056]'>
+                        {sections.length > 0 ? (
+                            sections.map((section) => (
+                                <div key={section.id} className='px-5 py-3 bg-[#E5E2D3] grid grid-cols-2 rounded-md my-2 shadow-sm text-lg items-center'>
                                     <div className='flex flex-col'>
 
                                         <div className='flex gap-2 items-center text-[#003056]'>  {/* row 1 */}
-                                          <div className='font-bold w-auto'>{section.title}</div>
-                                          <div className='mr-10'>- {section.time}</div>
-
+                                            <div className='font-bold w-auto'>{section.title}</div>
+                                            <div className='mr-10'>- {section.time}</div>
                                         </div>
+
                                         <div className='flex'>
-                                          
-                                          <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
+                                            <div className='text-black opacity-40'>{section.capacity} seats remaining</div>
                                         </div>
                                     </div>
 
-                                    <div className='flex justify-items-end'>
-                                      <Button 
-                                         onClick={() => {
-                                          setSelectedSection({ title: section.title, time: section.time, capacity: section.capacity });
-                                          setIsEditSectionPopupOpen(true);
-                                        }}
-                                        className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
+                                    <div className='flex justify-self-end'>
+                                        <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></button>
                                     </div>
 
-                                  </div>
-                                ))
-                              ) : (
-                                <p>Loading sections...</p>
-                              )}
-                            </div>
-
-                      </div>
-                      {/* End Sections Panel */}
-                          
-                          
-                      <Button 
-                            className="bg-[#A5925A] hover:bg-[#C1AC6F] row-span-1 w-max text-white text-md rounded-lg hover:bg-[#80724b]"
-                            onClick={() => setIsAddSectionPopupOpen(true)}
-                      >Add Section
-                      </Button>
-
+                                </div>
+                            ))
+                        ) : (
+                          <p>Loading sections...</p>
+                        )}
+                    </div>
                 </div>
-                {/* End Left Side */}
+                {/* End Sections Panel */}
+                
+                
+                
+                <Button 
+                  className="bg-[#A5925A] mt-5 text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+                  onClick={() => setIsAddSectionPopupOpen(true)}
+                >
+                  Add Section
+                </Button>
+
+          </div>
+          {/* End Left */}
 
 
-                {/* Start Right Side / Teams Panel */}
-                <div className='bg-[#003056] w-xs h-2/3 rounded-3xl grid-rows-2'>
 
-
-                    <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
-                    <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3'>
-                      <div className='grid grid-cols-12 h-50'>
+          {/* Teams Panel */}
+          <div className='bg-[#003056] w-xs h-min rounded-3xl grid-rows-2'>
+            <div className='px-8 py-2 lg:py-4 text-white text-lg lg:text-3xl font-bold'>Teams</div>
+            <div className='bg-[#FFFFFF] h-full w-50 rounded-b-3xl px-5 py-3'>
+              <div className='grid grid-cols-12 h-50'>
 
                         <div className='mb-3 col-start-1 col-end-12 grid grid-cols-8'>
                           <input
@@ -630,41 +592,38 @@ const newLead = (theirGTID, yourGTID) => {
                         <div className='bg-[#D9D9D9] border-[#B4B2B2] border-2 col-start-12 font-bold text-xl w-fit h-12 rounded-lg py-2 px-4 hover:text-[#525252] cursor-pointer justify-self-end'>λ</div>
 
 
-                      </div>
-                      {Object.keys(allTeams).length > 0 ? (
-                        Object.entries(allTeams).map(([key, value]) => (
-                          <div key={value.name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 flex items-center shadow-sm grid grid-cols-16'>
-                            <div className='font-bold pt-3.5 col-start-2 col-end-12'>Team - {value.name}</div>
-                            <div 
-                              className='rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
-                              style={{
-                                color: getStatusColor(value.status)
-                              }}
-                              >●</div>
-                          </div>
-                        ))
-                      ) : (
-                        <p>Loading teams...</p>
-                      )}
-                    </div>
-                </div>
-                {/* End Right Side / Teams Panel */}
-
-
-
-
-
-
-
-
-
+              </div>
+              {teams.length > 0 ? (
+                teams.map((team) => (
+                  <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
+                    <div
+                      className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
+                      style={{
+                        transform: rotatedTeams.has(team.id) ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease'
+                      }}
+                      onClick={() => toggleRotation(team.id)}>▶
+                    </div>     
+                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.id}</div>
+                    <div 
+                      className='bg-[#A5925A] rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
+                      style={{
+                        color: getStatusColor(team.status)
+                      }}
+                      >●</div>
+                  </div>
+                ))
+              ) : (
+                <p>Loading teams...</p>
+              )}
             </div>
-            {/* End Panels */}
-
+          </div>
+      
         </div>
-        {/* End Body */}
+      
+      </div>
 
-
+      {/* Pop-up Modal for Adding Section */}
       {isAddSectionPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
@@ -673,21 +632,21 @@ const newLead = (theirGTID, yourGTID) => {
               name="title" 
               placeholder="Section Title" 
               value={newSection.title}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setNewSection)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="time"
               placeholder="Times"
               value={newSection.time}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setNewSection)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="capacity"
               placeholder="Capacity"
               value={newSection.capacity}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, setNewSection)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <div className="flex justify-end mt-5">
@@ -713,65 +672,128 @@ const newLead = (theirGTID, yourGTID) => {
       )}
 
 
-
-      {/* Pop-up Modal for Edit Student */}
-      {isEditStudentPopupOpen && (
+      {/* Pop-up Modal for Adding Student */}
+      {isAddStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">Edit Section</h2>
+            <h2 className="text-lg font-bold">Add a New Student</h2>
             <input 
-              name="title" 
-              placeholder="Section Title" 
-              value={selectedSection.title}
-              onChange={handleEditInputChange}
+              name="name" 
+              placeholder="George Burdell" 
+              value={newSection.name}
+              onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
-              name="time"
-              placeholder="Times"
-              value={selectedSection.time}
-              onChange={handleEditInputChange}
+              name="gtid"
+              placeholder="903XXXXXX"
+              value={newSection.gtid}
+              onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
-              name="capacity"
-              placeholder="Capacity"
-              value={selectedSection.capacity}
-              onChange={handleEditInputChange}
+              name="gtusername"
+              placeholder="gburdell3"
+              value={newSection.gtusername}
+              onChange={(e) => handleInputChange(e, setNewStudent)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="team"
+              placeholder="1234"
+              value={newSection.team}
+              onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <div className="flex justify-end mt-5">
               <Button 
                 className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => setIsEditSectionPopupOpen(false)}
+                onClick={() => setIsAddStudentPopupOpen(false)}
               >
                 Cancel
               </Button>
               <Button 
-                className="bg-[#D01717] hover:bg-[#EA2020] text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
-                onClick={() => {
-                  setIsEditSectionPopupOpen(false);
-                  removeSection(selectedSection);
-                }}
-              >
-                Remove
-              </Button>
-              <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
                 onClick={() => {
-                  setIsEditSectionPopupOpen(false);
-                  addOrUpdateSection(newSection);
+                  addStudent;
+                  setIsAddStudentPopupOpen(false);
                 }}
               >
-                Save
+                Add
               </Button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Pop-up Modal for Editing a Student's information */}
+      {isEditStudentPopupOpen && (
 
-      {/* 
+          <div className="fixed inset-0 flex items-center justify-center text-[#003056] bg-black bg-opacity-50">
+              <div className="bg-white p-5 rounded-lg shadow-sm">
+                  <h2 className="text-lg font-bold">Edit Student</h2>
+
+                  <input 
+                    name="name" 
+                    placeholder="George Burdell" 
+                    value={selectedStudent.name}
+                    onChange={(e) => handleInputChange(e, setSelectedStudent)}
+                    className="border p-2 rounded-md w-full mt-3"
+                  />
+
+                  <input
+                    name="username"
+                    placeholder="gburdell3"
+                    value={selectedStudent.username}
+                    onChange={(e) => handleInputChange(e, setSelectedStudent)}
+                    className="border p-2 rounded-md w-full mt-3"
+                  />
+
+                  <input
+                    name="gtid"
+                    placeholder="903XXXXXX"
+                    value={selectedStudent.capacity}
+                    onChange={(e) => handleInputChange(e, setSelectedStudent)}
+                    className="border p-2 rounded-md w-full mt-3"
+                  />
+
+                  <input
+                    name="team"
+                    placeholder="1234"
+                    value={selectedStudent.team}
+                    onChange={(e) => handleInputChange(e, setSelectedStudent)}
+                    className="border p-2 rounded-md w-full mt-3"
+                  />
+                  
+                  <div className="flex justify-end mt-5">
+                    <Button 
+                      className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                      onClick={() => {
+                        setIsEditStudentPopupOpen(false);
+                        setSeeAllStudents(true);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+
+                    {/* Does Not Update Yet */}
+                    <Button 
+                      className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                      onClick={() => {
+                        setIsEditStudentPopupOpen(false);
+                        setSeeAllStudents(true);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Pop-up Modal for Adding Section */}
+{/*
+
       {isRefreshSemesterPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
@@ -839,7 +861,7 @@ const newLead = (theirGTID, yourGTID) => {
             </div>
       )}
 
-    {logoutOpen && (
+      {logoutOpen && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
             <h2 className="text-xl font-bold mb-4">Are You Sure?</h2>
@@ -871,182 +893,6 @@ const newLead = (theirGTID, yourGTID) => {
       )}
 
 
-      {addStudentPopup && (
-        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
-            <h2 className="text-xl font-bold mb-4">Add Student</h2>
-
-              <div className='flex flex-col gap-5'>
-
-                    <div className='flex'>
-
-                            <div>Name: </div>
-              
-                            <input
-                              type="text"
-                              value={newStudent.name}
-                              onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                              placeholder="George Burdell"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-              
-                    </div>
-
-                    <div className='flex'>
-
-                            <div className='text-nowrap'>GT Username: </div>
-              
-                            <input
-                              type="text"
-                              value={newStudent.username}
-                              onChange={(e) => setNewStudent({ ...newStudent, username: e.target.value })}
-                              placeholder="gburdell3"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-              
-                    </div>
-
-                    <div className='flex'>
-
-                            <div>GTID: </div>
-              
-                            <input
-                              type="text"
-                              value={newStudent.gtid}
-                              onChange={(e) => setNewStudent({ ...newStudent, gtid: e.target.value })}
-                              placeholder="903XXXXXX"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-
-                                  
-              
-                    </div>
-
-                    <div className='flex flex-col'>
-
-                            <div className='flex flex-row'>
-                                
-                                <div>Team: </div>
-                  
-                                <input
-                                  type="text"
-                                  value={newStudent.team}
-                                  onChange={(e) => setNewStudent({ ...newStudent, team: e.target.value })}
-                                  placeholder="1234"
-                                  className="border border-gray-300 p-2 rounded-md w-2/3"
-                                />       
-                                
-                            </div>
-
-                            <div className='text-sm'>Put 0000 for solo students </div>
-
-                    </div>
-                                  
-                    <div>
-                        <Button
-                          onClick={() => {
-                            setAddStudentPopup(false);
-                          }}
-                          className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white font-bold rounded-md"> Cancel
-                        </Button>
-    
-                        <Button
-                          onClick={() => {
-                            addStudent(newStudent);
-                            setAddStudentPopup(false);
-                          }}
-                          className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] text-[#003056] rounded-md"> Add
-                        </Button>
-                    </div>
-      
-              </div>
-
-
-
-            </div>
-            
-        </div>
-      )}
-
-
-    {addAdminPopup && (
-        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-lg w-max text-center">
-            <h2 className="text-xl font-bold mb-4">Add Admin</h2>
-
-              <div className='flex flex-col gap-5'>
-
-                    <div className='flex'>
-
-                            <div>Name: </div>
-              
-                            <input
-                              type="text"
-                              value={newAdmin.name}
-                              onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })}
-                              placeholder="George Burdell"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-              
-                    </div>
-
-                    <div className='flex'>
-
-                            <div>GT Username: </div>
-              
-                            <input
-                              type="text"
-                              value={newAdmin.username}
-                              onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })}
-                              placeholder="gburdell3"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-              
-                    </div>
-
-                    <div className='flex'>
-
-                            <div>GTID: </div>
-              
-                            <input
-                              type="text"
-                              value={newAdmin.gtid}
-                              onChange={(e) => setNewAdmin({ ...newAdmin, gtid: e.target.value })}
-                              placeholder="903XXXXXX"
-                              className="border border-gray-300 p-2 rounded-md w-2/3"
-                            />
-
-                                  
-              
-                    </div>
-                                  
-                    <div>
-                        <Button
-                          onClick={() => {
-                            setAddAdminPopup(false);
-                          }}
-                          className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white font-bold rounded-md"> Cancel
-                        </Button>
-    
-                        <Button
-                          onClick={() => {
-                            addAdmin(newAdmin);
-                            setAddAdminPopup(false);
-                          }}
-                          className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] text-[#003056] rounded-md"> Add
-                        </Button>
-                    </div>
-      
-              </div>
-
-
-
-            </div>
-            
-        </div>
-      )}
-
-
       {(settingsOpen && (isLeadAdmin == false)) && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
@@ -1058,7 +904,7 @@ const newLead = (theirGTID, yourGTID) => {
                 <input
                   type="text"
                   value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
+                  onChange={(e) => handleInputChange(e, setNewName)}
                   placeholder="Enter Name"
                   className="border border-gray-300 p-2 rounded-md w-2/3"
                 />
@@ -1118,7 +964,7 @@ const newLead = (theirGTID, yourGTID) => {
                         <input
                           type="text"
                           value={newName}
-                          onChange={(e) => setNewName(e.target.value)}
+                          onChange={(e) => handleInputChange(e, setNewName)}
                           placeholder="Enter Name"
                           className="border border-gray-300 p-2 rounded-md w-2/3"
                         />
@@ -1216,8 +1062,50 @@ const newLead = (theirGTID, yourGTID) => {
             
       )}
 
-        
-       {/*  <div className="m-10">
+    {seeAllstudents && (
+        <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+
+            <div className="bg-white gap-4 p-6 rounded-md shadow-lg w-2xl h-max text-center">
+
+                    <h2 className="text-xl font-bold mb-4">Students</h2>
+
+                    <div className='overflow-auto'>
+
+                        {Object.keys(allStudents).length > 0 ? (
+                          Object.entries(allStudents).map(([key, values]) => (
+                            <div key={values.name} className='text-[#003056] text-lg mx-5 my-2 grid grid-cols-2 items-center'>
+
+                              <div className='text-nowrap justify-self-start'>{values.name}</div>
+
+                                  <Button className='justify-self-end bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'
+                                      onClick={() => {
+                                        setSelectedStudent({name: values.name, gtid: values.gtID, username: values.username, team: values.team});
+                                        setSeeAllStudents(false);
+                                        setIsEditStudentPopupOpen(true);
+                                  }}></Button>     
+                              
+
+                            </div>
+                          ))
+                        ) : (
+                          <p>Loading Students...</p>
+                        )}
+
+
+                    </div>
+
+
+            </div>
+
+
+        </div>
+            
+      )}
+
+        {/* CSV Upload Section */}
+
+        {/*
+        <div className="m-10">
           <input 
             type="file" 
             id="csvFileInput" 
@@ -1231,7 +1119,7 @@ const newLead = (theirGTID, yourGTID) => {
           >
             Upload CSV
           </Button>
-        </div> */}
+        </div>  */}
 
     </div>
 

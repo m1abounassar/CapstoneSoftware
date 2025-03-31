@@ -493,8 +493,8 @@ export default function Home() {
             {/* Left-aligned logo and title */}
             <div className='p-5 text-lg lg:text-4xl w-max text-[#232323] font-bold flex items-center pl-1'>
                 {/* Website Logo */}
-                <img src="/logo.png" alt="Website Logo" className="w-16 h-16" /> {/* Adjust size as needed */}
-                <div className= 'p-2'>
+                <img src="/logo.png" alt="Website Logo" className="w-12 h-12" /> {/* Adjust size as needed */}
+                <div className= 'p-2 text-md'>
                   Team Sync <span className='pt-0 pb-4 pl-0 text-lg font-normal text-[#003056]'> for Junior Design</span>
                 </div>
               </div>
@@ -504,16 +504,12 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <div>{name}</div>
                 
-                {/* Edit Name Button */}
-                <button 
-                  className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 flex items-center justify-center"
-                  onClick={() => setNameEditOpen(true)}
-                >
-                  <img src="/pencil.png" alt="Edit" className="w-4 h-4" />
-                </button>
+                <Button
+                  onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                  className="flex bg-transparent hover:bg-transparent shadow-none hover:text[#054171] items-center justify-center text-2xl text-[#003056] hover:text-[#054171] font-bold px-3 pb-2 transition-all focus:outline-none">
+                ☰</Button>
               </div>
   
-              {/* <DropdownTwo/> */}
 
             </div>
       </div>
@@ -781,14 +777,14 @@ export default function Home() {
                   <div className='flex gap-5 justify-center font-bold'>
     
                       <Button
-                        onClick={() => setSettingsOpen(false)}
+                        onClick={() => setLogoutOpen(false)}
                         className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
                       >
                         Go Back
                       </Button>
                       <Button
                         onClick={() => {
-                          setSettingsOpen(false);
+                          setLogoutOpen(false);
                           startLogout();
                         }}
                         className="mt-4 px-4 py-2 bg-[#D01717] hover:bg-[#EA2020] text-white rounded-md"
