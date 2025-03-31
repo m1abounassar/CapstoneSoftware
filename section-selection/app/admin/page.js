@@ -182,6 +182,8 @@ const addStudent = (student) => {
           // Add the new student's GTID to the members array
           members.push(student.gtid);
 
+          console.log("Members: ", members);
+
           // Update the team in actualTeams.php with the new members array
           return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
             method: 'POST',
