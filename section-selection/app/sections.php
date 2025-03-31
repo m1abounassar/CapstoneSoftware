@@ -46,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $data = json_decode(file_get_contents("php://input"), true);
-    
+
     if (isset($data['title'], $data['time'], $data['capacity'])) {
         $title = $conn->real_escape_string($data['title']);
         $time = $conn->real_escape_string($data['time']);
         $capacity = (int)$data['capacity'];
 
         // Updated SQL query with more conditions to accurately target a section
-        $sql = "DELETE FROM `sections` WHERE title='$title';
+        $sql = "DELETE FROM `sections` WHERE title='$title'";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["message" => "Section deleted successfully"]);
@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     } else {
         echo json_encode(["error" => "Invalid input"]);
     }
+    
 }
 
 
