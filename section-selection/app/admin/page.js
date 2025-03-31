@@ -293,7 +293,7 @@ export default function Home() {
 
         {/* Start Nav Bar */}
         <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
-          <div>
+          <div className='flex'>
                 <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design</div>
                 <div className='p-4 text-lg lg:text-2xl ml-2 w-max text-[#003056]'>Team Sync</div>
           </div>
@@ -303,7 +303,7 @@ export default function Home() {
             <div>{name}</div>
             <Button
                   onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
-                  className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+                  className="flex bg-transparent hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
             ☰</Button>
         
           </div>
