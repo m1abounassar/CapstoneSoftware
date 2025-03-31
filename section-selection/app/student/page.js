@@ -10,6 +10,7 @@ export default function Home() {
   const [teams, setTeams] = useState({});
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [gtid, setGTID] = useState("");
   const [clientName, setClientName] = useState("");
   const [projectName, setProjectName] = useState("");
   const [newClientName, setNewClientName] = useState("");
@@ -65,6 +66,8 @@ export default function Home() {
               console.log(matchedStudent.name);
               setName(matchedStudent.name);
               setNewName(matchedStudent.name); // Initialize newName with current name
+              gtid = matchedStudent.gtid;
+              setGTID(gtid);
 
               const initialDropdownValues = {};
 
