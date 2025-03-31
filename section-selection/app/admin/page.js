@@ -149,6 +149,7 @@ export default function Home() {
       setIsAddSectionPopupOpen(false);
     })
     .catch(error => console.error('Error updating sections:', error));
+
   };
 
 
@@ -528,7 +529,7 @@ const newLead = (theirGTID, yourGTID) => {
                           
                           
                       <Button 
-                            className="bg-[#A5925A] row-span-1 text-white text-md rounded-lg hover:bg-[#80724b]"
+                            className="bg-[#A5925A] hover:bg-[#C1AC6F] row-span-1 w-max text-white text-md rounded-lg hover:bg-[#80724b]"
                             onClick={() => setIsAddSectionPopupOpen(true)}
                       >Add Section
                       </Button>
@@ -594,8 +595,6 @@ const newLead = (theirGTID, yourGTID) => {
         {/* End Body */}
 
 
-
-      {/* 
       {isAddSectionPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
@@ -630,7 +629,10 @@ const newLead = (theirGTID, yourGTID) => {
               </Button>
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addSection}
+                onClick={() => {
+                  addSection(newSection);
+                  setIsAddSectionPopupOpen(false);
+                }}
               >
                 Save
               </Button>
@@ -638,7 +640,8 @@ const newLead = (theirGTID, yourGTID) => {
           </div>
         </div>
       )}
-    
+
+      {/* 
       {isEditStudentPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
