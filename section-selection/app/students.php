@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } 
     // Handle name update
-    else if (isset($data['username'], $data['name'])) {
+    else if (isset($data['username'], $data['name']) && !isset($data['gtid'], $data['team'])) {
         $username = $conn->real_escape_string($data['username']);
         $name = $conn->real_escape_string($data['name']);
         
