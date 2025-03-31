@@ -981,7 +981,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                               <Button className='bg-[url("/crown.png")] hover:bg-[url("/crownHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'
                                   onClick={() => {
-                                    newLead(values.gtid);
+                                    newLead(values.gtid, gtid);
                               }}></Button>
                               <Button className='bg-[url("/remove.png")] hover:bg-[url("/removeHover.png")] bg-transparent hover:bg-transparent ml-3 shadow-none bg-contain bg-no-repeat h-8 w-9'
                                   onClick={() => {
