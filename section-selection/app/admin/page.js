@@ -454,7 +454,7 @@ export default function Home() {
 
                       </div>
                       {Object.keys(allTeams).length > 0 ? (
-                        Object.keys(allTeams).map(([name, members, section, status, clientName, projectName]) => (
+                        Object.entries(allTeams).map(([name, members, section, status, clientName, projectName]) => (
                           <div key={name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
                             <div className='font-bold pt-3.5 col-start-2 col-end-12'>{name}</div>
                             <div 
@@ -846,7 +846,7 @@ export default function Home() {
                     <div className='overflow-auto'>
 
                     {Object.keys(allAdmin).length > 0 ? (
-                      Object.keys(allAdmin).map(([name]) => (
+                      Object.entries(allAdmin).map(([name]) => (
                         <div key={name} className='text-[#003056] text-xl my-2 grid grid-cols-8'>
 
                           <div>{name}</div>
