@@ -95,6 +95,7 @@ export default function Home() {
 
                 allTeams = teamData.teams;
                 setAllTeams(teamData.teams);
+                console.log(allTeams);
 
                 
               } else {
@@ -680,7 +681,7 @@ export default function Home() {
 
 
       {hamburgerOptionsOpen && (
-            <div className="absolute right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
+            <div className="absoluteabsolute top-0 right-0 top-0 right-0 mt-20 mr-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50">
               <div
                 onClick={() => {
                   setSettingsOpen(true);
