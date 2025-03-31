@@ -52,39 +52,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
-    if (isset($data['username'])) {
+    if (isset($data['name'], $data['username'], $data['gtid'])) {
+        $name = $conn->real_escape_string($data['name']);
         $username = $conn->real_escape_string($data['username']);
-        $updates = [];
+        $gtid = $conn->real_escape_string($data['gtid']);
+        $isLead = 0; // Default value
 
-        if (isset($data['name'])) {
-            $name = $conn->real_escape_string($data['name']);
-            $updates[] = "name='$name'";
+        // Validate GTID (must be 9 digits)
+        if (!preg_match('/^\d{9}$/', $gtid)) {
+            echo json_encode(["error" => "GTID must be exactly 9 digits."]);
+            exit;
         }
 
-        if (isset($data['gtID'])) {
-            $gtID = $conn->real_escape_string($data['gtID']);
-            $updates[] = "gtID='$gtID'";
+        // Validate username (letters followed by numbers)
+        if (!preg_match('/^[A-Za-z]+\d+$/', $username)) {
+            echo json_encode(["error" => "Username must start with letters and end with numbers."]);
+            exit;
         }
 
-        if (isset($data['newUsername'])) {
-            $newUsername = $conn->real_escape_string($data['newUsername']);
-            $updates[] = "username='$newUsername'";
+        // Validate name (only letters and spaces)
+        if (!preg_match('/^[A-Za-z\s]+$/', $name)) {
+            echo json_encode(["error" => "Name must contain only letters and spaces."]);
+            exit;
         }
 
-        if (!empty($updates)) {
-            $updateSQL = implode(", ", $updates);
-            $sql = "UPDATE admin SET $updateSQL WHERE username='$username'";
+        // Check if GTID already exists
+        $checkSQL = "SELECT * FROM admin WHERE gtid = '$gtid'";
+        $checkResult = $conn->query($checkSQL);
+        if ($checkResult->num_rows > 0) {
+            echo json_encode(["error" => "An admin with this GTID already exists."]);
+            exit;
+        }
 
-            if ($conn->query($sql) === TRUE) {
-                echo json_encode(["message" => "Admin info updated successfully"]);
-            } else {
-                echo json_encode(["error" => "Error updating admin: " . $conn->error]);
-            }
+        // Insert new admin with default isLead = 0
+        $sql = "INSERT INTO admin (name, username, gtid, isLead) VALUES ('$name', '$username', '$gtid', '$isLead')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo json_encode(["message" => "Admin added successfully"]);
         } else {
-            echo json_encode(["error" => "No fields provided to update"]);
+            echo json_encode(["error" => "Error adding admin: " . $conn->error]);
         }
     } else {
-        echo json_encode(["error" => "Username is required for update"]);
+        echo json_encode(["error" => "Name, username, and GTID are required"]);
     }
 }
 
