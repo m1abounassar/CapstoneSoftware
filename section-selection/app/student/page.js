@@ -294,21 +294,24 @@ export default function Home() {
   return (
     <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default flex flex-col'>
 
-      <div className='bg-[#A5925A] grid grid-cols-3 w-681 items-center px-10'>
-            <div className='p-4 text-lg lg:text-2xl w-max text-[#232323] font-bold'>
-              <div className="flex items-center gap-2">
-                <div>{name}</div>
-                <Button
-                      onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
-                      className="flex hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
-                ☰</Button>
-
-              </div>
-
-              
-            </div>
+      {/* Start Nav Bar */}
+        <div className='bg-[#A5925A] grid grid-cols-3 w-screen items-center px-10'>
+          <div className='flex'>
+                <div className='p-4 text-lg lg:text-2xl font-bold w-max text-[#003056]'>Junior Design</div>
+                <div className='p-4 text-lg lg:text-2xl w-max text-[#003056]'>Team Sync</div>
+          </div>
+          <div></div>
+          <div className='pt-5 pb-5 text-sm lg:text-lg justify-self-end text-[#003056] flex gap-5 items-center'>
+            
+            <div>{name}</div>
+            <Button
+                  onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
+                  className="flex bg-transparent hover:bg-transparent shadow-none hover:text[#054171] items-center justify-center text-2xl text-[#003056] hover:text-[#054171] font-bold px-3 pb-2 transition-all focus:outline-none">
+            ☰</Button>
         
-      </div>
+          </div>
+        </div>
+        {/* End Nav Bar */}
 
 
 
