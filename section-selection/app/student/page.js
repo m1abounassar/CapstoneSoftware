@@ -68,6 +68,7 @@ export default function Home() {
               setNewName(matchedStudent.name); // Initialize newName with current name
               gtid = matchedStudent.gtid;
               setGTID(gtid);
+              console.log("GTID: ", gtid);
 
               const initialDropdownValues = {};
 
@@ -291,12 +292,12 @@ export default function Home() {
   // New function to save the updated name
 
   
-  const handleSaveName = async () => {
+  const handleSavedSettings = async () => {
       if (!newName.trim()) {
         return; // Don't save empty names
       }
 
-      if (newName !== name && (newName)) {
+      if (newName !== name && (newName.trim())) {
 
             try {
             const postData = {
@@ -327,7 +328,7 @@ export default function Home() {
         
       }
 
-      if (clientName != newClientName && (clientName)) {
+      if (clientName != newClientName && (clientName.trim())) {
 
             try {
                 const postData = {
@@ -358,7 +359,7 @@ export default function Home() {
         
       }
 
-      if (projectName != newProjectName && (projectName)) {
+      if (projectName != newProjectName && (projectName.trim())) {
 
             try {
                 const postData = {
