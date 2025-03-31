@@ -48,6 +48,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($data['theirGTID'], $data['yourGTID'])) {
+        $theirGTID = $conn->real_escape_string($data['theirGTID']);
+        $yourGTID = $conn->real_escape_string($data['yourGTID']);
+
+        // Start a transaction to ensure atomicity
+        $conn->begin_transaction();
+
+        try {
+            // Set isLead = 0 for yourGTID
+            $sql1 = "UPDATE admin SET isLead = 0 WHERE gtid = '$yourGTID'";
+            if ($conn->query($sql1) !== TRUE) {
+                throw new Exception("Error updating isLead for yourGTID: " . $conn->error);
+            }
+
+            // Set isLead = 1 for theirGTID
+            $sql2 = "UPDATE admin SET isLead = 1 WHERE gtid = '$theirGTID'";
+            if ($conn->query($sql2) !== TRUE) {
+                throw new Exception("Error updating isLead for theirGTID: " . $conn->error);
+            }
+
+            // Commit the transaction if everything is successful
+            $conn->commit();
+            echo json_encode(["message" => "Lead updated successfully"]);
+        } catch (Exception $e) {
+            // Rollback the transaction if something goes wrong
+            $conn->rollback();
+            echo json_encode(["error" => $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(["error" => "GTID values are required"]);
+    }
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
