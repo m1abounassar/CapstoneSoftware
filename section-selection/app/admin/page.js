@@ -125,8 +125,12 @@ export default function Home() {
   // Fetch sections data from PHP API
   useEffect(() => {
     fetch("https://jdregistration.sci.gatech.edu/sections.php")
-      .then(response => response.json())
-      .then(data => setSections(data.sections))
+      .then(response => response.text())  // Get the raw response text
+      .then(responseText => {
+        console.log("Raw response text:", responseText);  // This will print the raw response
+        const data = JSON.parse(responseText);  // Parse the response text into JSON
+        setSections(data.sections);
+      })
       .catch(error => console.error("Error loading sections:", error));
   }, []);
 
