@@ -161,6 +161,21 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
   };
 
+const removeAdmin = (adminGTID) => {
+  fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ adminGTID }) // Wrap adminGTID in an object
+  })
+  .then(response => response.json()) // Assuming the server responds with JSON
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+};
+
 
   const toggleRotation = (teamId) => {
     setRotatedTeams((prev) => {
@@ -790,9 +805,9 @@ export default function Home() {
 
       {(settingsOpen && (isLeadAdmin == true)) && (
         <div className="fixed text-[#003056] inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white grid grid-cols-2 gap-4 p-6 rounded-md shadow-lg w-max h-max text-center">
+          <div className="bg-white grid grid-cols-2 gap-4 p-6 rounded-md shadow-lg w-3/4 h-max text-center">
 
-            <div>
+                <div className='border-l-2 border-[#003056]'>
 
                     <h2 className="text-xl font-bold mb-4">Account Settings</h2>
                     <div className="grid grid-rows-4">
@@ -843,7 +858,7 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div>
+                <div className='border-r-2 border-[#003056]'>
 
                     <h2 className="text-xl font-bold mb-4">Admin Settings</h2>
 
@@ -857,7 +872,10 @@ export default function Home() {
                           <div className='col-span-1 col-start-3 text-nowrap flex'>
 
                               <Button className='bg-[url("/crown.png")] hover:bg-[url("/crownHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
-                              <Button className='bg-[url("/remove.png")] hover:bg-[url("/removeHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>        
+                              <Button className='bg-[url("/remove.png")] hover:bg-[url("/removeHover.png")] bg-transparent hover:bg-transparent ml-3 shadow-none bg-contain bg-no-repeat h-8 w-9'
+                                  onClick={() => {
+                                    removeAdmin(values.gtid);
+                              }}></Button>        
           
                           </div>
                           
