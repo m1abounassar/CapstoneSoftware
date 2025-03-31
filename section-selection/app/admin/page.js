@@ -153,7 +153,6 @@ export default function Home() {
 
 
 const addStudent = (student) => {
-
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -196,17 +195,22 @@ const addStudent = (student) => {
                 members: JSON.stringify(members) 
               })
             })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          if (data.error) {
-            console.error('Error updating team:', data.error);
-          } else {
-            console.log('Success updating team:', data.message);
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              if (data.error) {
+                console.error('Error updating team:', data.error);
+              } else {
+                console.log('Success updating team:', data.message);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
           }
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Error fetching teams:', error);
         });
     } catch (error) {
       console.error('Error parsing response:', error);
