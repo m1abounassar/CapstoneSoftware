@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [selectedSection, setSelectedSection] = useState({});
-  const [selectedStudent, setSelectedStudent] = useState({ name: '', username: '', gtid: '', team: '', });
+  const [selectedSection, setSelectedSection] = useState({ title: '', time: '', capacity: ''});
+  const [selectedStudent, setSelectedStudent] = useState({ name: '', username: '', gtid: '', team: ''});
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
 
@@ -95,6 +95,11 @@ export default function Home() {
                 gtid = matchedAdmin.gtid
                 setGTID(gtid);
 
+                if (matchedAdmin.isLead == '1') {
+                  isLeadAdmin = true;
+                  setIsLeadAdmin(true);
+                }
+
                 const teamsRes = await fetch('https://jdregistration.sci.gatech.edu/actualTeams.php');
                 if (!teamsRes.ok) throw new Error("Team fetch failed");
                     
@@ -142,13 +147,13 @@ export default function Home() {
     setState(prev => ({ ...prev, [name]: value }));
   };
 
-  const addOrUpdateSection = () => {
-    if (!newSection.title.trim()) return;
+  const addOrUpdateSection = (sec) => {
+    if (!sec.title.trim()) return;
 
     fetch("https://jdregistration.sci.gatech.edu/sections.php", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newSection)
+      body: JSON.stringify(sec)
     })
     .then(response => response.json())
     .then(() => {
@@ -545,7 +550,12 @@ const newLead = (theirGTID, yourGTID) => {
                                     </div>
 
                                     <div className='flex justify-self-end'>
-                                        <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></button>
+                                        <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9' 
+                                            onClick={() => {
+                                              setSelectedSection({name: section.title, time: section.time, capacity: section.capacity});
+                                              setIsEditSectionPopupOpen(true);
+                                            }}
+                                        ></button>
                                     </div>
 
                                 </div>
@@ -662,6 +672,55 @@ const newLead = (theirGTID, yourGTID) => {
                 onClick={() => {
                   setIsAddSectionPopupOpen(false);
                   addOrUpdateSection(newSection);
+                }}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+       {/* Pop-up Modal for Editing Seciton */}
+      {isEditSectionPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Edit Section</h2>
+            <input 
+              name="title" 
+              placeholder="AAA" 
+              value={selectedSection.title}
+              onChange={(e) => handleInputChange(e, setSelectedSection)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="time"
+              placeholder="1:00 PM - 2:00 PM"
+              value={selectedSection.time}
+              onChange={(e) => handleInputChange(e, setSelectedSection)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="capacity"
+              placeholder="20"
+              value={selectedSection.capacity}
+              onChange={(e) => handleInputChange(e, setSelectedSection)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => setIsEditSectionPopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+
+                onClick={() => {
+                  setIsEditSectionPopupOpen(false);
+                  addOrUpdateSection(selectedSection);
                 }}
               >
                 Save
@@ -1043,13 +1102,13 @@ const newLead = (theirGTID, yourGTID) => {
                     <div className='flex gap-5 justify-center font-bold'>
 
                           <Button
-                            onClick={() => {
-                              setAddAdminPopup(true);
-                              setSettingsOpen(false);
-                            }}
-                            className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
-                          >
-                            Add an Admin
+                              onClick={() => {
+                                setAddAdminPopup(true);
+                                setSettingsOpen(false);
+                              }}
+                              className="mt-4 px-4 py-2 bg-[#A5925A] hover:bg-[#C1AC6F] rounded-md"
+                            >
+                              Add an Admin
                           </Button>
                      </div>
 
@@ -1093,6 +1152,11 @@ const newLead = (theirGTID, yourGTID) => {
 
 
                     </div>
+
+                    <Button className='justify-self-end bg-[#A5925A] hover:bg-[#C1AC6F] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'
+                        onClick={() => {
+                          setSeeAllStudents(false);
+                    }}>Close</Button>   
 
 
             </div>
