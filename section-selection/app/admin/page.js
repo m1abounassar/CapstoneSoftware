@@ -152,14 +152,45 @@ export default function Home() {
   };
 
 const addStudent = (student) => {
+  // First, add the student
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(student)
   })
   .then(response => response.json())
-  .then(data => console.log('Success:', data))
-  .catch(error => console.error('Error:', error));
+  .then(data => {
+    if (data.error) {
+      console.error('Error adding student:', data.error);
+      return;
+    }
+
+    console.log('Success:', data.message);
+
+    // Now, add the student's GTID to the actual team
+    const teamData = {
+      gtid: student.gtid,
+      team: student.team,  // Assuming student.team exists
+    };
+
+    // Send the GTID to actualTeams.php to add to the team members
+    return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(teamData)
+    });
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      console.error('Error adding to team:', data.error);
+    } else {
+      console.log('Success adding to team:', data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 };
 
 const addAdmin = (admin) => {
