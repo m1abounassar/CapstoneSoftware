@@ -259,14 +259,17 @@ const addStudent = (student) => {
 
 
 
-const addAdmin = (admin) => {
+const addAdmin = () => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(admin)
+    body: JSON.stringify(newAdmin)
   })
   .then(response => response.json())
   .then(data => console.log('Success:', data))
+  .then(() => {
+      setNewAdmin({ name: '', username: '', gtid: '' };
+    })
   .catch(error => console.error('Error:', error));
 };
 
@@ -740,6 +743,57 @@ const newLead = (theirGTID, yourGTID) => {
         </div>
       )}
 
+      {/* Pop-up Modal for Adding Admin */}
+      {addAdminPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-sm">
+            <h2 className="text-lg font-bold">Add a New Admin</h2>
+            <input 
+              name="name" 
+              placeholder="George Burdell" 
+              value={newAdmin.name}
+              onChange={(e) => handleInputChange(e, setNewAdmin)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="gtid"
+              placeholder="903XXXXXX"
+              value={newAdmin.gtid}
+              onChange={(e) => handleInputChange(e, setNewAdmin)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+            <input
+              name="gtusername"
+              placeholder="gburdell3"
+              value={newAdmin.username}
+              onChange={(e) => handleInputChange(e, setNewAdmin)}
+              className="border p-2 rounded-md w-full mt-3"
+            />
+
+            <div className="flex justify-end mt-5">
+              <Button 
+                className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
+                onClick={() => {
+                  setAddAdminPopup(false);
+                  setSettingsOpen(true);
+                }}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
+                onClick={() => {
+                  addAdmin();
+                  setAddAdminPopup(false);
+                  setSettingsOpen(true);
+                }}
+              >
+                Add
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* Pop-up Modal for Adding Student */}
       {isAddStudentPopupOpen && (
@@ -797,7 +851,6 @@ const newLead = (theirGTID, yourGTID) => {
 
       {/* Pop-up Modal for Editing a Student's information */}
       {isEditStudentPopupOpen && (
-
           <div className="fixed inset-0 flex items-center justify-center text-[#003056] bg-black bg-opacity-50">
               <div className="bg-white p-5 rounded-lg shadow-sm">
                   <h2 className="text-lg font-bold">Edit Student</h2>
