@@ -474,7 +474,7 @@ const newLead = (theirGTID, yourGTID) => {
       
 
       {/* Start Body */}
-      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default grid grid-rows'>
+      <div className='h-svh overflow-hidden bg-[#E5E2D3] font-figtree hover:cursor-default grid grid-flow-row auto-rows-max gap-5''>
 
           {/* Start Header */}
           <div className="grid grid-cols-2 mt-5 mx-10 w-9/10 h-min">
@@ -524,7 +524,7 @@ const newLead = (theirGTID, yourGTID) => {
 
 
           {/* Start Panels */}
-         <div className="grid grid-cols-2 mx-10 gap-10">
+         <div className="grid grid-cols-2 content-start mx-10 gap-10">
           
               {/* Start Left */}
               <div className=''>
@@ -715,6 +715,16 @@ const newLead = (theirGTID, yourGTID) => {
               >
                 Cancel
               </Button>
+                  
+              <Button 
+                className="bg-[#D01717] text-white text-sm rounded-lg hover:bg-[#EA2020] shadow-none mr-2"
+                onClick={() => {
+                  setIsEditSectionPopupOpen(false);
+                  removeSection();
+                }}>
+                Remove
+              </Button>
+                  
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
 
