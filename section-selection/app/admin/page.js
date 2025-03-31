@@ -268,7 +268,7 @@ const addAdmin = () => {
   .then(response => response.json())
   .then(data => console.log('Success:', data))
   .then(() => {
-      setNewAdmin({ name: '', username: '', gtid: '' };
+      setNewAdmin({ name: '', username: '', gtid: '' });
     })
   .catch(error => console.error('Error:', error));
 };
