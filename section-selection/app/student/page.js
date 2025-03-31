@@ -64,16 +64,35 @@ export default function Home() {
               const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
               const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
 
-              // Assign priorities from student's choices
-              firstChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "1";
-              });
-              secondChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "2";
-              });
-              thirdChoiceArray.forEach((section) => {
-                initialDropdownValues[section] = "3";
-              });
+              if (!firstChoiceArray) {
+                const sectionsRes = await fetch('https://jdregistration.sci.gatech.edu/sections.php');
+                if (!sectionsRes.ok) throw new Error("Sections fetch failed");
+    
+                const sectionsData = await sectionsRes.json();
+                if (!Array.isArray(sectionsData.sections)) {
+                  console.error("Unexpected data format:", sectionsData);
+                  return;
+                }
+
+                (sectionsData.sections).forEach((section) => {
+                  initialDropdownValues[section.title] = "3";
+                });
+                
+              } else {
+
+
+                // Assign priorities from student's choices
+                firstChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "1";
+                });
+                secondChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "2";
+                });
+                thirdChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "3";
+                });
+                
+              }
 
               dropdownValues = initialDropdownValues;
               setDropdownValues(dropdownValues);
