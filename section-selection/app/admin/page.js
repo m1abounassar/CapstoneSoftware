@@ -303,7 +303,7 @@ export default function Home() {
             <div>{name}</div>
             <Button
                   onClick={() => setHamburgerOptionsOpen(!hamburgerOptionsOpen)}
-                  className="flex bg-transparent hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
+                  className="flex bg-transparent hover:bg-transparent shadow-none hover:text[#054171] items-center justify-center text-2xl font-bold px-3 py-1 transition-all focus:outline-none">
             ☰</Button>
         
           </div>
@@ -390,7 +390,7 @@ export default function Home() {
                                     </div>
 
                                     <div className='flex justify-items-end'>
-                                      <Button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9'></Button>
+                                      <Button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'></Button>
                                     </div>
 
                     
