@@ -851,9 +851,10 @@ export default function Home() {
 
                     {Object.keys(allAdmin).length > 0 ? (
                       Object.entries(allAdmin).map(([key, values]) => (
-                        <div key={values.name} className='text-[#003056] text-xl my-2 grid grid-cols-8'>
+                        <div key={values.name} className='text-[#003056] text-lg mx-5 my-2 grid grid-cols-3 items-center'>
 
-                          <div>{values.name}</div>
+                          <div className='col-span-1 text-nowrap'>{values.name}</div>
+                          <div className='col-span-1 col-start-3 text-nowrap flex '></div>
                           
 
                         </div>
