@@ -391,7 +391,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                   <Button 
                     className="bg-[#A5925A] hover:bg-[#C1AC6F]"
-                    onClick={() => setIsAddStudentPopupOpen(true)}
+                    onClick={() => setAddStudentPopup(true)}
                   >
                     Add Student
                   </Button>
