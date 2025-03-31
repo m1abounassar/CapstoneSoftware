@@ -79,16 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->rollback();
             echo json_encode(["error" => $e->getMessage()]);
         }
-    } else {
-        echo json_encode(["error" => "GTID values are required"]);
-    }
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    if (isset($data['name'], $data['username'], $data['gtid'])) {
+    } else if (isset($data['name'], $data['username'], $data['gtid'])) {
         $name = $conn->real_escape_string($data['name']);
         $username = $conn->real_escape_string($data['username']);
         $gtid = $conn->real_escape_string($data['gtid']);
@@ -129,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["error" => "Error adding admin: " . $conn->error]);
         }
     } else {
-        echo json_encode(["error" => "Name, username, and GTID are required"]);
+        echo json_encode(["error" => "Error updating admin table"]);
     }
 }
 
