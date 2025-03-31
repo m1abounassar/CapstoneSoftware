@@ -152,7 +152,6 @@ export default function Home() {
   };
 
 
-
 const addStudent = (student) => {
   // First, add the student
   fetch("https://jdregistration.sci.gatech.edu/students.php", {
@@ -183,8 +182,6 @@ const addStudent = (student) => {
           // Add the new student's GTID to the members array
           members.push(student.gtid);
 
-          console.log(members);
-
           // Update the team in actualTeams.php with the new members array
           return fetch("https://jdregistration.sci.gatech.edu/actualTeams.php", {
             method: 'POST',
@@ -196,6 +193,7 @@ const addStudent = (student) => {
           });
         } else {
           console.error('Team not found');
+          throw new Error('Team not found');
         }
       })
       .then(response => response.json())
