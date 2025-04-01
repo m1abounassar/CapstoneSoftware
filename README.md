@@ -24,7 +24,6 @@ Team Sync is a web app designed to help Junior Design students plan their schedu
 - When section is deleted , UI does not update correctly until page is refreshed
   
 
-# Release Notes
 ## Version 0.3.0
 
 ### New Features
@@ -39,7 +38,7 @@ Team Sync is a web app designed to help Junior Design students plan their schedu
 ### Known Issues
 - GT SSO is implemented but cannot be exited (page always refreshes to GT Login) 
 
-# Release Notes
+
 ## Version 0.2.0
 
 ### New Features
