@@ -107,10 +107,12 @@ export default function Home() {
                 
               }
 
-              dropdownValues = initialDropdownValues;
-              setDropdownValues(dropdownValues);
-              priorities = dropdownValues;
-              setPriorities(priorities);
+              //dropdownValues = initialDropdownValues;
+              //setDropdownValues(dropdownValues);
+              //priorities = dropdownValues;
+              //setPriorities(priorities);
+              setDropdownValues(initialDropdownValues);
+              setPriorities(initialDropdownValues);
               console.log("inital:", initialDropdownValues);
               console.log("actual:", dropdownValues);
 
@@ -206,7 +208,7 @@ export default function Home() {
       .then(data => {
 
         setSections(data.sections);
-        setSections(sections);
+        //setSections(sections);
         console.log(sections);
         console.log(typeof sections);
 
