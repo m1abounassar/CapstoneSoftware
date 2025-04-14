@@ -694,15 +694,19 @@ export default function Home() {
                                   </div>
                                   <div className='pt-6 text-xl text-[#003056] font-bold text-nowrap'>Ideal Section for Your Group</div>
                                   <div className='text-lg mt-2 text-[#003056]'>
-                                    {!everyoneFilled ? (
-                                      <p>Not everyone in the group has filled out their preferences!</p>
-                                    ) : idealSection ? (
-                                      <p>
-                                        The ideal section is{" "}
-                                        <span className="font-bold text-[#A5925A]">{idealSection}</span>.
-                                      </p>
+                                    {typeof everyoneFilled !== "undefined" ? (
+                                      !everyoneFilled ? (
+                                        <p>Not everyone in the group has filled out their preferences!</p>
+                                      ) : idealSection ? (
+                                        <p>
+                                          The ideal section is{" "}
+                                          <span className="font-bold text-[#A5925A]">{idealSection}</span>.
+                                        </p>
+                                      ) : (
+                                        <p>No ideal section could be determined.</p>
+                                      )
                                     ) : (
-                                      <p>No ideal section could be determined.</p>
+                                      <p>Loading group preferences...</p>
                                     )}
                                   </div>
 
