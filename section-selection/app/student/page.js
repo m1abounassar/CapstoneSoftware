@@ -29,6 +29,11 @@ export default function Home() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [leaveTeamOpen, setLeaveTeamOpen] = useState(false);
 
+  //fix
+  const [everyoneFilled, setEveryoneFilled] = useState(undefined);
+  const [idealSection, setIdealSection] = useState("");
+
+
 
   useEffect(() => {
     async function fetchData() {
