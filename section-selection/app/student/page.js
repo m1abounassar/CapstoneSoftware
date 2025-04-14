@@ -405,6 +405,68 @@ export default function Home() {
     console.log("Updated Dropdown Values:", dropdownValues);
   }, [dropdownValues]);
 
+  useEffect(() => {
+    if (!sections.length || Object.keys(teamMembers).length === 0) return;
+  
+    let allFilled = true;
+    const sectionScores = {};
+  
+    sections.forEach(section => {
+      sectionScores[section.title] = [];
+    });
+  
+    for (const memberName in teamMembers) {
+      const { firstChoice, secondChoice, thirdChoice } = teamMembers[memberName];
+  
+      const first = JSON.parse(firstChoice);
+      const second = JSON.parse(secondChoice);
+      const third = JSON.parse(thirdChoice);
+  
+      if (first.length === 0 && second.length === 0) {
+        allFilled = false;
+        break;
+      }
+  
+      sections.forEach(section => {
+        const title = section.title;
+        if (first.includes(title)) {
+          sectionScores[title].push(1);
+        } else if (second.includes(title)) {
+          sectionScores[title].push(2);
+        } else {
+          sectionScores[title].push(3);
+        }
+      });
+    }
+  
+    setEveryoneFilled(allFilled);
+  
+    if (allFilled) {
+      let best = null;
+      let bestScore = Infinity;
+      let bestOnes = 0;
+  
+      for (const section in sectionScores) {
+        const scores = sectionScores[section];
+        const total = scores.reduce((sum, val) => sum + val, 0);
+        const ones = scores.filter(val => val === 1).length;
+  
+        if (
+          total < bestScore ||
+          (total === bestScore && ones > bestOnes) ||
+          (total === bestScore && ones === bestOnes && section < best)
+        ) {
+          best = section;
+          bestScore = total;
+          bestOnes = ones;
+        }
+      }
+  
+      setIdealSection(best);
+    }
+  }, [teamMembers, sections]);
+  
+
   const startLogout = () => {
     window.location.href = '/logout.php';
   };
@@ -630,6 +692,21 @@ export default function Home() {
 
 
                                   </div>
+                                  <div className='pt-6 text-xl text-[#003056] font-bold text-nowrap'>Ideal Section for Your Group</div>
+                                  <div className='text-lg mt-2 text-[#003056]'>
+                                    {!everyoneFilled ? (
+                                      <p>Not everyone in the group has filled out their preferences!</p>
+                                    ) : idealSection ? (
+                                      <p>
+                                        The ideal section is{" "}
+                                        <span className="font-bold text-[#A5925A]">{idealSection}</span>.
+                                      </p>
+                                    ) : (
+                                      <p>No ideal section could be determined.</p>
+                                    )}
+                                  </div>
+
+
 
 
                               </div>
