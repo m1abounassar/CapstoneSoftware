@@ -205,7 +205,7 @@ export default function Home() {
       .then(response => response.json())
       .then(data => {
 
-        sections = data.sections;
+        setSections(data.sections);
         setSections(sections);
         console.log(sections);
         console.log(typeof sections);
