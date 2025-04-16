@@ -124,6 +124,18 @@ export default function Home() {
                 setAllTeams(teamData.teams);
                 console.log(allTeams);
 
+                const studentsRes = await fetch('https://jdregistration.sci.gatech.edu/students.php');
+                if (!studentsRes.ok) throw new Error("Students fetch failed");
+
+                const studentsData = await studentsRes.json();
+                if (!Array.isArray(studentsData.students)) {
+                  console.error("Unexpected student data format:", studentsData);
+                  return;
+                }
+
+                setAllStudents(studentsData.students);
+
+
                 
               } else {
                 console.error("Student not found in the list.");
