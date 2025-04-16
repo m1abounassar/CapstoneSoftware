@@ -48,6 +48,15 @@ export default function Home() {
   
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
+  function parsePref(prefString) {
+    try {
+      const parsed = JSON.parse(prefString);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
 
   // comment out function below to use local hosting
    useEffect(() => {
@@ -647,18 +656,9 @@ const newLead = (theirGTID, yourGTID) => {
                     return first.length > 0 || second.length > 0;
                   }); */
                   const everyoneFilled = teamMembers.every(member => {
-                    let first = [];
-                    let second = [];
-                  
-                    try {
-                      first = JSON.parse(member.firstChoice || "[]");
-                      second = JSON.parse(member.secondChoice || "[]");
-                    } catch (e) {
-                      console.error("Invalid preference data for member:", member.name, e);
-                      return false;
-                    }
-                  
-                    return Array.isArray(first) && Array.isArray(second) && (first.length > 0 || second.length > 0);
+                    const first = parsePref(member.firstChoice);
+                    const second = parsePref(member.secondChoice);
+                    return first.length > 0 || second.length > 0;
                   });
 
                   teamMembers.forEach(member => {
