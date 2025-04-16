@@ -612,15 +612,15 @@ const newLead = (theirGTID, yourGTID) => {
                 teams.map((team) => {
                   const teamMembers = allStudents.filter(s => JSON.parse(team.members).includes(s.gtID));
 
-                  const sectionScores = {};
-                  let everyoneFilled = true;
+                  //const sectionScores = {};
+                  //let everyoneFilled = true;
 
                   // Initialize scores per section
-                  sections.forEach(section => {
+                  /* sections.forEach(section => {
                     sectionScores[section.title] = [];
-                  });
+                  }); */
 
-                  teamMembers.forEach(member => {
+                  /* teamMembers.forEach(member => {
                     const first = JSON.parse(member.firstChoice);
                     const second = JSON.parse(member.secondChoice);
                     const third = JSON.parse(member.thirdChoice);
@@ -628,6 +628,29 @@ const newLead = (theirGTID, yourGTID) => {
                     if (first.length === 0 && second.length === 0) {
                       everyoneFilled = false;
                     }
+
+                    sections.forEach(section => {
+                      const title = section.title;
+                      if (first.includes(title)) sectionScores[title].push(1);
+                      else if (second.includes(title)) sectionScores[title].push(2);
+                      else sectionScores[title].push(3);
+                    });
+                  }); */
+                  const sectionScores = {};
+                  sections.forEach(section => {
+                    sectionScores[section.title] = [];
+                  });
+
+                  const everyoneFilled = teamMembers.every(member => {
+                    const first = JSON.parse(member.firstChoice);
+                    const second = JSON.parse(member.secondChoice);
+                    return first.length > 0 || second.length > 0;
+                  });
+
+                  teamMembers.forEach(member => {
+                    const first = JSON.parse(member.firstChoice);
+                    const second = JSON.parse(member.secondChoice);
+                    const third = JSON.parse(member.thirdChoice);
 
                     sections.forEach(section => {
                       const title = section.title;
@@ -689,7 +712,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                           <div className='text-[#003056] text-md'>
                             <div className='font-bold pt-2'>Team Section Preferences:</div>
-                            {teamMembers.map(member => {
+                            {/* {teamMembers.map(member => {
                               const first = JSON.parse(member.firstChoice);
                               const second = JSON.parse(member.secondChoice);
                               const third = JSON.parse(member.thirdChoice);
@@ -705,7 +728,7 @@ const newLead = (theirGTID, yourGTID) => {
                                   )}
                                 </div>
                               );
-                            })}
+                            })} */}
 
                             <div className='font-bold pt-4'>Ideal Section for Your Group:</div>
                             {everyoneFilled ? (
