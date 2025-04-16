@@ -48,6 +48,7 @@ export default function Home() {
   
   const apiUrl = `${protocol}jdregistration.sci.gatech.edu/sections.php`;
 
+
   // comment out function below to use local hosting
    useEffect(() => {
       async function fetchData() {
@@ -607,28 +608,122 @@ const newLead = (theirGTID, yourGTID) => {
 
               </div>
               {teams.length > 0 ? (
-                teams.map((team) => (
-                  <div key={team.id} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm grid grid-cols-16'>
-                    <div
-                      className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
-                      style={{
-                        transform: rotatedTeams.has(team.id) ? 'rotate(90deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.3s ease'
-                      }}
-                      onClick={() => toggleRotation(team.id)}>▶
-                    </div>     
-                    <div className='font-bold pt-3.5 col-start-2 col-end-12'>{team.id}</div>
-                    <div 
-                      className='bg-[#A5925A] rounded-md rounded-l-lg col-start-12 text-center pt-2 text-4xl'
-                      style={{
-                        color: getStatusColor(team.status)
-                      }}
-                      >●</div>
-                  </div>
-                ))
+                teams.map((team) => {
+                  const teamMembers = allStudents.filter(s => JSON.parse(team.members).includes(s.gtID));
+
+                  const sectionScores = {};
+                  let everyoneFilled = true;
+
+                  // Initialize scores per section
+                  sections.forEach(section => {
+                    sectionScores[section.title] = [];
+                  });
+
+                  teamMembers.forEach(member => {
+                    const first = JSON.parse(member.firstChoice);
+                    const second = JSON.parse(member.secondChoice);
+                    const third = JSON.parse(member.thirdChoice);
+
+                    if (first.length === 0 && second.length === 0) {
+                      everyoneFilled = false;
+                    }
+
+                    sections.forEach(section => {
+                      const title = section.title;
+                      if (first.includes(title)) sectionScores[title].push(1);
+                      else if (second.includes(title)) sectionScores[title].push(2);
+                      else sectionScores[title].push(3);
+                    });
+                  });
+
+                  // Compute ideal section
+                 let idealSection = null;
+                  if (everyoneFilled) {
+                    let bestScore = Infinity;
+                    let bestOnes = 0;
+
+                    for (const title in sectionScores) {
+                      const scores = sectionScores[title];
+                      const total = scores.reduce((a, b) => a + b, 0);
+                      const ones = scores.filter(x => x === 1).length;
+
+                      if (
+                        total < bestScore ||
+                        (total === bestScore && ones > bestOnes) ||
+                        (total === bestScore && ones === bestOnes && title < idealSection)
+                      ) {
+                        idealSection = title;
+                        bestScore = total;
+                        bestOnes = ones;
+                      }
+                    }
+                  }
+
+                  return (
+                    <div key={team.name} className='bg-[#E5E2D3] text-[#003056] text-xl rounded-md my-2 shadow-sm'>
+                      <div className='grid grid-cols-16 items-center'>
+                        <div
+                          className='p-3 pr-0 text-[#A5925A] hover:text-[#877645] cursor-pointer text-2xl col-start-1 col-end-2'
+                          style={{
+                            transform: rotatedTeams.has(team.name) ? 'rotate(90deg)' : 'rotate(0deg)',
+                            transition: 'transform 0.3s ease'
+                          }}
+                          onClick={() => toggleRotation(team.name)}>
+                          ▶
+                        </div>
+                        <div className='font-bold pt-3.5 col-start-2 col-end-12'>Team {team.name}</div>
+                        <div
+                          className='col-start-12 text-center pt-2 text-4xl'
+                          style={{ color: everyoneFilled ? '#66D575' : '#FF7556' }}>
+                          ●
+                        </div>
+                      </div>
+
+                      {rotatedTeams.has(team.name) && (
+                        <div className='px-6 py-3 text-lg border-t border-[#A5925A]'>
+                          <div className='flex justify-between text-xl font-bold text-[#003056] pb-2'>
+                            <div>Project: {team.projectName}</div>
+                            <div>Client: {team.clientName}</div>
+                          </div>
+
+                          <div className='text-[#003056] text-md'>
+                            <div className='font-bold pt-2'>Team Section Preferences:</div>
+                            {teamMembers.map(member => {
+                              const first = JSON.parse(member.firstChoice);
+                              const second = JSON.parse(member.secondChoice);
+                              const third = JSON.parse(member.thirdChoice);
+                              return (
+                                <div key={member.gtID} className='mt-2'>
+                                  <span className='font-medium'>{member.name}:</span>{' '}
+                                  {first.map((s, i) => <span key={i} className='font-bold ml-1'>{s}</span>)}
+                                  {second.length > 0 && (
+                                    <>
+                                      <span className='ml-2'>|</span>
+                                      {second.map((s, i) => <span key={i} className='ml-1'>{s}</span>)}
+                                    </>
+                                  )}
+                                </div>
+                              );
+                            })}
+
+                            <div className='font-bold pt-4'>Ideal Section for Your Group:</div>
+                            {everyoneFilled ? (
+                              <p>
+                                The ideal section is{' '}
+                                <span className='font-bold text-[#A5925A]'>{idealSection}</span>
+                              </p>
+                            ) : (
+                              <p>Not everyone in the group has filled out their preferences!</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               ) : (
                 <p>Loading teams...</p>
-              )}
+              ) }
             </div>
           </div>
       
@@ -1255,17 +1350,3 @@ const newLead = (theirGTID, yourGTID) => {
   
   );
 }
-
-
-
-        
-
-          
-
-
-
-
-
-          
-            
-            
