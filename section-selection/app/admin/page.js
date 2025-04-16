@@ -729,9 +729,9 @@ const newLead = (theirGTID, yourGTID) => {
                         </div>
                       </div>
                       {/* DEBUG: remove later */}
-                      <p className="text-sm italic pl-6 text-[#888]">
+                      {/* <p className="text-sm italic pl-6 text-[#888]">
                         Debug: everyoneFilled = {String(everyoneFilled)}
-                      </p>
+                      </p> */}
                       {!everyoneFilled && (
                         <div className="text-sm italic pl-6 text-[#D01717]">
                          <p className="font-bold">Missing Preferences:</p>
@@ -741,7 +741,7 @@ const newLead = (theirGTID, yourGTID) => {
                             if (first.length === 0 && second.length === 0) {
                               return (
                                 <p key={member.gtID}>
-                                  ❌ {member.name} ({member.username}) — First: {first.length}, Second: {second.length}
+                                  ❌ {member.name} ({member.username})
                                 </p>
                               );
                            }
