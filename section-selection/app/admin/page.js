@@ -778,7 +778,7 @@ const newLead = (theirGTID, yourGTID) => {
                               );
                             })} */}
 
-                            <div className='font-bold pt-4'>Ideal Section for Your Group:</div>
+                            <div className='font-bold pt-4'>Ideal Section for This Group:</div>
                             {everyoneFilled ? (
                               <p>
                                 The ideal section is{' '}
