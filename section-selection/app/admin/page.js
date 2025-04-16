@@ -110,7 +110,8 @@ export default function Home() {
                     return;
                 }
 
-                allTeams = teamData.teams;
+                //allTeams = teamData.teams;
+                setTeams(teamData.teams);
                 setAllTeams(teamData.teams);
                 console.log(allTeams);
 
