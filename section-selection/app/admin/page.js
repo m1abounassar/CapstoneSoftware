@@ -641,10 +641,24 @@ const newLead = (theirGTID, yourGTID) => {
                     sectionScores[section.title] = [];
                   });
 
-                  const everyoneFilled = teamMembers.every(member => {
+                  /* const everyoneFilled = teamMembers.every(member => {
                     const first = JSON.parse(member.firstChoice);
                     const second = JSON.parse(member.secondChoice);
                     return first.length > 0 || second.length > 0;
+                  }); */
+                  const everyoneFilled = teamMembers.every(member => {
+                    let first = [];
+                    let second = [];
+                  
+                    try {
+                      first = JSON.parse(member.firstChoice || "[]");
+                      second = JSON.parse(member.secondChoice || "[]");
+                    } catch (e) {
+                      console.error("Invalid preference data for member:", member.name, e);
+                      return false;
+                    }
+                  
+                    return Array.isArray(first) && Array.isArray(second) && (first.length > 0 || second.length > 0);
                   });
 
                   teamMembers.forEach(member => {
