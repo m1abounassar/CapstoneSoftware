@@ -759,7 +759,7 @@ const newLead = (theirGTID, yourGTID) => {
                           </div>
 
                           <div className='text-[#003056] text-md'>
-                            <div className='font-bold pt-2'>Team Section Preferences:</div>
+                            {/* <div className='font-bold pt-2'>Team Section Preferences:</div> */}
                             {/* {teamMembers.map(member => {
                               const first = JSON.parse(member.firstChoice);
                               const second = JSON.parse(member.secondChoice);
