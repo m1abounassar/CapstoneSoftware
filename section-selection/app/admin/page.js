@@ -716,6 +716,10 @@ const newLead = (theirGTID, yourGTID) => {
                           ●
                         </div>
                       </div>
+                      {/* DEBUG: remove later */}
+                      <p className="text-sm italic pl-6 text-[#888]">
+                        Debug: everyoneFilled = {String(everyoneFilled)}
+                      </p>
 
                       {rotatedTeams.has(team.name) && (
                         <div className='px-6 py-3 text-lg border-t border-[#A5925A]'>
