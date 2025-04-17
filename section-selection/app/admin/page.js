@@ -334,6 +334,72 @@ const newLead = (theirGTID, yourGTID) => {
       return newSet;
     });
   };
+  const handleExportCSV = () => {
+    const rows = [["GTID", "Username", "Ideal Section"]];
+  
+    teams.forEach(team => {
+      const teamMembers = allStudents.filter(s => JSON.parse(team.members).includes(s.gtID));
+  
+      const sectionScores = {};
+      sections.forEach(section => {
+        sectionScores[section.title] = [];
+      });
+  
+      const everyoneFilled = teamMembers.every(member => {
+        const first = parsePref(member.firstChoice);
+        const second = parsePref(member.secondChoice);
+        return first.length > 0 && second.length > 0;
+      });
+  
+      let idealSection = "N/A";
+      if (everyoneFilled) {
+        teamMembers.forEach(member => {
+          const first = parsePref(member.firstChoice);
+          const second = parsePref(member.secondChoice);
+          sections.forEach(section => {
+            const title = section.title;
+            if (first.includes(title)) sectionScores[title].push(1);
+            else if (second.includes(title)) sectionScores[title].push(2);
+            else sectionScores[title].push(3);
+          });
+        });
+  
+        let bestScore = Infinity;
+        let bestOnes = 0;
+        for (const title in sectionScores) {
+          const scores = sectionScores[title];
+          const total = scores.reduce((a, b) => a + b, 0);
+          const ones = scores.filter(x => x === 1).length;
+  
+          if (
+            total < bestScore ||
+            (total === bestScore && ones > bestOnes) ||
+            (total === bestScore && ones === bestOnes && title < idealSection)
+          ) {
+            idealSection = title;
+            bestScore = total;
+            bestOnes = ones;
+          }
+        }
+      }
+  
+      teamMembers.forEach(member => {
+        rows.push([member.gtID, member.username, idealSection]);
+      });
+    });
+  
+    const csvContent = rows.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+  
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "ideal_sections.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -798,10 +864,17 @@ const newLead = (theirGTID, yourGTID) => {
               ) }
             </div>
           </div>
-      
         </div>
-      
+        <div className="mt-5 flex justify-end pr-5">
+          <Button 
+            className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+            onClick={handleExportCSV}
+          >
+            Export Ideal Sections CSV
+          </Button>
+          </div>
       </div>
+      
 
       {/* Pop-up Modal for Adding Section */}
       {isAddSectionPopupOpen && (
