@@ -188,7 +188,7 @@ export default function Home() {
     .catch(error => console.error('Error updating sections:', error));
 
   }; */
-  const addOrUpdateSection = (sec) => {
+  /* const addOrUpdateSection = (sec) => { this works, un comment if i break this.
     if (!sec.title.trim()) return;
   
     fetch("https://jdregistration.sci.gatech.edu/sections.php", {
@@ -216,6 +216,36 @@ export default function Home() {
         setIsEditSectionPopupOpen(false);
       })
       .catch(error => console.error('Error updating sections:', error));
+  }; */
+  const addOrUpdateSection = (sec) => {
+    if (!sec.title.trim()) return;
+  
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec)
+    })
+    .then(response => response.json())
+    .then(() => {
+      // If the edit popup is open, update an existing section
+      if (isEditSectionPopupOpen) {
+        setSections(prevSections =>
+          prevSections.map(s => 
+            s.title === selectedSection.title ? sec : s
+          )
+        );
+        setIsEditSectionPopupOpen(false);
+      } else {
+        // If the add popup is open, add a new section
+        setSections(prevSections => [...prevSections, { id: Date.now(), ...sec }]);
+        setIsAddSectionPopupOpen(false);
+      }
+  
+      // Reset form data
+      setNewSection({ title: '', time: '', capacity: '' });
+      setSelectedSection({ title: '', time: '', capacity: '' });
+    })
+    .catch(error => console.error('Error updating sections:', error));
   };
 
 
