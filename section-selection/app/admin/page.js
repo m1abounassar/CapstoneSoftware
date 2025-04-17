@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function Home() {
   const [teams, setTeams] = useState([]);
   const [sections, setSections] = useState([]);
-  const [selectedSection, setSelectedSection] = useState({ title: '', time: '', capacity: ''});
+  const [selectedSection, setSelectedSection] = useState({ id: '', title: '', time: '', capacity: '' });
   const [selectedStudent, setSelectedStudent] = useState({ name: '', username: '', gtid: '', team: ''});
   const [isAddSectionPopupOpen, setIsAddSectionPopupOpen] = useState(false);
   const [isEditSectionPopupOpen, setIsEditSectionPopupOpen] = useState(false);
@@ -170,7 +170,7 @@ export default function Home() {
     setState(prev => ({ ...prev, [name]: value }));
   };
 
-  const addOrUpdateSection = (sec) => {
+  /* const addOrUpdateSection = (sec) => {
     if (!sec.title.trim()) return;
 
     fetch("https://jdregistration.sci.gatech.edu/sections.php", {
@@ -187,7 +187,71 @@ export default function Home() {
     })
     .catch(error => console.error('Error updating sections:', error));
 
+  }; */
+  /* const addOrUpdateSection = (sec) => { this works so dont delete
+    if (!sec.title.trim()) return;
+  
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec)
+    })
+      .then(response => response.json())
+      .then(() => {
+        setSections(prevSections => {
+          const index = prevSections.findIndex(s => s.title === sec.title);
+          if (index !== -1) {
+            // Update existing section
+            const newList = [...prevSections];
+            newList[index] = sec;
+            return newList;
+          } else {
+            // Add new section
+            return [...prevSections, { id: Date.now(), ...sec }];
+          }
+        });
+  
+        setNewSection({ title: '', time: '', capacity: '' });
+        setIsAddSectionPopupOpen(false);
+        setIsEditSectionPopupOpen(false);
+      })
+      .catch(error => console.error('Error updating sections:', error));
+  }; */
+  const addSection = (sec) => {
+    if (!sec.title.trim()) return;
+  
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec)
+    })
+    .then(response => response.json())
+    .then(() => {
+      // Refresh or update section list
+      setSections(prev => [...prev, { ...sec }]);
+      setNewSection({ title: '', time: '', capacity: '' });
+      setIsAddSectionPopupOpen(false);
+    })
+    .catch(error => console.error('Error adding section:', error));
   };
+  
+  const updateSection = (sec) => {
+    if (!sec.title.trim() || !sec.id) return;
+  
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec)
+    })
+    .then(response => response.json())
+    .then(() => {
+      setSections(prevSections => prevSections.map(s => s.id === sec.id ? sec : s));
+      setSelectedSection({ title: '', time: '', capacity: '' });
+      setIsEditSectionPopupOpen(false);
+    })
+    .catch(error => console.error('Error updating section:', error));
+  };
+  
 
 
   const removeSection = () => {
@@ -644,7 +708,7 @@ const newLead = (theirGTID, yourGTID) => {
                                     <div className='flex justify-self-end'>
                                         <button className='bg-[url("/pencil.png")] hover:bg-[url("/pencilHover.png")] bg-contain bg-no-repeat h-8 w-9' 
                                             onClick={() => {
-                                              setSelectedSection({title: section.title, time: section.time, capacity: section.capacity});
+                                              setSelectedSection({id: section.id, title: section.title, time: section.time, capacity: section.capacity});
                                               setIsEditSectionPopupOpen(true);
                                             }}
                                         ></button>
@@ -914,7 +978,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                 onClick={() => {
                   setIsAddSectionPopupOpen(false);
-                  addOrUpdateSection(newSection);
+                  addSection(newSection);
                 }}
               >
                 Save
@@ -973,7 +1037,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                 onClick={() => {
                   setIsEditSectionPopupOpen(false);
-                  addOrUpdateSection(selectedSection);
+                  updateSection(selectedSection);
                 }}
               >
                 Save
