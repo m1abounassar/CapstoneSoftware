@@ -348,7 +348,7 @@ const newLead = (theirGTID, yourGTID) => {
       const everyoneFilled = teamMembers.every(member => {
         const first = parsePref(member.firstChoice);
         const second = parsePref(member.secondChoice);
-        return first.length > 0 && second.length > 0;
+        return first.length > 0 || second.length > 0;
       });
   
       let idealSection = "N/A";
