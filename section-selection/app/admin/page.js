@@ -170,7 +170,7 @@ export default function Home() {
     setState(prev => ({ ...prev, [name]: value }));
   };
 
-  const addOrUpdateSection = (sec) => {
+  /* const addOrUpdateSection = (sec) => {
     if (!sec.title.trim()) return;
 
     fetch("https://jdregistration.sci.gatech.edu/sections.php", {
@@ -187,6 +187,35 @@ export default function Home() {
     })
     .catch(error => console.error('Error updating sections:', error));
 
+  }; */
+  const addOrUpdateSection = (sec) => {
+    if (!sec.title.trim()) return;
+  
+    fetch("https://jdregistration.sci.gatech.edu/sections.php", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec)
+    })
+      .then(response => response.json())
+      .then(() => {
+        setSections(prevSections => {
+          const index = prevSections.findIndex(s => s.title === sec.title);
+          if (index !== -1) {
+            // Update existing section
+            const newList = [...prevSections];
+            newList[index] = sec;
+            return newList;
+          } else {
+            // Add new section
+            return [...prevSections, { id: Date.now(), ...sec }];
+          }
+        });
+  
+        setNewSection({ title: '', time: '', capacity: '' });
+        setIsAddSectionPopupOpen(false);
+        setIsEditSectionPopupOpen(false);
+      })
+      .catch(error => console.error('Error updating sections:', error));
   };
 
 
