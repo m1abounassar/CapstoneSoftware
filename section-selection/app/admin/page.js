@@ -1259,24 +1259,12 @@ const newLead = (theirGTID, yourGTID) => {
                     className="border p-2 rounded-md w-full mt-3"
                   />
                   
-                  <div className="flex justify-end mt-5 gap-3">
+                  <div className="flex justify-end mt-5">
                     <Button
                       className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none"
-                      onClick={() => {
-                        setIsEditStudentPopupOpen(false);
-                        setSeeAllStudents(true);
-                      }}
+                      onClick={() => setIsEditStudentPopupOpen(false)}
                     >
                       Close
-                    </Button>
-                    <Button
-                      className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                      onClick={() => {
-                        setIsEditStudentPopupOpen(false);
-                        setSeeAllStudents(true);
-                      }}
-                    >
-                     Save
                     </Button>
                   </div>
               </div>
