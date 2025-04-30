@@ -1261,7 +1261,7 @@ const newLead = (theirGTID, yourGTID) => {
                   
                   <div className="flex justify-end mt-5">
                     <Button
-                      className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none"
+                      className="bg-[#D01717] text-white text-sm rounded-lg hover:bg-[#EA2020] shadow-none"
                       onClick={() => setIsEditStudentPopupOpen(false)}
                     >
                       Close
