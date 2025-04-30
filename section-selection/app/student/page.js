@@ -443,7 +443,6 @@ export default function Home() {
       const first = parsePref(firstChoice);
       const second = parsePref(secondChoice);
       const third = parsePref(thirdChoice);
-      
   
       if (first.length === 0 && second.length === 0) {
         allFilled = false;
@@ -768,7 +767,11 @@ export default function Home() {
               <div className="bg-white p-6 rounded-md shadow-lg w-96 text-center">
                 <p>Saved!</p>
                 <button 
-                  onClick={() => setSavePrefOpen(!savePrefOpen)}
+                  //onClick={() => setSavePrefOpen(!savePrefOpen)}
+                  onClick={() => {
+                    setSavePrefOpen(false);
+                    window.location.reload();  // Refresh the page
+                  }}
                   className="mt-4 px-4 py-2 bg-[#003056] text-white rounded-md"
                 >
                   Close
