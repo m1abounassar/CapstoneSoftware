@@ -35,6 +35,17 @@ export default function Home() {
 
 
 
+  function parsePref(prefString) {
+    try {
+      const parsed = JSON.parse(prefString);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+
+
   useEffect(() => {
     async function fetchData() {
         const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
@@ -425,9 +436,14 @@ export default function Home() {
     for (const memberName in teamMembers) {
       const { firstChoice, secondChoice, thirdChoice } = teamMembers[memberName];
   
-      const first = JSON.parse(firstChoice);
-      const second = JSON.parse(secondChoice);
-      const third = JSON.parse(thirdChoice);
+      //const first = JSON.parse(firstChoice);
+      //const second = JSON.parse(secondChoice);
+      //const third = JSON.parse(thirdChoice);
+
+      const first = parsePref(firstChoice);
+      const second = parsePref(secondChoice);
+      const third = parsePref(thirdChoice);
+      
   
       if (first.length === 0 && second.length === 0) {
         allFilled = false;
