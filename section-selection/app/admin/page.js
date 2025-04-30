@@ -381,7 +381,7 @@ const addAdmin = () => {
   .catch(error => console.error('Error:', error));
 };
 
-const removeAdmin = (gtid) => {
+/* const removeAdmin = (gtid) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
@@ -394,9 +394,23 @@ const removeAdmin = (gtid) => {
   .catch((error) => {
     console.error('Error:', error);
   });
+}; */
+
+const removeAdmin = (gtid) => {
+  fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ gtid })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    window.location.reload(); // ✅ Refresh after success
+  })
+  .catch(error => console.error('Error:', error));
 };
 
-const newLead = (theirGTID, yourGTID) => {
+/* const newLead = (theirGTID, yourGTID) => {
   fetch("https://jdregistration.sci.gatech.edu/admin.php", {
     method: 'POST', 
     headers: { 'Content-Type': 'application/json' },
@@ -404,6 +418,19 @@ const newLead = (theirGTID, yourGTID) => {
   })
   .then(response => response.json())
   .then(data => console.log('Success:', data))
+  .catch(error => console.error('Error:', error));
+}; */
+const newLead = (theirGTID, yourGTID) => {
+  fetch("https://jdregistration.sci.gatech.edu/admin.php", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ theirGTID, yourGTID })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    window.location.reload(); // ✅ Refresh after success
+  })
   .catch(error => console.error('Error:', error));
 };
 
