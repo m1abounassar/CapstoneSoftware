@@ -57,6 +57,27 @@ export default function Home() {
     }
   }
 
+  const handleRefreshSemester = () => {
+    if (!window.confirm("Are you sure you want to refresh the semester? This will delete all students, teams, and sections.")) return;
+  
+    fetch("/admin/refresh_semester.php", {
+      method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Semester refreshed successfully!");
+        window.location.reload();
+      } else {
+        alert("Error: " + data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Refresh failed", error);
+      alert("Unexpected error occurred.");
+    });
+  };
+
 
   // comment out function below to use local hosting
    useEffect(() => {
@@ -569,7 +590,7 @@ const newLead = (theirGTID, yourGTID) => {
       .then(data => {
         if (data.success) {
           alert("CSV uploaded and processed successfully!");
-          // Refresh data if necessary
+          window.location.reload(); 
         } else {
           alert("Error: " + data.error);
         }
@@ -804,9 +825,13 @@ const newLead = (theirGTID, yourGTID) => {
                   });                  
 
                   teamMembers.forEach(member => {
-                    const first = JSON.parse(member.firstChoice);
-                    const second = JSON.parse(member.secondChoice);
-                    const third = JSON.parse(member.thirdChoice);
+                    //const first = JSON.parse(member.firstChoice);
+                    //const second = JSON.parse(member.secondChoice);
+                    //const third = JSON.parse(member.thirdChoice);
+                    const first = parsePref(member.firstChoice);
+                    const second = parsePref(member.secondChoice);
+                    const third = parsePref(member.thirdChoice);
+
 
                     sections.forEach(section => {
                       const title = section.title;
@@ -929,16 +954,32 @@ const newLead = (theirGTID, yourGTID) => {
             </div>
           </div>
         </div>
-        <div className="mt-5 flex justify-end pr-5">
+        <div className="mt-5 flex justify-end pr-5 gap-3">
           <Button 
             className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
             onClick={handleExportCSV}
           >
             Export Ideal Sections CSV
           </Button>
+
+          <input 
+            type="file" 
+            id="csvFileInput" 
+            accept=".csv" 
+            style={{ display: "none" }} 
+            onChange={handleCSVUpload} 
+          />
+          <Button
+            className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
+            onClick={() => document.getElementById("csvFileInput").click()}
+          >
+            Upload CSV
+          </Button>
           </div>
+          
       </div>
       
+
 
       {/* Pop-up Modal for Adding Section */}
       {isAddSectionPopupOpen && (
@@ -1218,33 +1259,13 @@ const newLead = (theirGTID, yourGTID) => {
       )}
 
       {/* Pop-up Modal for Adding Section */}
-{/*
-
       {isRefreshSemesterPopupOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-5 rounded-lg shadow-sm">
-            <h2 className="text-lg font-bold">{editingSection ? 'Edit Section' : 'Add a New Section'}</h2>
-            <input 
-              name="title" 
-              placeholder="Section Title" 
-              value={newSection.title}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="time"
-              placeholder="Times"
-              value={newSection.time}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
-            <input
-              name="capacity"
-              placeholder="Capacity"
-              value={newSection.capacity}
-              onChange={handleInputChange}
-              className="border p-2 rounded-md w-full mt-3"
-            />
+            <h2 className="text-lg font-bold">Refresh Semester</h2>
+            <p className="mt-2 text-gray-700">
+              This will permanently delete all students, teams, and sections. Are you sure you want to proceed?
+            </p>
             <div className="flex justify-end mt-5">
               <Button 
                 className="bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 shadow-none mr-2"
@@ -1253,15 +1274,20 @@ const newLead = (theirGTID, yourGTID) => {
                 Cancel
               </Button>
               <Button 
-                className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
-                onClick={addOrUpdateSection}
+                className="bg-[#D01717] text-white text-sm rounded-lg hover:bg-[#EA2020] shadow-none"
+                onClick={() => {
+                  setIsRefreshSemesterPopupOpen(false);
+                  handleRefreshSemester();
+                }}
               >
-                Save
+                Confirm
               </Button>
             </div>
           </div>
         </div>
-      )} */}
+      )}
+
+      
 
 
       {hamburgerOptionsOpen && (
@@ -1533,29 +1559,8 @@ const newLead = (theirGTID, yourGTID) => {
             
       )}
 
-        {/* CSV Upload Section */}
-
-        {/*
-        <div className="m-10">
-          <input 
-            type="file" 
-            id="csvFileInput" 
-            accept=".csv" 
-            style={{ display: "none" }} 
-            onChange={handleCSVUpload} 
-          />
-          <Button
-            className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-sm"
-            onClick={() => document.getElementById("csvFileInput").click()}
-          >
-            Upload CSV
-          </Button>
-        </div>  */}
+        
 
     </div>
-
-
-
-  
   );
 }
