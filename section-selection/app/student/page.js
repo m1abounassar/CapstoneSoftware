@@ -110,11 +110,47 @@ export default function Home() {
 
               const initialDropdownValues = {};
 
-              const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
-              const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
-              const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
+              const firstChoiceArray = parsePref(matchedStudent.firstChoice);
+              const secondChoiceArray = parsePref(matchedStudent.secondChoice);
+              const thirdChoiceArray = parsePref(matchedStudent.thirdChoice);
 
-              if (!firstChoiceArray) {
+              // If no preferences saved yet, default all to yellow
+              if (
+                (!firstChoiceArray || firstChoiceArray.length === 0) &&
+                (!secondChoiceArray || secondChoiceArray.length === 0) &&
+                (!thirdChoiceArray || thirdChoiceArray.length === 0)
+              ) {
+                const sectionsRes = await fetch('https://jdregistration.sci.gatech.edu/sections.php');
+                if (!sectionsRes.ok) throw new Error("Sections fetch failed");
+
+                const sectionsData = await sectionsRes.json();
+                if (!Array.isArray(sectionsData.sections)) {
+                  console.error("Unexpected data format:", sectionsData);
+                  return;
+                }
+
+                sectionsData.sections.forEach((section) => {
+                  initialDropdownValues[section.title] = "3";
+                });
+              } else {
+                firstChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "1";
+                });
+                secondChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "2";
+                });
+                thirdChoiceArray.forEach((section) => {
+                  initialDropdownValues[section] = "3";
+                });
+              }
+
+              //const firstChoiceArray = JSON.parse(matchedStudent.firstChoice);
+              //const secondChoiceArray = JSON.parse(matchedStudent.secondChoice);
+              //const thirdChoiceArray = JSON.parse(matchedStudent.thirdChoice);
+
+
+
+              /* if (!firstChoiceArray) {
                 const sectionsRes = await fetch('https://jdregistration.sci.gatech.edu/sections.php');
                 if (!sectionsRes.ok) throw new Error("Sections fetch failed");
     
@@ -142,7 +178,7 @@ export default function Home() {
                   initialDropdownValues[section] = "3";
                 });
                 
-              }
+              } */
 
               //dropdownValues = initialDropdownValues;
               //setDropdownValues(dropdownValues);
