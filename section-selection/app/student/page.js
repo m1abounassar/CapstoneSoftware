@@ -48,12 +48,33 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-        const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        //const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+        const sectionsRes = await fetch("https://jdregistration.sci.gatech.edu/sections.php");
+      if (!sectionsRes.ok) {
+        console.error("Failed to fetch sections");
+        return;
+      }
+
+      const sectionsData = await sectionsRes.json();
+      if (!Array.isArray(sectionsData.sections)) {
+        console.error("Unexpected sections format", sectionsData);
+        return;
+      }
+
+      setSections(sectionsData.sections);
+
+      // Continue with session logic
+      const sessionRes = await fetch("https://jdregistration.sci.gatech.edu/api/auth/session.php");
+      if (!sessionRes.ok) {
+          window.location.href = '/error';
+      }
+
+      const sessionData = await sessionRes.json();
         if (!sessionRes.ok) {
             window.location.href = '/error';
         }
 
-        const sessionData = await sessionRes.json();
+        //const sessionData = await sessionRes.json();
         console.log('Session:', sessionData);
 
         if (sessionData.loggedIn === 'true') {
