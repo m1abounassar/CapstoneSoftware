@@ -1175,28 +1175,28 @@ const newLead = (theirGTID, yourGTID) => {
             <input 
               name="name" 
               placeholder="George Burdell" 
-              value={newSection.name}
+              value={newStudent.name}
               onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="gtid"
               placeholder="903XXXXXX"
-              value={newSection.gtid}
+              value={newStudent.gtid}
               onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="gtusername"
               placeholder="gburdell3"
-              value={newSection.gtusername}
+              value={newStudent.username}
               onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
             <input
               name="team"
               placeholder="1234"
-              value={newSection.team}
+              value={newStudent.team}
               onChange={(e) => handleInputChange(e, setNewStudent)}
               className="border p-2 rounded-md w-full mt-3"
             />
@@ -1210,7 +1210,7 @@ const newLead = (theirGTID, yourGTID) => {
               <Button 
                 className="bg-[#A5925A] text-white text-sm rounded-lg hover:bg-[#80724b] shadow-none"
                 onClick={() => {
-                  addStudent;
+                  addStudent(newStudent);
                   setIsAddStudentPopupOpen(false);
                 }}
               >
@@ -1265,6 +1265,12 @@ const newLead = (theirGTID, yourGTID) => {
                       onClick={() => setIsEditStudentPopupOpen(false)}
                     >
                       Close
+                    </Button>
+                    <Button
+                      className="bg-[#003056] text-white text-sm rounded-lg hover:bg-[#EA2020] shadow-none"
+                      onClick={() => {setIsEditStudentPopupOpen(false)}}
+                    >
+                      Save
                     </Button>
                   </div>
               </div>
@@ -1559,7 +1565,7 @@ const newLead = (theirGTID, yourGTID) => {
 
                     </div>
 
-                    <Button className='justify-self-end bg-[#A5925A] hover:bg-[#C1AC6F] bg-transparent hover:bg-transparent shadow-none bg-contain bg-no-repeat h-8 w-9'
+                    <Button className='justify-self-end bg-[#A5925A] hover:bg-[#C1AC6F] shadow-none bg-contain bg-no-repeat h-8 w-9'
                         onClick={() => {
                           setSeeAllStudents(false);
                     }}>Close</Button>   
